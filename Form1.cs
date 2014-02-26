@@ -71,7 +71,7 @@ namespace OCDataImporter
     public partial class Form1 : Form
     {
         
-        public bool DEBUGMODE = false;
+        public bool DEBUGMODE = true;
         public bool labelOCoidExists = false; // 2.1.1 If labelOCoid file exists, get the oid from that file, instead of 'SS_label'...
         public string dmpfilename = "";
         public string dmpprm = "";
@@ -403,13 +403,14 @@ namespace OCDataImporter
 
         private void masterHeader()
         {
-            string today = getTodaysDate();
+            DateTime dt = DateTime.Now;
+            String timeStamp = dt.ToString("yyyy-MM-ddTHH:mm:ss");
             AppendToFile(DIMF, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             AppendToFile(DIMF, "<ODM xmlns=\"http://www.cdisc.org/ns/odm/v1.3\"");
             AppendToFile(DIMF, "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
             AppendToFile(DIMF, "xsi:schemaLocation=\"http://www.cdisc.org/ns/odm/v1.3 ODM1-3.xsd\"");
             AppendToFile(DIMF, "ODMVersion=\"1.3\" FileOID=\"1D20080412202420\" FileType=\"Snapshot\"");
-            AppendToFile(DIMF, "Description=\"Dataset ODM\" CreationDateTime=\"" + today + "T10:00:00\" >");
+            AppendToFile(DIMF, "Description=\"Dataset ODM\" CreationDateTime=\"" + timeStamp + "\" >");
             AppendToFile(DIMF, "<ClinicalData StudyOID=\"" + TheStudyOID + "\" MetaDataVersionOID=\"v1.0.0\">");
         }
 
