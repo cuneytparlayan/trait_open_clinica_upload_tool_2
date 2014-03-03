@@ -68,8 +68,13 @@ using System.Security.AccessControl;
 
 namespace OCDataImporter
 {
+    
+    
+    
     public partial class Form1 : Form
     {
+        
+        public const String VERSION_LABEL = "OCDataImporter Version 4.3";   
         
         public bool DEBUGMODE = true;
         public bool labelOCoidExists = false; // 2.1.1 If labelOCoid file exists, get the oid from that file, instead of 'SS_label'...
@@ -280,7 +285,7 @@ namespace OCDataImporter
 
         void MenuHelpAboutOnClick(object obj, EventArgs ea)
         {
-            MessageBox.Show("OCDataImporter Version 4.x Made by: C. Parlayan, VU Medical Center, Dept. of Pathology, Amsterdam, The Netherlands - 2010-2014", Text);
+            MessageBox.Show(VERSION_LABEL + " - Made by: C. Parlayan, VU Medical Center, Dept. of Pathology, Amsterdam, The Netherlands - 2010-2014", Text);
         }
         private string FillTildes(string var, int len)
         {

@@ -144,7 +144,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(260, 18);
             this.label1.TabIndex = 0;
-            this.label1.Text = "OCDataImporter Version 4.3";
+            this.label1.Text = OCDataImporter.Form1.VERSION_LABEL;
             // 
             // label3
             // 
