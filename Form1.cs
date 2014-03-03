@@ -361,7 +361,7 @@ namespace OCDataImporter
             }
             catch (Exception ex)
             {
-                textBoxOutput.Text += Mynewline + "No dmp file found." + Mynewline;
+                textBoxOutput.Text += Mynewline + "No dmp file found." + Mynewline + ex.Message + Mynewline;
                 return false;
             }
         }
@@ -402,9 +402,8 @@ namespace OCDataImporter
         }
 
         private void masterHeader()
-        {
-            DateTime dt = DateTime.Now;
-            String timeStamp = dt.ToString("yyyy-MM-ddTHH:mm:ss");
+        {            
+            String timeStamp = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
             AppendToFile(DIMF, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             AppendToFile(DIMF, "<ODM xmlns=\"http://www.cdisc.org/ns/odm/v1.3\"");
             AppendToFile(DIMF, "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
@@ -420,7 +419,7 @@ namespace OCDataImporter
             SUBJECTSEX_F = textBoxSubjectSexF.Text;
             if (IsNumber(textBoxMaxLines.Text) == false)
             {
-                MessageBox.Show("Split factor must be a number, 0 means no splittig.", "OCDataImporter");
+                MessageBox.Show("Split factor must be a number, 0 means no splitting.", "OCDataImporter");
                 return;
             }
             OUTFMAXLINES = System.Convert.ToInt32(textBoxMaxLines.Text);
@@ -1042,9 +1041,9 @@ namespace OCDataImporter
                         // generate insert statements
                         int theSERKInt = System.Convert.ToInt16(theSERK);
                         string theDOB = "";
-                        if (DOBIndex >= 0) theDOB = ConvertToODMFormat(split[DOBIndex]);
+                        if (DOBIndex >= 0) theDOB = DateUtilities.ConvertToODMFormat(split[DOBIndex], comboBoxDateFormat.SelectedItem.ToString());
                         string theSTD = "";
-                        if (STDIndex >= 0) theSTD = ConvertToODMFormat(split[STDIndex]); // This is needed for non repeating events
+                        if (STDIndex >= 0) theSTD = DateUtilities.ConvertToODMFormat(split[STDIndex], comboBoxDateFormat.SelectedItem.ToString()); // This is needed for non repeating events
                         string thePID = "";
                         if (PIDIndex < 0) thePID = theKEY;
                         else thePID = split[PIDIndex];
@@ -1095,7 +1094,7 @@ namespace OCDataImporter
                                     part1 = EventStartDates.Substring(EventStartDates.IndexOf(part2) + 1);
                                     part1 = part1.Substring(part1.IndexOf("^") + 1);
                                     part1 = part1.Substring(0, part1.IndexOf("$"));  // part1 is the index of date
-                                    theSTD = ConvertToODMFormat(split[System.Convert.ToInt16(part1)]);
+                                    theSTD = DateUtilities.ConvertToODMFormat(split[System.Convert.ToInt16(part1)], comboBoxDateFormat.SelectedItem.ToString());
                                     if (theSTD.StartsWith("Error"))
                                     {
                                         string errtext = "Invalid start date '" + theSTD + "' at line " + linecount.ToString() + ". Index: " + STDIndex + ". ";
@@ -1709,47 +1708,7 @@ namespace OCDataImporter
             SW = File.AppendText(theFile);
             SW.WriteLine(theText);
             SW.Close();
-        }
-
-        private bool CheckDay(string day, string month)
-        {
-            try
-            {
-                int theDay = System.Convert.ToInt16(day);
-                if (month == "01" || month == "03" || month == "05" || month == "07" || month == "08" || month == "10" || month == "12")
-                {
-                    if (theDay < 1 || theDay > 31) return (false);
-                }
-                if (month == "04" || month == "06" || month == "09" || month == "11")
-                {
-                    if (theDay < 1 || theDay > 30) return (false);
-                }
-                if (month == "02")
-                {
-                    if (theDay < 1 || theDay > 29) return (false);
-                }
-            }
-            catch (Exception ex)
-            {
-                return (false);
-            }
-            return (true);
-        }
-
-        private bool CheckYear(string year)
-        {
-            try
-            {
-                int theYear = System.Convert.ToInt16(year);
-                DateTime dt = DateTime.Now;
-                if (theYear < 1700 || theYear > (System.Convert.ToInt16(dt.Year) + 1)) return false;
-                else return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
+        }       
 
         private string ConvertToODMPartial(string theSource)
         {
@@ -1760,21 +1719,21 @@ namespace OCDataImporter
                 string[] splitd = theSource.Split('-');
                 if (splitd[0].Length == 4 && (splitd[1].Length == 3 || splitd[1].Length == 2))   // yyyy-mmm or yyyy-mm
                 {
-                    string mon = Get_maand(splitd[1]);
+                    string mon = DateUtilities.Get_maand(splitd[1]);
                     if (mon.StartsWith("Error")) return (mon);
                     else
                     {
-                        if (CheckYear(splitd[0])) return (splitd[0] + "-" + mon);
+                        if (DateUtilities.CheckYear(splitd[0])) return (splitd[0] + "-" + mon);
                         else return ("Error: Wrong Year in partial date");
                     }
                 }
                 if (splitd[1].Length == 4 && (splitd[0].Length == 3 || splitd[0].Length == 2))   // mmm-yyyy or mm-yyyy
                 {
-                    string mon = Get_maand(splitd[0]);
+                    string mon = DateUtilities.Get_maand(splitd[0]);
                     if (mon.StartsWith("Error")) return (mon);
                     else
                     {
-                        if (CheckYear(splitd[1])) return (splitd[1] + "-" + mon);
+                        if (DateUtilities.CheckYear(splitd[1])) return (splitd[1] + "-" + mon);
                         else return ("Error: Wrong Year in partial date");
                     }
                 }
@@ -1784,125 +1743,8 @@ namespace OCDataImporter
                 return ("Error: Unrecognised partial date and exception: " + ex.Message);
             }
             return ("Error: Unrecognised partial date");
-        }
-
-        private string ConvertToODMFormat(string theSource)
-        {
-            if (theSource.Trim() == "") return ("");  // 1.0f .Trim = 2.0.4
-            if (comboBoxDateFormat.SelectedItem.ToString() == "--select--") return (theSource);
-            if (comboBoxDateFormat.SelectedItem.ToString() == "day-month-year")
-            {
-                theSource = theSource.Replace('/', '-');
-                try
-                {
-                    string[] splitd = theSource.Split('-');
-                    string mon = Get_maand(splitd[1]);
-                    if (mon.StartsWith("Error")) return (mon);
-                    string day = splitd[0];
-                    if (day.Length == 1) day = "0" + day;
-                    if (CheckYear(splitd[2]) && CheckDay(day, mon)) return (splitd[2] + "-" + mon + "-" + day);
-                    else return ("Error: Wrong day or year");
-                }
-                catch (Exception ex)
-                {
-                    return ("Error: date is not in day-month-yyyy format " + ex);
-                }
-            }
-            if (comboBoxDateFormat.SelectedItem.ToString() == "month-day-year")
-            {
-                theSource = theSource.Replace('/', '-');
-                try
-                {
-                    string[] splitd = theSource.Split('-');
-                    string mon = Get_maand(splitd[0]);
-                    if (mon.StartsWith("Error")) return (mon);
-                    string day = splitd[1];
-                    if (day.Length == 1) day = "0" + day;
-                    if (CheckYear(splitd[2]) && CheckDay(day, mon)) return (splitd[2] + "-" + mon + "-" + day);
-                    else return ("Error: Wrong day or year");
-                }
-                catch (Exception ex)
-                {
-                    return ("Error: date is not in month-day-yyyy format " + ex);
-                }
-            }
-            if (comboBoxDateFormat.SelectedItem.ToString() == "year-month-day")
-            {
-                theSource = theSource.Replace('/', '-');
-                try
-                {
-                    string[] splitd = theSource.Split('-');
-                    string mon = Get_maand(splitd[1]);
-                    if (mon.StartsWith("Error")) return (mon);
-                    string day = splitd[2];
-                    if (day.Length == 1) day = "0" + day;
-                    if (CheckYear(splitd[0]) && CheckDay(day, mon)) return (splitd[0] + "-" + mon + "-" + day);
-                    else return ("Error: Wrong day or year");
-                }
-                catch (Exception ex)
-                {
-                    return ("Error: date is not in yyyy-month-day format " + ex);
-                }
-            }
-            return ("Error: unknown date format ");
-        }
-        public string Get_maand(string inp)
-        {
-            inp = inp.ToUpper();
-            switch (inp)
-            {
-                case "JAN": 
-                case "01":
-                case "1":
-                    return ("01");
-                case "FEB":
-                case "02":
-                case "2":
-                    return ("02");
-                case "MAR":
-                case "MRT": 
-                case "03":
-                case "3":
-                    return ("03");
-                case "APR":
-                case "04":
-                case "4":
-                    return ("04");
-                case "MAY":
-                case "05":
-                case "MEI":
-                case "5":
-                    return ("05");
-                case "JUN":
-                case "06":
-                case "6":
-                    return ("06");
-                case "JUL":
-                case "07":
-                case "7":
-                    return ("07");
-                case "AUG":
-                case "08":
-                case "8":
-                    return ("08");
-                case "SEP":
-                case "09":
-                case "9":
-                    return ("09");
-                case "OCT":
-                case "OKT":
-                case "10":
-                    return ("10");
-                case "NOV":
-                case "11":
-                    return ("11");
-                case "DEC":
-                case "12":
-                    return ("12");
-                default:
-                    return ("Error: month:" + inp + " not found");
-            }
-        }
+        }       
+        
         private void exit_error(string probl)
         {   
             using (StreamWriter swlog = new StreamWriter(workdir + "\\OCDataImporter_log.txt"))
@@ -2582,7 +2424,7 @@ namespace OCDataImporter
             if (ittype == "date")
             {
                 if (comboBoxDateFormat.SelectedItem.ToString() == "--select--") append_warning(fixedwarning + "Item is date but no date format is selected in parameters");
-                ConvertedDate = ConvertToODMFormat(ItemVal);
+                ConvertedDate = DateUtilities.ConvertToODMFormat(ItemVal, comboBoxDateFormat.SelectedItem.ToString());
                 
             }
             if (ittype == "partialDate") ConvertedDate = ConvertToODMPartial(ItemVal);
@@ -2699,7 +2541,7 @@ namespace OCDataImporter
             }
             catch (Exception ex)
             {
-                append_warning(fixedwarning + "Range check ignored: " + huidige.Replace('^', ','));
+                append_warning(fixedwarning + "Range check ignored: " + huidige.Replace('^', ',') + ". " + ex.Message);
             }            
             return (ItemVal);
         }
