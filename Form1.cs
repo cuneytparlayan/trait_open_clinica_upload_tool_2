@@ -263,9 +263,18 @@ namespace OCDataImporter
             Get_work_file();
         }
 
+
+        private void safeClose(Stream stream)
+        {
+            if (stream != null)
+            {
+                stream.Close();
+            }
+        }
+
         void MenuFileExitOnClick(object obj, EventArgs ea)
         {
-            fpipdf.Close();
+            safeClose(fpipdf);            
             Close();
         }
         void MenuHelpHowToOnClick(object obj, EventArgs ea)
@@ -460,12 +469,12 @@ namespace OCDataImporter
             StreamWriter swINSwR = new StreamWriter(fpoINSR);
             fpoDELR = new FileStream(workdir + "\\Deletes_ONLY_STUDY_EVENTS.sql", FileMode.Create, FileAccess.Write);
             StreamWriter swDELwR = new StreamWriter(fpoDELR);
-            fpoDIM.Close();
-            fpoINS.Close();
-            fpoINSR.Close();
-            fpoDEL.Close();
-            fpoDELR.Close();
-            fpoLOG.Close();
+            safeClose(fpoDIM);
+            safeClose(fpoINS);
+            safeClose(fpoINSR);
+            safeClose(fpoDEL);
+            safeClose(fpoDELR);
+            safeClose(fpoLOG);
             INSF = workdir + "\\Inserts.sql";
             LOG = workdir + "\\OCDataImporter_warnings.txt"; 
             INSFR = workdir + "\\Inserts_ONLY_STUDY_EVENTS.sql";
@@ -1034,12 +1043,12 @@ namespace OCDataImporter
                         if (OUTFLINECOUNTER >= OUTFMAXLINES)  // 1.0f
                         {
                             masterClose();
-                            fpoDIM.Close();
+                            safeClose(fpoDIM);
                             OUTFLINECOUNTER = 0;
                             OUTFFILECOUNTER = OUTFFILECOUNTER + 1;
                             OUTF = OUTFBASIS + OUTFFILECOUNTER + ".xml";
                             fpoDIM = new FileStream(OUTF, FileMode.Create, FileAccess.Write);
-                            fpoDIM.Close();
+                            safeClose(fpoDIM);
                             DIMF = OUTF;
                             masterHeader();
                         }
@@ -1829,7 +1838,7 @@ namespace OCDataImporter
                 long FileSize;
                 fp_ioc = new FileStream(split[1], FileMode.Open);
                 FileSize = fp_ioc.Length;
-                fp_ioc.Close();
+                safeClose(fp_ioc);
                 if (FileSize > 2147483647) FileSize = 2147483647;
                 progressBar1.Minimum = 0;
                 progressBar1.Maximum = (int)FileSize;
