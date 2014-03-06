@@ -1055,9 +1055,9 @@ namespace OCDataImporter
                         // generate insert statements
                         int theSERKInt = System.Convert.ToInt16(theSERK);
                         string theDOB = "";
-                        if (DOBIndex >= 0) theDOB = DateUtilities.ConvertToODMFormat(split[DOBIndex], comboBoxDateFormat.SelectedItem.ToString());
+                        if (DOBIndex >= 0) theDOB = Utilities.ConvertToODMFormat(split[DOBIndex], comboBoxDateFormat.SelectedItem.ToString());
                         string theSTD = "";
-                        if (STDIndex >= 0) theSTD = DateUtilities.ConvertToODMFormat(split[STDIndex], comboBoxDateFormat.SelectedItem.ToString()); // This is needed for non repeating events
+                        if (STDIndex >= 0) theSTD = Utilities.ConvertToODMFormat(split[STDIndex], comboBoxDateFormat.SelectedItem.ToString()); // This is needed for non repeating events
                         string thePID = "";
                         if (PIDIndex < 0) thePID = theKEY;
                         else thePID = split[PIDIndex];
@@ -1108,7 +1108,7 @@ namespace OCDataImporter
                                     part1 = EventStartDates.Substring(EventStartDates.IndexOf(part2) + 1);
                                     part1 = part1.Substring(part1.IndexOf("^") + 1);
                                     part1 = part1.Substring(0, part1.IndexOf("$"));  // part1 is the index of date
-                                    theSTD = DateUtilities.ConvertToODMFormat(split[System.Convert.ToInt16(part1)], comboBoxDateFormat.SelectedItem.ToString());
+                                    theSTD = Utilities.ConvertToODMFormat(split[System.Convert.ToInt16(part1)], comboBoxDateFormat.SelectedItem.ToString());
                                     if (theSTD.StartsWith("Error"))
                                     {
                                         string errtext = "Invalid start date '" + theSTD + "' at line " + linecount.ToString() + ". Index: " + STDIndex + ". ";
@@ -1733,21 +1733,21 @@ namespace OCDataImporter
                 string[] splitd = theSource.Split('-');
                 if (splitd[0].Length == 4 && (splitd[1].Length == 3 || splitd[1].Length == 2))   // yyyy-mmm or yyyy-mm
                 {
-                    string mon = DateUtilities.Get_maand(splitd[1]);
+                    string mon = Utilities.Get_maand(splitd[1]);
                     if (mon.StartsWith("Error")) return (mon);
                     else
                     {
-                        if (DateUtilities.CheckYear(splitd[0])) return (splitd[0] + "-" + mon);
+                        if (Utilities.CheckYear(splitd[0])) return (splitd[0] + "-" + mon);
                         else return ("Error: Wrong Year in partial date");
                     }
                 }
                 if (splitd[1].Length == 4 && (splitd[0].Length == 3 || splitd[0].Length == 2))   // mmm-yyyy or mm-yyyy
                 {
-                    string mon = DateUtilities.Get_maand(splitd[0]);
+                    string mon = Utilities.Get_maand(splitd[0]);
                     if (mon.StartsWith("Error")) return (mon);
                     else
                     {
-                        if (DateUtilities.CheckYear(splitd[1])) return (splitd[1] + "-" + mon);
+                        if (Utilities.CheckYear(splitd[1])) return (splitd[1] + "-" + mon);
                         else return ("Error: Wrong Year in partial date");
                     }
                 }
@@ -2438,7 +2438,7 @@ namespace OCDataImporter
             if (ittype == "date")
             {
                 if (comboBoxDateFormat.SelectedItem.ToString() == "--select--") append_warning(fixedwarning + "Item is date but no date format is selected in parameters");
-                ConvertedDate = DateUtilities.ConvertToODMFormat(ItemVal, comboBoxDateFormat.SelectedItem.ToString());
+                ConvertedDate = Utilities.ConvertToODMFormat(ItemVal, comboBoxDateFormat.SelectedItem.ToString());
                 
             }
             if (ittype == "partialDate") ConvertedDate = ConvertToODMPartial(ItemVal);
