@@ -12,60 +12,71 @@ using System.Diagnostics;
 using System.Collections;
 using System.Xml;
 using System.Security.AccessControl;
-
-//1.0	    21/05/2010	    Initial version	                    C. Parlayan, J.A.M. Beliën
-//1.1	    21/04/2012	    Production version	                C. Parlayan
-//2.0       08/11/2012      Production 2.0                      C. Parlayan
-//2.0.1     01/02/2013      Added Repeating events and groups   C. Parlayan
-//2.0.2	    26/03/2013      The GRID now keeps the previously 
-//                          matched items when a new CRF or 
-//                          Group is chosen for more matching.  C. Parlayan
-//2.0.3	    01/04/2013	    Bug solved in matching with 
-//                          repeated items.	                    C. Parlayan
-//2.0.4	    01/05/2013	    Remove white space when matching	C. Parlayan
-//2.0.5	    21/07/2013	    Do not print form data with no 
-//                          items in XML as this causes error 
-//                          in OpenClinica upload.	            C. Parlayan, S. de Ridder
-//2.0.6	    26/08/2013	    Added “Limit number of characters 
-//                          to match” to make matching easier	C. Parlayan
-//2.0.7/8/9	29/08/2013	    Bugs introduced in 2.0.5 solved.	C. Parlayan, S. de Ridder
-//2.1.1	    09/09/2013	    Introduced label-oid file.	        C. Parlayan, J. Rousseau, R. Voorham
-//2.1.2	    01/11/2013	    Bug ItemGroupRepeatKey solved.	    C. Parlayan, R. Voorham
-//2.1.3	    18/11/2013	    Possibility to not generate 
-//                          events if startdate is blank.	    C. Parlayan, S. de Ridder
-//2.1.4	    01/11/2013	    XML escaping.	                    C. Parlayan, J. Rousseau
-//2.2       30/11/2013      Input file allows EVENT_INDEX 
-//                          and GROUP_INDEX to be defined 
-//                          to accept repeating events/items
-//                          in rows                             C. Parlayan, J. Rousseau
-//3.0       20/12/2013      Type and range validations,
-//                          better messaging                    C. Parlayan
-//3.01      20-01-2014      XML parsing error while RangeCheck  J. Rousseau, C. Parlayan
-//3.02      20-01-2014      Warnings to status window           J. Rousseau, C. Parlayan
-//3.03      22-01-2014      matching now uses "ItemName"  
-//                          instead of ItemOID                  C. Parlayan, S. de Ridder
-//3.03      24-01-2014      matching is done for all groups  
-//                          in a CRF in one go                  C. Parlayan, S. de Ridder
-//4.0       29-01-2014      Better UI                           C. Parlayan
-//4.01      07-02-2014      Show/hide Subj related columns
-//                          bugfixes on validation              C. Parlayan, J. Rousseau, S. de Ridder
-//4.1       10-02-2014      Auto detection and show/hide         
-//                          subject related columns             C. Parlayan, J. Rousseau, S. de Ridder
-//4.1       10-02-2014      Added Multiple select to         
-//                          validations                         C. Parlayan, J. Rousseau
-//4.1       10-02-2014      Leading zeroes in times and           
-//                          subjectid's in log records          C. Parlayan, J. Rousseau
-//4.1       10-02-2014      fix: "-- select --" in insert            
-//                          statements                          C. Parlayan, S. de Ridder
-//4.2       17-02-2014      Show/hidden warn ONLY if show and 
-//                          has no value                        C. Parlayan, S. de Ridder
-//4.2.1     19-02-2014      Ignore range check if other 
-//                          problems detected with data         C. Parlayan, S. de Ridder
-//4.3       21-02-2014      SE/GR repeating index in rows 
-//                          bugs fixed                          C. Parlayan, J. Rousseau
-//4.3       21-02-2014      Better error messages if input
-//                          file is open by other programs      C. Parlayan, J. Rousseau
-
+/******************************************************************************************
+1.0	        21/05/2010      Initial version	                    C. Parlayan, J.A.M. Beliën
+1.1	        21/04/2012	    Production version	                C. Parlayan
+2.0         08/11/2012      Production 2.0                      C. Parlayan
+2.0.1       01/02/2013      Added Repeating events and groups   C. Parlayan
+2.0.2	    26/03/2013      The GRID now keeps the previously 
+                            matched items when a new CRF or 
+                            Group is chosen for more matching.  C. Parlayan
+2.0.3	    01/04/2013	    Bug solved in matching with 
+                            repeated items.	                    C. Parlayan
+2.0.4	    01/05/2013	    Remove white space when matching	C. Parlayan
+2.0.5	    21/07/2013	    Do not print form data with no 
+                            items in XML as this causes error 
+                            in OpenClinica upload.	            C. Parlayan, S. de Ridder
+2.0.6	    26/08/2013	    Added “Limit number of characters 
+                            to match” to make matching easier	C. Parlayan
+2.0.7/8/9	29/08/2013	    Bugs introduced in 2.0.5 solved.	C. Parlayan, S. de Ridder
+2.1.1	    09/09/2013	    Introduced label-oid file.	        C. Parlayan, J. Rousseau, R. Voorham
+2.1.2	    01/11/2013	    Bug ItemGroupRepeatKey solved.	    C. Parlayan, R. Voorham
+2.1.3	    18/11/2013	    Possibility to not generate 
+                            events if startdate is blank.	    C. Parlayan, S. de Ridder
+2.1.4	    01/11/2013	    XML escaping.	                    C. Parlayan, J. Rousseau
+2.2         30/11/2013      Input file allows EVENT_INDEX 
+                            and GROUP_INDEX to be defined 
+                            to accept repeating events/items
+                            in rows                             C. Parlayan, J. Rousseau
+3.0       20/12/2013        Type and range validations,
+                            better messaging                    C. Parlayan
+3.01      20-01-2014        XML parsing error while RangeCheck  J. Rousseau, C. Parlayan
+3.02      20-01-2014        Warnings to status window           J. Rousseau, C. Parlayan
+3.03      22-01-2014        matching now uses "ItemName"  
+                            instead of ItemOID                  C. Parlayan, S. de Ridder
+3.03      24-01-2014        matching is done for all groups  
+                            in a CRF in one go                  C. Parlayan, S. de Ridder
+4.0       29-01-2014        Better UI                           C. Parlayan
+4.01      07-02-2014        Show/hide Subj related columns
+                            bugfixes on validation              C. Parlayan, J. Rousseau, S. de Ridder
+4.1       10-02-2014        Auto detection and show/hide         
+                            subject related columns             C. Parlayan, J. Rousseau, S. de Ridder
+4.1       10-02-2014        Added Multiple select to         
+                            validations                         C. Parlayan, J. Rousseau
+4.1       10-02-2014        Leading zeroes in times and           
+                            subjectid's in log records          C. Parlayan, J. Rousseau
+4.1       10-02-2014        fix: "-- select --" in insert            
+                            statements                          C. Parlayan, S. de Ridder
+4.2       17-02-2014        Show/hidden warn ONLY if show and 
+                            has no value                        C. Parlayan, S. de Ridder
+4.2.1     19-02-2014        Ignore range check if other 
+                            problems detected with data         C. Parlayan, S. de Ridder
+4.3       21-02-2014        SE/GR repeating index in rows 
+                            bugs fixed                          C. Parlayan, J. Rousseau
+4.3       21-02-2014        Better error messages if input
+                            file is open by other programs      C. Parlayan, J. Rousseau
+4.4       11-03-2014        Decoupeling of the input 
+                            parameters from the view, 
+                            introduction of a utilities
+                            class, a OutputFile class to 
+                            stream output to, and a main 
+                            converter which is the controler 
+                            of the conversion (MVC), various
+                            fixes.
+                            Project is now available on github 
+                            for change history.                 C. Parlayan, J. Rousseau
+                            
+*******************************************************************************************/
 namespace OCDataImporter
 {
     
@@ -74,7 +85,7 @@ namespace OCDataImporter
     public partial class Form1 : Form
     {
         
-        public const String VERSION_LABEL = "OCDataImporter Version 4.3";   
+        public const String VERSION_LABEL = "OCDataImporter Version 4.4";   
         
         public bool DEBUGMODE = true;
         public bool labelOCoidExists = false; // 2.1.1 If labelOCoid file exists, get the oid from that file, instead of 'SS_label'...
