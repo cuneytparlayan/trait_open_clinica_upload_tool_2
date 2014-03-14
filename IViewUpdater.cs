@@ -6,7 +6,7 @@ using System.Text;
 namespace OCDataImporter
 {
     /// <summary>
-    /// Definest the methods a class must implement to update external view components from 
+    /// Defines the methods a class must implement to update external view components from 
     /// the model or controller.
     /// </summary>
     interface IViewUpdater

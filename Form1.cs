@@ -82,21 +82,19 @@ namespace OCDataImporter
     
     
     
-    public partial class Form1 : Form
+    public partial class Form1 : Form, IViewUpdater
     {
         
         public const String VERSION_LABEL = "OCDataImporter Version 4.4";   
         
-        public bool DEBUGMODE = true;
+        public const bool DEBUGMODE = true;
+        
         public bool labelOCoidExists = false; // 2.1.1 If labelOCoid file exists, get the oid from that file, instead of 'SS_label'...
         public string dmpfilename = "";
         public string dmpprm = "";
         Thread MyThread;
         FileStream fpipdf;
-        string Mynewline = System.Environment.NewLine;
-        static public string workdir = "";
-        static public string input_oc = "";
-        static public string input_data = "";
+        string Mynewline = System.Environment.NewLine;                
         static public string input_oid = "";
         ArrayList Items = new ArrayList();
         ArrayList DataFileItems = new ArrayList();
@@ -113,40 +111,23 @@ namespace OCDataImporter
         ArrayList Warnings = new ArrayList();
         ArrayList AllValuesInOneRow = new ArrayList();
         ArrayList Hiddens = new ArrayList();
-        string TheStudyOID = "";
-        string TheStudyEventOID = "";
-        string EventStartDates = "";
-        string TheItemId = "";
-        string TheFormOID = "";
-        string TheItemGroupDef = "";
-        char RepSeparator = ';';
+        
+        
+        
         ArrayList InsertKeys = new ArrayList();
-        FileStream fpoDIM;
-        FileStream fpoINS;
-        FileStream fpoLOG;
-        FileStream fpoINSR;
-        FileStream fpoDEL;
-        FileStream fpoDELR;
-        string INSF = "";
+        
+        
         string LOG = "";
-        string INSFR = "";
-        string DIMF = "";
-        string DELF = "";
-        string DELFR = "";
+        
+        
+        
+        
         char Delimiter = ';';
         char tab = '\u0009';
         int sepcount = 1;
         int PROGBARSIZE = 0;
-        int WARCOUNT = 0;
-        int keyIndex = 0;
-        int sexIndex = 0;
-        int PIDIndex = 0;
-        int DOBIndex = 0;
-        int STDIndex = 0;
-        string sexItem = "";
-        string PIDItem = "";
-        string DOBItem = "";
-        string STDItem = "";
+
+        
         int linelen = 0;
         // Places in Data Grid
         private const int DGIndexOfDataItem = 0;
@@ -157,26 +138,33 @@ namespace OCDataImporter
         private const int DGIndexOfPID = 5;
         private const int DGIndexOfDOB = 6;
         private const int DGIndexOfSTD = 7;
-        string SUBJECTSEX_M = "";
-        string SUBJECTSEX_F = "";
-        string repeating_groups = "";
-        string repeating_events = "";
-        // ODM file splitting
-        string OUTF = "";
-        string OUTFBASIS = "";
-        int OUTFLINECOUNTER = 0;
-        int OUTFFILECOUNTER = 1;
-        int OUTFMAXLINES = 0;
+        
+        
+        
+        
+        
         string selectedEventRepeating = "No";
         
         static public string insert1a = "INSERT INTO subject(status_id, gender, unique_identifier, date_created, owner_id, dob_collected, date_of_birth)";
         static public string insert1 = "INSERT INTO subject(status_id, gender, unique_identifier, date_created, owner_id, dob_collected)";
         static public string insert2 = "INSERT INTO study_subject(label, study_id, status_id, enrollment_date, date_created, date_updated, owner_id,  oc_oid, subject_id)";
         static public string insert3 = "INSERT INTO study_event(study_event_definition_id, study_subject_id, location, sample_ordinal, date_start, owner_id, status_id, date_created, subject_event_status_id, start_time_flag, end_time_flag)";
+
+        
+        private DataGrid dataGrid;
+        private StudyMetaDataValidator studyMetaDataValidator;
+        private ConversionSettings conversionSettings;
+        private WarningLog warningLog;
         
         public Form1()
         {
-            InitializeComponent();
+            InitializeComponent();            
+
+            conversionSettings = new ConversionSettings();
+            warningLog = new WarningLog();
+            studyMetaDataValidator = new StudyMetaDataValidator(warningLog);
+            dataGrid = new DataGrid(conversionSettings, studyMetaDataValidator, dataGridView1, this);
+
             Menu = new MainMenu();
             if (DEBUGMODE) MessageBox.Show("D E B U G M O D E - !!!!!", "OCDataImporter", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             Menu.MenuItems.Add("&File");
@@ -198,10 +186,11 @@ namespace OCDataImporter
             {
                 MessageBox.Show("Problem opening user manual. Message = " + exx.Message, "OCDataImporter", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            workdir = Directory.GetCurrentDirectory();
+            conversionSettings.workdir = Directory.GetCurrentDirectory();
             StateReadFiles();
         }
 
+        /*
         public bool Get_DataFileItems_FrpmInput(string theInputFile)
         {
             // Find out how many data items are present per line and build array of data item names for using in data grid
@@ -234,7 +223,8 @@ namespace OCDataImporter
             }
             return (true);
         }
-
+        */
+        
         public void Get_label_oid(string theInputFile)
         {
             // Get the abnormal oid's from file.
@@ -263,7 +253,7 @@ namespace OCDataImporter
 
         public void Get_work_file()
         {
-            MyFileDialog mfd = new MyFileDialog(workdir);
+            MyFileDialog mfd = new MyFileDialog(conversionSettings.workdir);
             if (mfd.fntxt == "" || mfd.fnxml == "") return;
             textBoxInput.Text = mfd.fnxml + ";" + mfd.fntxt + ";" + mfd.fnoid;
             if (mfd.fnoid != "") labelOCoidExists = true;
@@ -306,18 +296,7 @@ namespace OCDataImporter
         void MenuHelpAboutOnClick(object obj, EventArgs ea)
         {
             MessageBox.Show(VERSION_LABEL + " - Made by: C. Parlayan, VU Medical Center, Dept. of Pathology, Amsterdam, The Netherlands - 2010-2014", Text);
-        }
-        private string FillTildes(string var, int len)
-        {
-            if (var.Length < len)
-            {
-                int aantalnullen = len - var.Length;
-                string voornullen = "";
-                for (int ii = 0; ii < aantalnullen; ii++) voornullen += "~";
-                return (var + voornullen);
-            }
-            return (var);
-        }
+        }        
 
         public void FillTheParams()
         {
@@ -355,7 +334,8 @@ namespace OCDataImporter
                 textBoxOutput.Text += Mynewline + "No parameters file found." + Mynewline + ex.Message;
                 return;
             }
-        }
+        }        
+
 
         public bool FillTheGrid()
         {
@@ -424,22 +404,136 @@ namespace OCDataImporter
                     exit_error(ex.ToString());
                 }
             }
+        }        
+
+        /**
+         * 4 methodes defined in IViewUpdater
+         * 
+         */
+        public void updateProgressbarStep(int step)
+        {
+            progressBar1.Step = step;
         }
 
-        private void masterHeader()
-        {            
-            String timeStamp = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
-            AppendToFile(DIMF, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            AppendToFile(DIMF, "<ODM xmlns=\"http://www.cdisc.org/ns/odm/v1.3\"");
-            AppendToFile(DIMF, "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
-            AppendToFile(DIMF, "xsi:schemaLocation=\"http://www.cdisc.org/ns/odm/v1.3 ODM1-3.xsd\"");
-            AppendToFile(DIMF, "ODMVersion=\"1.3\" FileOID=\"1D20080412202420\" FileType=\"Snapshot\"");
-            AppendToFile(DIMF, "Description=\"Dataset ODM\" CreationDateTime=\"" + timeStamp + "\" >");
-            AppendToFile(DIMF, "<ClinicalData StudyOID=\"" + TheStudyOID + "\" MetaDataVersionOID=\"v1.0.0\">");
+
+        public void performProgressbarStep()
+        {
+            progressBar1.PerformStep();
         }
+
+
+        public void appendText(String aMessage)
+        {
+            textBoxOutput.Text += aMessage;
+        }
+
+
+        public void resetText()
+        {
+            textBoxOutput.Text = "";
+        }
+
+        /// <summary>
+        /// Initializes the user interface elements before the conversion
+        /// </summary>
+        private void initializeUserInterfaceElements()
+        {
+            if (conversionSettings.pathToInputFile.Contains("\\") == false)
+            {
+                conversionSettings.pathToInputFile = conversionSettings.workdir + "\\" + conversionSettings.pathToInputFile;
+            }
+            if (Delimiter != tab) textBoxOutput.Text += "\r\nData file is: " + conversionSettings.pathToInputFile + ", delimited by: " + Delimiter + " Number of items per line: " + sepcount + "\r\n";
+            else textBoxOutput.Text += "\r\nData file is: " + conversionSettings.pathToInputFile + ", delimited by: tab, Number of items per line: " + sepcount + "\r\n";
+            textBoxOutput.Text += "Started in directory " + conversionSettings.workdir + ". This may take several minutes...\r\n";
+
+            buttonStartConversion.Enabled = false;
+            buttonExit.Enabled = false;
+            buttonCancel.Enabled = true;
+            buttonCancel.BackColor = System.Drawing.Color.LightGreen;
+            progressBar1.Value = 0;
+            this.Cursor = Cursors.AppStarting;
+        }
+
+        /// <summary>
+        /// Resets the user interface elements after the conversion and update the fields with the information
+        /// of the run which just finished.
+        /// </summary>
+        private void resetUserInterfaceElements(Converter converter)
+        {
+            buttonStartConversion.Enabled = false;
+            buttonStartConversion.BackColor = SystemColors.Control;
+            button_start.Enabled = false;
+            buttonExit.Enabled = true;
+            buttonBrowse.Enabled = false;
+            buttonCancel.Enabled = false;
+            buttonCancel.BackColor = SystemColors.Control;
+            linkLabelBuildDG.Enabled = false;
+            linkbuttonSHCols.Enabled = false;
+            linkLabel1.Enabled = false;
+            textBoxInput.Focus();
+            this.Cursor = Cursors.Arrow;
+            progressBar1.Value = PROGBARSIZE;
+            int numberOfWarnings = warningLog.getWarningCount();
+
+
+            textBoxOutput.Text += warningLog.ToString();
+
+            labelWarningCounter.Text = "WARNINGS: " + numberOfWarnings.ToString();
+            if (numberOfWarnings == 0)
+            {                
+                warningLog.appendMessage(DateTime.Now + " Finished successfully.");
+                MessageBox.Show("Process finished successfully", "OCDataImporter", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Process ended with errors or warnings: See OCDataImporter_log.txt and/or OCDataImporter_warning.txt for details", "OCDataImporter", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxOutput.Text += "*** There are errors or warnings: See OCDataImporter_log.txt and/or OCDataImporter_warning.txt for details ***";
+            }
+            if (converter.numberOfOutputFiles > 1)
+            {
+                textBoxOutput.Text += " Total: " + converter.numberOfOutputFiles.ToString() + " ODM files.";
+            }
+            textBoxOutput.SelectionStart = textBoxOutput.Text.Length;
+            textBoxOutput.ScrollToCaret();
+        }       
 
         private void buttonStartConversion_Click_1(object sender, EventArgs e)
         {
+            BuildRepeatingEventString();
+            BuildRepeatingGroupString();
+            initializeUserInterfaceElements();
+
+            // delete DataImport*.xml
+            string[] txtList = Directory.GetFiles(conversionSettings.workdir, "DataImport_*.xml");
+            if (txtList.Length > 0)
+            {
+                if (MessageBox.Show("DataImport_* files will be overwritten. Do you want to delete the old files?", "Confirm delete old DataImport*.xml files", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                {
+                    foreach (string f in txtList) File.Delete(f);
+                }
+            }
+
+            LOG = conversionSettings.workdir + "\\OCDataImporter_warnings.txt";
+            conversionSettings.checkForDuplicateSubjects = checkBoxDup.Checked;
+            conversionSettings.useTodaysDateIfNoEventDate = radioButtonUseTD.Checked;
+            conversionSettings.dateFormat = comboBoxDateFormat.SelectedItem.ToString();
+
+            dumpTheGrid();
+            Converter converter = new Converter(conversionSettings, studyMetaDataValidator, dataGridView1, warningLog, this);
+            try
+            {
+                converter.DoWork(dataGrid);
+            }
+            catch (OCDataImporterException ocdie) {
+                    MessageBox.Show(ocdie.ToString(), "OCDataImporter", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    exit_error(ocdie.ToString());
+            }
+            resetUserInterfaceElements(converter);
+            
+            // *******
+            // Start of old code
+            // 
+            /*
             SUBJECTSEX_M = textBoxSubjectSexM.Text;
             SUBJECTSEX_F = textBoxSubjectSexF.Text;
             if (IsNumber(textBoxMaxLines.Text) == false)
@@ -453,7 +547,7 @@ namespace OCDataImporter
             if (OUTFMAXLINES == 0) OUTFMAXLINES = 99999;
             OUTFBASIS = workdir + "\\DataImport_";
             OUTF = OUTFBASIS + OUTFFILECOUNTER + ".xml";
-            // delete DataImport*.xml 
+            // delete DataImport*.xml
             string[] txtList = Directory.GetFiles(workdir, "DataImport_*.xml");
             if (txtList.Length > 0)
             {
@@ -487,7 +581,7 @@ namespace OCDataImporter
             safeClose(fpoDELR);
             safeClose(fpoLOG);
             INSF = workdir + "\\Inserts.sql";
-            LOG = workdir + "\\OCDataImporter_warnings.txt"; 
+            LOG = workdir + "\\OCDataImporter_warnings.txt";
             INSFR = workdir + "\\Inserts_ONLY_STUDY_EVENTS.sql";
             DIMF = OUTF;
             DELF = workdir + "\\Deletes.sql";
@@ -592,7 +686,7 @@ namespace OCDataImporter
                         mi[2] = FillTildes(mi[2], maxGR);
                         if (ev_rep != "") mi[0] = mi[0] + "*" + ev_rep;
                         if (gr_rep != "") mi[2] = mi[2] + "*" + gr_rep;
-                        else mi[2] = "A" + mi[2];  // This is due to an OC bug; UNGROUPED items must come before the grouped items in the grid.
+                        else mi[2] = "A" + mi[2]; // This is due to an OC bug; UNGROUPED items must come before the grouped items in the grid.
                         SortableDG.Add(mi[0] + "." + mi[1] + "." + mi[2] + "." + mi[3] + "^" + theDataItem + "^" + dataGridView1.Rows[i].Cells[DGIndexOfKey].Value.ToString() + "^" + dataGridView1.Rows[i].Cells[DGIndexOfDate].Value.ToString() + "^" + dataGridView1.Rows[i].Cells[DGIndexOfSex].Value.ToString() + "^" + dataGridView1.Rows[i].Cells[DGIndexOfPID].Value.ToString() + "^" + dataGridView1.Rows[i].Cells[DGIndexOfDOB].Value.ToString() + "^" + dataGridView1.Rows[i].Cells[DGIndexOfSTD].Value.ToString());
                     }
                 }
@@ -661,9 +755,9 @@ namespace OCDataImporter
                 ReplacePairStrings.Add(Rline);
             }
 
-            if (input_data.Contains("\\") == false) input_data = workdir + "\\" + input_data;
-            if (Delimiter != tab) textBoxOutput.Text += "\r\nData file is: " + input_data + ", delimited by: " + Delimiter + " Number of items per line: " + sepcount + "\r\n";
-            else textBoxOutput.Text += "\r\nData file is: " + input_data + ", delimited by: tab, Number of items per line: " + sepcount + "\r\n";
+            if (conversionSettings.pathToInputFile.Contains("\\") == false) conversionSettings.pathToInputFile = workdir + "\\" + conversionSettings.pathToInputFile;
+            if (Delimiter != tab) textBoxOutput.Text += "\r\nData file is: " + conversionSettings.pathToInputFile + ", delimited by: " + Delimiter + " Number of items per line: " + sepcount + "\r\n";
+            else textBoxOutput.Text += "\r\nData file is: " + conversionSettings.pathToInputFile + ", delimited by: tab, Number of items per line: " + sepcount + "\r\n";
             textBoxOutput.Text += "Started in directory " + workdir + ". This may take several minutes...\r\n";
 
             buttonStartConversion.Enabled = false;
@@ -680,6 +774,7 @@ namespace OCDataImporter
                 MyThread.IsBackground = true;
                 MyThread.Start();
             }
+             */
         }
 
         public string getTodaysDate()
@@ -688,6 +783,7 @@ namespace OCDataImporter
             return dt.ToString("yyyy-MM-dd");
         }
 
+        /**
         public void DoWork()
         {
             string theDate = getTodaysDate();
@@ -699,7 +795,7 @@ namespace OCDataImporter
             InsertKeys.Clear();
             try
             {
-                using (StreamReader sr = new StreamReader(input_data))
+                using (StreamReader sr = new StreamReader(conversionSettings.pathToInputFile))
                 {
                     String line;
                     int linecount = 0;
@@ -981,7 +1077,7 @@ namespace OCDataImporter
                                     if (selectedEventRepeating == "Yes")
                                     {
                                         if (event_index_row != -1) theSERK = split[event_index_row];
-                                        else theSERK = Get_SE_RepeatingKey_FromStudyDataColumn(theStudyDataColumn);
+                                        else theSERK = Utilities.Get_SE_RepeatingKey_FromStudyDataColumn(theStudyDataColumn);
                                     }
                                     theXMLEvent += "        <StudyEventData StudyEventOID=\"" + theWrittenSE + "\" StudyEventRepeatKey=\"" + CheckRK(theSERK, linecount) + "\">" + Mynewline;
                                     TheFormOID = nwdingen[1];
@@ -1231,6 +1327,8 @@ namespace OCDataImporter
             textBoxOutput.SelectionStart = textBoxOutput.Text.Length;
             textBoxOutput.ScrollToCaret();
         }
+         **/
+        /*
         public bool IsDuplicatePID(string thePIDtoCheck)
         {
             bool found = false;
@@ -1248,67 +1346,8 @@ namespace OCDataImporter
             }
             return (found);
         }
-        public string Get_SE_RepeatingKey_FromStudyDataColumn(string theName)
-        {
-            // Format: Adverse_Event_E1_G3      We must get the "1" here. It may not exist, as in:  SurgeryPlan_E_G2 or, for any other reason. -> Then error!   
-            string errtext = "Error while getting STUDYEVENT Repeating Key: Cant resolve the DataItemColumnName " + theName + ". The proper name should look like 'DataItem_E2_G3 Where E2 means Event repeating key = 2 and G3 means Group repeating key = 3. \r\nASSUMING 1 AS REPEATING KEY...If this is not what you meant, the generated files ARE INCOMPLETE AND CAN NOT BE USED. See documentation for more.";
-            string[] split = theName.Split('_');
-            int lengtOfName = split.Length;
-            int waarde = -1;
-            try
-            {
-                if (lengtOfName >= 2 && split[lengtOfName - 1].Length > 1 && split[lengtOfName - 1].StartsWith("E"))
-                {
-                    waarde = System.Convert.ToInt16(split[lengtOfName - 1].Substring(1));
-                    if (waarde > 0) return (waarde.ToString());
-                }
-                else if (lengtOfName >= 3 && split[lengtOfName - 2].Length > 1 && split[lengtOfName - 2].StartsWith("E"))
-                {
-                    waarde = System.Convert.ToInt16(split[lengtOfName - 2].Substring(1));
-                    if (waarde > 0) return (waarde.ToString());
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(errtext + "    " + ex.Message, "OCDataImporter", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                exit_error(errtext + "    " + ex.Message);
-            }
-            // MessageBox.Show(errtext, "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            // exit_error(errtext);  Version 2.0.1 -> Assume 1 if the repeating key cant be determined. (and dont exit) The error message tells the user about the caveats.
-            return ("1");
-        }
-
-        public string Get_GR_RepeatingKey_FromStudyDataColumn(string theName)
-        {
-            // Format: Adverse_Event_E1_G3      We must get the "3" here; G=group, C= WAS also group, not anymore as of 2.0.2 to avoid confusion
-            string errtext = "Error while getting GROUP Repeating Key: Cant resolve the DataItemColumnName " + theName + ". The proper name should look like 'DataItem_E2_G3 Where E2 means StudyEvent repeating key = 2 and G3 means Group repeating key = 3. \r\nExiting...The generated files ARE INCOMPLETE AND CAN NOT BE USED";
-            string[] split = theName.Split('_');
-            int lengtOfName = split.Length;
-            int waarde = -1;
-            try
-            {
-                if (lengtOfName >= 2 && split[lengtOfName - 1].Length > 1 && (split[lengtOfName - 1].StartsWith("G")))
-                {
-                    waarde = System.Convert.ToInt16(split[lengtOfName - 1].Substring(1));
-                    if (waarde > 0) return (waarde.ToString());
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(errtext + "    " + ex.Message, "OCDataImporter", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                exit_error(errtext + "    " + ex.Message);
-            }
-            //MessageBox.Show(errtext, "OCDataImporter", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-            //exit_error(errtext);
-            return ("N");  // this means: Cant determine but maybe going to get from row: the check will be done in DoWork
-        }
-
-        private void masterClose()
-        {
-            AppendToFile(DIMF, "</ClinicalData>");
-            AppendToFile(DIMF, "</ODM>");
-        }
-
+        */
+        /*
         public void check_index_of_item(int linecount, int myioi)
         {
             if (myioi < 0)
@@ -1318,7 +1357,9 @@ namespace OCDataImporter
                 exit_error(errtext);
             }
         }
+         * */
 
+        /*
         public string Repl(string it, string val)
         {
             foreach (string one in ReplacePairStrings)
@@ -1349,7 +1390,8 @@ namespace OCDataImporter
             }
             return (val);
         }
-
+        */
+        /*  
         public int GetIndexOfItem(string item)
         {
             for (int i = 0; i < dataGridView1.RowCount; i++)
@@ -1366,6 +1408,8 @@ namespace OCDataImporter
             }
             return (-1);
         }
+        */
+        
         public void GetStudyEventDef(string path)
         {
             try
@@ -1383,7 +1427,10 @@ namespace OCDataImporter
                         if (reader.AttributeCount == 4)
                         {
                             string SEOID = reader.GetAttribute(0);
-                            if (DEBUGMODE) textBoxOutput.Text += reader.GetAttribute(0) + ", Name = " + reader.GetAttribute(1) + ", Repeating = " + reader.GetAttribute(2) + ", Type = " + reader.GetAttribute(3) + Mynewline;
+                            if (DEBUGMODE)
+                            {
+                                textBoxOutput.Text += reader.GetAttribute(0) + ", Name = " + reader.GetAttribute(1) + ", Repeating = " + reader.GetAttribute(2) + ", Type = " + reader.GetAttribute(3) + Mynewline;
+                            }
                             comboBoxSE.Items.Insert(0, SEOID);
                         }
                     }
@@ -1411,14 +1458,14 @@ namespace OCDataImporter
 
         private void BuildRepeatingGroupString()
         {
-            repeating_groups = "";
+            String repeating_groups = "";
             try
             {
                 XmlReaderSettings settings = new XmlReaderSettings();
                 settings.ConformanceLevel = ConformanceLevel.Fragment;
                 settings.IgnoreWhitespace = true;
                 settings.IgnoreComments = true;
-                XmlReader reader = XmlReader.Create(input_oc, settings);
+                XmlReader reader = XmlReader.Create(conversionSettings.pathToMetaDataFile, settings);
                 while (reader.Read())
                 {
                     if (reader.Name == "ItemGroupDef")
@@ -1436,18 +1483,19 @@ namespace OCDataImporter
                 MessageBox.Show("Can't get Group definitions; please check the format of the file", "OCDataImporter", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 exit_error(ex.ToString());
             }
+            studyMetaDataValidator.repeatingGroups = repeating_groups;
         }
 
         private void BuildRepeatingEventString()
         {
-            repeating_events = "";
+            String repeating_events = "";
             try
             {
                 XmlReaderSettings settings = new XmlReaderSettings();
                 settings.ConformanceLevel = ConformanceLevel.Fragment;
                 settings.IgnoreWhitespace = true;
                 settings.IgnoreComments = true;
-                XmlReader reader = XmlReader.Create(input_oc, settings);
+                XmlReader reader = XmlReader.Create(conversionSettings.pathToMetaDataFile, settings);
                 while (reader.Read())
                 {
                     if (reader.Name == "StudyEventDef")
@@ -1465,6 +1513,7 @@ namespace OCDataImporter
                 MessageBox.Show("Can't get Event definitions; please check the format of the meta-file", "OCDataImporter", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 exit_error(ex.ToString());
             }
+            studyMetaDataValidator.repeatingEvents = repeating_events;
         }
 
         private void comboBoxGR_SelectedIndexChanged(object sender, EventArgs e)
@@ -1484,9 +1533,12 @@ namespace OCDataImporter
                 settings.ConformanceLevel = ConformanceLevel.Fragment;
                 settings.IgnoreWhitespace = true;
                 settings.IgnoreComments = true;
-                XmlReader reader = XmlReader.Create(input_oc, settings);
+                XmlReader reader = XmlReader.Create(conversionSettings.pathToMetaDataFile, settings);
 
-                if (DEBUGMODE) textBoxOutput.Text += "Selected Group = " + myGR;
+                if (DEBUGMODE)
+                {
+                    textBoxOutput.Text += "Selected Group = " + myGR;
+                }
                 while (reader.Read())
                 {
                     if (reader.Name == "ItemGroupDef")
@@ -1496,20 +1548,29 @@ namespace OCDataImporter
                             string SEOID = reader.GetAttribute(0);
                             if (SEOID == myGR)
                             {
-                                if (DEBUGMODE) textBoxOutput.Text += " Repeating = " + reader.GetAttribute(2) + Mynewline; 
+                                if (DEBUGMODE)
+                                {
+                                    textBoxOutput.Text += " Repeating = " + reader.GetAttribute(2) + Mynewline;
+                                }
                                 string myGRPS = reader.ReadInnerXml();
                                 if (myGRPS.Contains("<ItemRef "))
                                 {
                                     myGRPS = myGRPS.Replace("<ItemRef ", "");
                                     myGRPS = myGRPS.Replace("/>", "~");
-                                    if (DEBUGMODE) textBoxOutput.Text += "Items for the selected Group = " + Mynewline;
+                                    if (DEBUGMODE)
+                                    {
+                                        textBoxOutput.Text += "Items for the selected Group = " + Mynewline;
+                                    }
                                     foreach (string ss in myGRPS.Split('~'))
                                     {
                                         ss.Trim();
                                         if (ss != "" && ss.Contains("ItemOID"))
                                         {
                                             string myIT = "";
-                                            if (DEBUGMODE) textBoxOutput.Text += ss + Mynewline;
+                                            if (DEBUGMODE) { 
+                                                textBoxOutput.Text += ss + Mynewline; 
+                                            }
+
                                             myIT = ss.Substring(9);
                                             int stoppunt = myIT.IndexOf('"');
                                             myIT = myIT.Substring(0, stoppunt);
@@ -1554,8 +1615,11 @@ namespace OCDataImporter
                 settings.ConformanceLevel = ConformanceLevel.Fragment;
                 settings.IgnoreWhitespace = true;
                 settings.IgnoreComments = true;
-                XmlReader reader = XmlReader.Create(input_oc, settings);
-                if (DEBUGMODE) textBoxOutput.Text += "Selected CRF = " + myCRF + Mynewline;
+                XmlReader reader = XmlReader.Create(conversionSettings.pathToMetaDataFile, settings);
+                if (DEBUGMODE) { 
+                    textBoxOutput.Text += "Selected CRF = " + myCRF + Mynewline; 
+                }
+
                 while (reader.Read())
                 {
                     if (reader.Name == "FormDef")
@@ -1570,14 +1634,20 @@ namespace OCDataImporter
                                 {
                                     myGRPS = myGRPS.Replace("<ItemGroupRef ", "");
                                     myGRPS = myGRPS.Replace("/>", "~");
-                                    if (DEBUGMODE) textBoxOutput.Text += "Groups for the selected CRF = " + Mynewline;
+                                    if (DEBUGMODE)
+                                    {
+                                        textBoxOutput.Text += "Groups for the selected CRF = " + Mynewline;
+                                    }
                                     foreach (string ss in myGRPS.Split('~'))
                                     {
                                         ss.Trim();
                                         if (ss != "" && ss.Contains("ItemGroupOID"))
                                         {
                                             string myGRP = "";
-                                            if (DEBUGMODE) textBoxOutput.Text += ss + Mynewline;
+                                            if (DEBUGMODE)
+                                            {
+                                                textBoxOutput.Text += ss + Mynewline;
+                                            }
                                             myGRP = ss.Substring(14);
                                             int stoppunt = myGRP.IndexOf('"');
                                             myGRP = myGRP.Substring(0, stoppunt);
@@ -1632,7 +1702,7 @@ namespace OCDataImporter
                 settings.ConformanceLevel = ConformanceLevel.Fragment;
                 settings.IgnoreWhitespace = true;
                 settings.IgnoreComments = true;
-                XmlReader reader = XmlReader.Create(input_oc, settings);
+                XmlReader reader = XmlReader.Create(conversionSettings.pathToMetaDataFile, settings);
                 if (DEBUGMODE) textBoxOutput.Text += "Selected Study Event = " + mySE;
                 while (reader.Read())
                 {
@@ -1701,7 +1771,7 @@ namespace OCDataImporter
                 settings.ConformanceLevel = ConformanceLevel.Fragment;
                 settings.IgnoreWhitespace = true;
                 settings.IgnoreComments = true;
-                XmlReader reader = XmlReader.Create(input_oc, settings);
+                XmlReader reader = XmlReader.Create(conversionSettings.pathToMetaDataFile, settings);
                 if (DEBUGMODE) textBoxOutput.Text += "Selected Item = " + myIT + Mynewline;
                 while (reader.Read())
                 {
@@ -1727,6 +1797,8 @@ namespace OCDataImporter
                 exit_error(ex.ToString());
             }
         }
+        
+        /*
         static void AppendToFile(string theFile, string theText)
         {
             StreamWriter SW;
@@ -1734,7 +1806,10 @@ namespace OCDataImporter
             SW.WriteLine(theText);
             SW.Close();
         }       
+        */
 
+
+        /*
         private string ConvertToODMPartial(string theSource)
         {
             if (theSource.Trim() == "") return ("");
@@ -1769,15 +1844,18 @@ namespace OCDataImporter
             }
             return ("Error: Unrecognised partial date");
         }       
-        
+        */
+          
         private void exit_error(string probl)
         {   
-            using (StreamWriter swlog = new StreamWriter(workdir + "\\OCDataImporter_log.txt"))
+            using (StreamWriter swlog = new StreamWriter(conversionSettings.workdir + "\\OCDataImporter_log.txt"))
             {
                 swlog.WriteLine(probl);
             }
             Close();
         }
+        
+        /*
         private void append_warning(string probl)
         {
             bool found = false;
@@ -1800,6 +1878,7 @@ namespace OCDataImporter
                 labelWarningCounter.Text = "WARNINGS: " + WARCOUNT.ToString();
             }
         }
+        */
 
         private void buttonBrowse_Click_1(object sender, EventArgs e)
         {
@@ -1814,8 +1893,7 @@ namespace OCDataImporter
         }
 
         private void button_start_Click(object sender, EventArgs e)
-        {
-            WARCOUNT = 0;
+        {            
             dataGridView1.Rows.Clear();
             if (textBoxInput.Text == "" || (textBoxInput.Text.Contains(";") == false))
             {
@@ -1826,23 +1904,23 @@ namespace OCDataImporter
             string[] split = textBoxInput.Text.Split(';');
             if (split[0].Contains(".xml") || split[0].Contains(".XML"))
             {
-                input_oc = split[0];
-                input_data = split[1];
+                conversionSettings.pathToMetaDataFile = split[0];
+                conversionSettings.pathToInputFile = split[1];
             }
             else
             {
-                input_oc = split[1];
-                input_data = split[0];
+                conversionSettings.pathToMetaDataFile = split[1];
+                conversionSettings.pathToInputFile = split[0];
             }
-            if (!Get_DataFileItems_FrpmInput(input_data)) return;  // 1.1b
+            if (!dataGrid.GetDataFileItemsFromInput()) return;  // 1.1b
             if (labelOCoidExists)
             {
-                input_oid = split[2];
+                conversionSettings.pathToMetaDataFile = split[2];
                 Get_label_oid(input_oid);
             }
 
-            dmpfilename = input_data.Substring(0, input_data.Length - 4) + "_grid.dmp";
-            dmpprm = input_data.Substring(0, input_data.Length - 4) + "_parameters.dmp";
+            dmpfilename = conversionSettings.pathToInputFile.Substring(0, conversionSettings.pathToInputFile.Length - 4) + "_grid.dmp";
+            dmpprm = conversionSettings.pathToInputFile.Substring(0, conversionSettings.pathToInputFile.Length - 4) + "_parameters.dmp";
             try
             {
                 FileStream fp_ioc;
@@ -1861,32 +1939,40 @@ namespace OCDataImporter
                 MessageBox.Show(ex.Message, "OCDataImporter", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return;
             }
-            workdir = "";
-            if (input_oc.Contains("\\")) workdir = input_oc.Substring(0, input_oc.LastIndexOf('\\'));
-            else workdir = Directory.GetCurrentDirectory();
+
+            conversionSettings.workdir = "";
+            if (conversionSettings.pathToMetaDataFile.Contains("\\"))
+            {
+                conversionSettings.workdir = conversionSettings.pathToMetaDataFile.Substring(0, conversionSettings.pathToMetaDataFile.LastIndexOf('\\'));
+            }
+            else
+            {
+                conversionSettings.workdir = Directory.GetCurrentDirectory();
+            }
+
             comboBoxSE.Items.Clear();
             comboBoxCRF.Items.Clear();
             comboBoxGR.Items.Clear();
             comboBoxIT.Items.Clear();
             Items.Clear();
-          
+
+            XmlReader reader = null;
             try
             {
                 XmlReaderSettings settings = new XmlReaderSettings();
                 settings.ConformanceLevel = ConformanceLevel.Fragment;
                 settings.IgnoreWhitespace = true;
                 settings.IgnoreComments = true;
-                XmlReader reader = XmlReader.Create(input_oc, settings);
+                reader = XmlReader.Create(conversionSettings.pathToMetaDataFile, settings);
 
                 while (reader.Read())
                 {
                     if (reader.Name == "Study")
                     {
-                        TheStudyOID = reader.GetAttribute(0);
+                        conversionSettings.studyOID = reader.GetAttribute(0);
                         break;
                     }
                 }
-                reader.Close();
             }
             catch (Exception ex)
             {
@@ -1894,8 +1980,16 @@ namespace OCDataImporter
                 exit_error(ex.ToString());
                 return;
             }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+            }
 
-            GetStudyEventDef(input_oc);
+
+            GetStudyEventDef(conversionSettings.pathToMetaDataFile);
 
             if (comboBoxSE.Items.Count == 0)
             {
@@ -1904,11 +1998,20 @@ namespace OCDataImporter
                 buttonStartConversion.Enabled = true;
                 return;
             }
-            if (FillTheGrid() == false) BuildDG(false);
-            BuildVerificationArrays();
+            conversionSettings.selectedStudyEvent = comboBoxSE.SelectedItem.ToString();
+            conversionSettings.selectedCRF = comboBoxCRF.SelectedItem.ToString();
+
+            if (FillTheGrid() == false)
+            {
+                dataGrid.BuildDG(false);
+            }
+            studyMetaDataValidator.BuildVerificationArrays(conversionSettings.pathToMetaDataFile, conversionSettings.workdir + "\\OCDataImporter_verification.txt", DEBUGMODE);
             StateParametres();
         }
 
+
+       
+        /*
         private void BuildDG(bool matchcolumns)
         {
             string key = "False";
@@ -2047,7 +2150,7 @@ namespace OCDataImporter
                 }
             }
         }
-
+        */
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Process is not finished yet. If you cancel the process now, the generated files will be INCOMPLETE AND CAN NOT BE USED. Are you sure you want to cancel?", "OCDataImporter asks confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.No) return;
@@ -2095,32 +2198,34 @@ namespace OCDataImporter
         {
             if (comboBoxSE.Items.Count > 0)
             {
-                if (comboBoxSE.SelectedItem.ToString() != "-- select --") BuildDG(true);
+                if (comboBoxSE.SelectedItem.ToString() != "-- select --")
+                {
+                    conversionSettings.selectedStudyEvent = comboBoxSE.SelectedItem.ToString();
+                    conversionSettings.selectedCRF = comboBoxCRF.SelectedItem.ToString();
+                    dataGrid.BuildDG(true);
+                }
                 else MessageBox.Show("Please select a StudyEvent and a CRF before matching.", "OCDataImporter");
             }
             else MessageBox.Show("Please read input files first.", "OCDataImporter");
         }
+
+        /*
         public string CheckRK(string rk, int line)
         {
-            if (IsNumber(rk)) return (rk);
+            if (Utilities.IsNumber(rk)) return (rk);
             append_warning("Event and/or Group repeat index can't be determined at line: " + line.ToString());
             return ("ERROR: " + rk);
         }
-        public bool IsNumber(String s)
-        {
-            bool value = true;
-            foreach (Char c in s.ToCharArray())
-            {
-                value = value && Char.IsDigit(c);
-            }
-
-            return value;
-        }
+        */
+          
+        /*
         public string Escape(string strtoescape)  // 2.1.4 xml escaping
         {
             return (strtoescape.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;").Replace("\"", "&quot;").Replace("'", "&apos;"));
         }
+         */
 
+        /*
         private string GetGroupFromItemCRF(string ItemOID, string FormOID)
         {
             foreach (string idfs in ItemGroupDefs)
@@ -2134,7 +2239,9 @@ namespace OCDataImporter
             }
             return ("NOTFOUND1");
         }
+        */
         
+        /*
         private string GetItemOIDFromItemName(string ItemName, string FormOID)
         {
             foreach (string idfs in ItemDefForm)
@@ -2149,7 +2256,9 @@ namespace OCDataImporter
             }            
             return ("NOTFOUND2");
         }
+         */
 
+        /***
         private void BuildVerificationArrays()  // 3.0 Data verification structures 
         {
         //*** ItemGroupDefs: CRF, Group contains which items. Item_OID,OPT = optional, Item_OID,MAN = mandatory. Separated by ~
@@ -2241,10 +2350,10 @@ namespace OCDataImporter
                             if (theType.ToLower() == "date") ItLine = "date^999^999";
                             else
                             {
-                                if (IsNumber(reader.GetAttribute(4)) && IsNumber(reader.GetAttribute(3))) ItLine = theType + "^" + reader.GetAttribute(3) + "^" + reader.GetAttribute(4); // should be float
+                                if (Utilities.IsNumber(reader.GetAttribute(4)) && Utilities.IsNumber(reader.GetAttribute(3))) ItLine = theType + "^" + reader.GetAttribute(3) + "^" + reader.GetAttribute(4); // should be float
                                 else // integer or text
                                 {
-                                    if (IsNumber(reader.GetAttribute(3))) ItLine = theType + "^" + reader.GetAttribute(3) + "^999";
+                                    if (Utilities.IsNumber(reader.GetAttribute(3))) ItLine = theType + "^" + reader.GetAttribute(3) + "^999";
                                     else ItLine = theType + "^999^999";  // we should never come here
                                 }
                             }
@@ -2398,6 +2507,9 @@ namespace OCDataImporter
                 }
             }
         }
+        */
+
+        /*
         private string ValidateItem (string key, string FormOID, string ItemOID, string ItemVal, int linenr)
         {
             // check integer or float, has only digits
@@ -2460,7 +2572,7 @@ namespace OCDataImporter
                 string theval = ItemVal.Replace(".", "").Replace(",", "").Replace("-", "");
                 if (ittype == "float")
                 {
-                    if (IsNumber(theval) == false) append_warning(fixedwarning + "Item type is real but contains non numeric characters: " + ItemVal);
+                    if (Utilities.IsNumber(theval) == false) append_warning(fixedwarning + "Item type is real but contains non numeric characters: " + ItemVal);
                     string thefloatval = ItemVal.Replace(",", ".");
                     if (thefloatval.IndexOf('.') > 0)
                     {
@@ -2471,7 +2583,7 @@ namespace OCDataImporter
                 }
                 else
                 {
-                    if (IsNumber(ItemVal.Replace("-", "")) == false) append_warning(fixedwarning + "Item type is integer but contains non integer characters: " + ItemVal);
+                    if (Utilities.IsNumber(ItemVal.Replace("-", "")) == false) append_warning(fixedwarning + "Item type is integer but contains non integer characters: " + ItemVal);
                 }
             }
             if (ItemVal.Length > itlen) append_warning(fixedwarning + "Item value exceeds required width = " + itlen.ToString()); 
@@ -2570,6 +2682,8 @@ namespace OCDataImporter
             }            
             return (ItemVal);
         }
+        */
+
         private void EnableRead()
         {
             textBoxInput.Enabled = true;
@@ -2586,6 +2700,8 @@ namespace OCDataImporter
             label3.ForeColor = System.Drawing.Color.Black;
             label16.ForeColor = System.Drawing.Color.Black;
         }
+
+
         private void DisableRead()
         {
             textBoxInput.Enabled = false;
@@ -2596,6 +2712,8 @@ namespace OCDataImporter
             label16.Visible = false;
             label3.Visible = false;
         }
+
+
         private void EnableProcess()
         {
             dataGridView1.ReadOnly = false;
@@ -2616,6 +2734,8 @@ namespace OCDataImporter
             label6.ForeColor = System.Drawing.Color.Black;
             label7.ForeColor = System.Drawing.Color.Black;
         }
+
+
         private void DisableProcess()
         {
             dataGridView1.Rows.Clear();
@@ -2639,6 +2759,8 @@ namespace OCDataImporter
             label6.ForeColor = System.Drawing.Color.LightGray;
             label7.ForeColor = System.Drawing.Color.LightGray;
         }
+
+
         private void DisableParams()
         {
             label15.Visible = false;
@@ -2664,6 +2786,8 @@ namespace OCDataImporter
             groupBox1.ForeColor = System.Drawing.Color.LightGray;
             checkBoxDup.ForeColor = System.Drawing.Color.LightGray;
         }
+
+
         private void EnableParams()
         {
             label15.Visible = true;
@@ -2691,6 +2815,8 @@ namespace OCDataImporter
             groupBox1.ForeColor = System.Drawing.Color.Black;
             checkBoxDup.ForeColor = System.Drawing.Color.Black;
         }
+
+
         private void StateReadFiles()
         {
             // initialize program variables
@@ -2702,9 +2828,9 @@ namespace OCDataImporter
             labelOCoidExists = false;
             dmpfilename = "";
             dmpprm = "";
-            workdir = "";
-            input_oc = "";
-            input_data = "";
+            
+            conversionSettings.reset();
+            
             input_oid = "";
             Items.Clear();
             DataFileItems.Clear();
@@ -2717,60 +2843,42 @@ namespace OCDataImporter
             CodeList.Clear();
             MSList.Clear();
             RCList.Clear();
-            Warnings.Clear();
-            TheStudyOID = "";
-            TheStudyEventOID = "";
-            EventStartDates = "";
-            TheItemId = "";
-            TheFormOID = "";
-            TheItemGroupDef = "";
-            RepSeparator = ';';
+            Warnings.Clear();            
+            
+            
             InsertKeys.Clear();
-            INSF = "";
+            
             LOG = "";
-            INSFR = "";
-            DIMF = "";
-            DELF = "";
-            DELFR = "";
+            
             Delimiter = ';';
             sepcount = 1;
             PROGBARSIZE = 0;
-            WARCOUNT = 0;
-            keyIndex = 0;
-            sexIndex = 0;
-            PIDIndex = 0;
-            DOBIndex = 0;
-            STDIndex = 0;
-            sexItem = "";
-            PIDItem = "";
-            DOBItem = "";
-            STDItem = "";
+            
+            
             linelen = 0;
-            SUBJECTSEX_M = "";
-            SUBJECTSEX_F = "";
-            repeating_groups = "";
-            repeating_events = "";
-            OUTF = "";
-            OUTFBASIS = "";
-            OUTFLINECOUNTER = 0;
-            OUTFFILECOUNTER = 1;
-            OUTFMAXLINES = 0;
+
             selectedEventRepeating = "No";
             EnableRead();
             textBoxInput.Focus();
             DisableProcess();
             DisableParams();
         }
+
+
         private void StateParametres()
         {
             DisableRead();
             EnableParams();
         }
+
+
         private void StateProcess()
         {
             DisableParams();
             EnableProcess();
         }
+
+
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             for (int n = 0; n < dataGridView1.RowCount; n++)
@@ -2781,6 +2889,8 @@ namespace OCDataImporter
                 }
             }
         }
+
+
         private void buttonConfPars_Click(object sender, EventArgs e)
         {
             if (textBoxLocation.Text == "")
@@ -2790,6 +2900,8 @@ namespace OCDataImporter
             }
             StateProcess();
         }
+
+
         private void BackToBegin()
         {
             StateReadFiles();
@@ -2797,6 +2909,8 @@ namespace OCDataImporter
             textBoxOutput.Text = "";
             labelWarningCounter.Text = "";
         }
+
+
         private void buttonBackToBegin_Click(object sender, EventArgs e)
         {
             BackToBegin();

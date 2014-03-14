@@ -38,6 +38,11 @@ namespace OCDataImporter
             return (this.messageText == that.messageText);
         }
 
+        public override String ToString()
+        {
+            return timeStamp + " " + messageText;
+        }
+
         public override int GetHashCode()
         {
             return messageText.GetHashCode();
@@ -47,6 +52,7 @@ namespace OCDataImporter
     class WarningLog
     {
         private List<WarningMessage> warningMessageList;
+        private static string LINE_SEPARATOR = System.Environment.NewLine;
         
         
         public WarningLog()
@@ -62,6 +68,20 @@ namespace OCDataImporter
         public int getWarningCount()
         {
             return warningMessageList.Count;
+        }
+
+        /// <summary>
+        /// Returns a list of the message contained in the list
+        /// </summary>
+        /// <returns></returns>
+        public override String ToString()
+        {
+            String ret = "";
+            foreach (WarningMessage warningMessage in warningMessageList)
+            {
+                ret += warningMessage.ToString() + LINE_SEPARATOR;
+            }
+            return ret;
         }
 
         public void appendMessage(String aMessageText)

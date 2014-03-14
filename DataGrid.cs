@@ -33,7 +33,9 @@ namespace OCDataImporter
         public int DOBIndex { get; private set; }
         public int STDIndex { get; private set; }
         public String sexItem { get; private set; }
-        public String EventStartDates { get; private set; }
+        public String eventStartDates { get; private set; }
+        public char delimiter { get; private set; }
+        public int sepcount { get; private set; }
 
 
         private int maxSE = 0;
@@ -44,45 +46,33 @@ namespace OCDataImporter
         /// The length of an input line. Can be used to tell a progressbar how must characters it must process.
         /// </summary>
         private int linelen;
-
-        
-
-            
-        private int sexCount = 0;
-        private int PIDCount = 0;
-        private int DOBCount = 0;
-        private int STDCount = 0;
-            
-
-
-        private int sepcount = 1;
-
         
         private string PIDItem = "";
         private string DOBItem = "";
+        
         public string startDateItem {get; set;}
-        
-        
-
-        private char Delimiter = ';';
+                      
 
         private DataGridView dataGridView;
-        private String pathToInputFile;
-        private String selectedCRF;
-        private String selectedStudyEvent;
+        
 
         private ArrayList dataFileItems = new ArrayList();
         private StudyMetaDataValidator studyMetaDataValidator;
         private IViewUpdater viewUpdater;
+        private ConversionSettings conversionSettings;
 
-        public DataGrid(ConversionSettings conversionSettings, StudyMetaDataValidator studyMetaDataValidator, IViewUpdater viewUpdater)
+        public DataGrid(ConversionSettings conversionSettings, StudyMetaDataValidator studyMetaDataValidator, DataGridView dataGridView, IViewUpdater viewUpdater)
         {
-            this.dataGridView = conversionSettings.dataGridView;
-            this.pathToInputFile = conversionSettings.pathToInputFile;
-            this.selectedCRF = conversionSettings.selectedCRF;
-            this.selectedStudyEvent = conversionSettings.selectedStudyEvent;
+            this.dataGridView = dataGridView;            
+            this.conversionSettings = conversionSettings;
             this.studyMetaDataValidator = studyMetaDataValidator;
             this.viewUpdater = viewUpdater;
+            reset();   
+        }
+
+
+        public void reset()
+        {
             dataFileItems = new ArrayList();
             subjectIDIndex = 0;
             sexIndex = 0;
@@ -90,17 +80,19 @@ namespace OCDataImporter
             DOBIndex = 0;
             STDIndex = 0;
             startDateItem = "";
+            eventStartDates = "";
+            delimiter = ';';
+            sepcount = 1;
         }
 
-
-        public bool Get_dataFileItems_FrpmInput()
+        public bool GetDataFileItemsFromInput()
         {
             // Find out how many data items are present per line and build array of data item names for using in data grid
             dataFileItems.Clear();
             sepcount = 1;
             try
             {
-                using (StreamReader sr = new StreamReader(pathToInputFile))
+                using (StreamReader sr = new StreamReader(conversionSettings.pathToInputFile))
                 {
                     String line;
                     while ((line = sr.ReadLine()) != null)
@@ -108,11 +100,11 @@ namespace OCDataImporter
                         line = line.Trim();  // 1.1b
                         if (line.Length == 0) continue;
                         linelen = line.Length;
-                        if (line.IndexOf(TAB) > 0) Delimiter = TAB;
-                        if (line.IndexOf(';') > 0) Delimiter = ';';
+                        if (line.IndexOf(TAB) > 0) delimiter = TAB;
+                        if (line.IndexOf(';') > 0) delimiter = ';';
 
-                        for (int i = 0; i < line.Length; i++) if (line[i] == Delimiter) sepcount++;
-                        string[] spfirst = line.Split(Delimiter);
+                        for (int i = 0; i < line.Length; i++) if (line[i] == delimiter) sepcount++;
+                        string[] spfirst = line.Split(delimiter);
                         foreach (string one in spfirst) dataFileItems.Add(one);
                         break;
                     }
@@ -144,6 +136,17 @@ namespace OCDataImporter
                     if (mi[2].Length > maxGR) maxGR = mi[2].Length;
                 }
             }
+            int sexCount = 0;
+            int PIDCount = 0;
+            int DOBCount = 0;
+            int STDCount = 0;            
+            PIDIndex = -1;
+            sexIndex = -1;
+            DOBIndex = -1;
+            STDIndex = -1;
+            sexItem = "";
+            PIDItem = "";
+            DOBItem = "";
             
             for (int i = 0; i < dataGridView.RowCount; i++)
             {
@@ -195,7 +198,7 @@ namespace OCDataImporter
                             {
                                 STDIndex = j;
                                 startDateItem = dataGridView.Rows[i].Cells[DGIndexOfDataItem].Value.ToString();
-                                EventStartDates += startDateItem + "^" + STDIndex.ToString() + "$";
+                                eventStartDates += startDateItem + "^" + STDIndex.ToString() + "$";
                             }
                         }
                     }
@@ -277,7 +280,7 @@ namespace OCDataImporter
             return true;
         }
 
-        private void BuildDG(bool matchcolumns)
+        public void BuildDG(bool matchcolumns)
         {
             string key = "False";
             string dat = "False";
@@ -288,7 +291,7 @@ namespace OCDataImporter
             viewUpdater.resetText();
             string[] fnparts;
             fnparts = new string[dataGridView.ColumnCount];
-            if (selectedStudyEvent != "-- select --" && selectedCRF != "-- select --")
+            if (conversionSettings.selectedStudyEvent != "-- select --" && conversionSettings.selectedCRF != "-- select --")
             {
                 int matched = 0;
                 bool nomatch = false;
@@ -337,10 +340,10 @@ namespace OCDataImporter
                     if (startEvent > 0) theItem = theItem.Substring(0, startEvent);
                     else if (startGroup > 0) theItem = theItem.Substring(0, startGroup);
 
-                    string theItemOID = studyMetaDataValidator.GetItemOIDFromItemName(theItem, selectedCRF);
+                    string theItemOID = studyMetaDataValidator.GetItemOIDFromItemName(theItem, conversionSettings.selectedCRF);
                     if (theItemOID != "NOTFOUND2" && theItemOID != "ANOTHERCRF") // 3.03
                     {
-                        fnparts[DGIndexOfOCItem] = selectedStudyEvent + "." + selectedCRF + "." + studyMetaDataValidator.GetGroupFromItemCRF(theItemOID, selectedCRF) + "." + theItemOID;
+                        fnparts[DGIndexOfOCItem] = conversionSettings.selectedStudyEvent + "." + conversionSettings.selectedCRF + "." + studyMetaDataValidator.GetGroupFromItemCRF(theItemOID, conversionSettings.selectedCRF) + "." + theItemOID;
                         matched++;
                     }
                     else

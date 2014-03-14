@@ -29,18 +29,16 @@ namespace OCDataImporter
         private ArrayList Hiddens = new ArrayList();
 
 
-        public String repeatingGroups {get; private set;}
-        public String repeatingEvents { get; private set;}
+        public String repeatingGroups {get; set;}
+        public String repeatingEvents { get; set;}
         
-        private String pathToMetaDataFile;
+        
         private WarningLog warningLog;
-        private String dateFormat;
+        
 
-        public StudyMetaDataValidator(ConversionSettings conversionSettings, WarningLog warningLog) 
-        {
-            this.pathToMetaDataFile = conversionSettings.pathToMetaDataFile;
-            this.warningLog = warningLog;
-            this.dateFormat = conversionSettings.dateFormat;
+        public StudyMetaDataValidator(WarningLog warningLog) 
+        {        
+            this.warningLog = warningLog;            
         }
 
         public void reset()
@@ -51,36 +49,8 @@ namespace OCDataImporter
             repeatingEvents = "";
         }
 
-        public void BuildVerificationArrays()  // 3.0 Data verification structures 
-        {
-            //*** ItemGroupDefs: CRF, Group contains which items. Item_OID,OPT = optional, Item_OID,MAN = mandatory. Separated by ~
-            //F_COCO_V10^IG_COCO_UNGROUPED^I_COCO_LABELLINK,MAN~I_COCO_DATEINTAKE,OPT~I_COCO_DATECOMMENT,OPT~I_COCO_STUDYEXPLANATION,OPT~I_COCO_INFORMEDCONSENTPATIENT,OPT~I_COCO_DATESIGNATUREPATIENT,OPT~I_COCO_INFORMEDCONSENTINVESTIGATOR,OPT~I_COCO_DATESIGNATUREINVESTIGATOR,OPT~I_COCO_STOOLCONSENT,OPT~I_COCO_FITCONSENT,OPT~I_COCO_BLOODCONSENT,OPT~I_COCO_COLONOSCOPYDATE,OPT~I_COCO_STOOLGIVEN,OPT~I_COCO_STOOLCOMMENT,OPT~I_COCO_STOOLDELIVERY,OPT~I_COCO_PICKUPDATE,OPT~I_COCO_PICKUPCOMMENT,OPT~I_COCO_PICKUPCONFIRMATION,OPT~I_COCO_NOPICKUPCOMMENT,OPT~I_COCO_FITDONE,OPT~I_COCO_FITCOMMENT,OPT~I_COCO_FITEIKENBARCODE,OPT~I_COCO_FITONCOBARCODE,OPT
-            //F_COCOS_BLOOD__V10^IG_COCOS_UNGROUPED^I_COCOS_BLOOD_THINNER,OPT~I_COCOS_BLOOD_THINNER_SPECIFIED,OPT~I_COCOS_BLOOD_THINNER_SPECIFIED_OTH,OPT~I_COCOS_ASCAL_DOSE,OPT~I_COCOS_PLAVIX_DOSE,OPT~I_COCOS_ACENOFENPRO_DOSE,OPT~I_COCOS_BLOOD_THINNER_OTHER_DOSE,OPT
-            //
-            // *** ItemDefForm: Item-data attributes in which form and show/hide situation
-            //I_COCO_LABELLINK^F_COCO_V10^SHOW^CL_75^integer^1
-            //I_COCO_DATECOMMENT^F_COCO_V10^SHOW^NOCODE^text^216
-            //
-            //*** CodeList: Codelist ID and values separated by ~
-            //CL_75^1~0
-            //CL_79^NA~1~0
-            //CL_10495^1~2~3~4~5~6~7~8~9~-1
-            //CL_10497^14~1~2~3~4~5~6~7~8~13~11~12~10~41~42~67~-1
-            //
-            //*** RCList: Range Check
-            //I_TEST_ITEM4^text^GT^10
-            //I_TEST_ITEM5^text^GE^1
-            //I_TEST_ITEM5^text^LE^5
-            //
-            //*** MSList
-            //MSL_18^1~2~3
-            //MSL_25^1
-            //
-            //*** SCOList
-            // ItemOID^ItemName^ControlItemName^ValueToControl
-            //I_COCOS_BLOOD_THINNER_SPECIFIED^Blood_thinner_specified^Blood_thinner^1
-            //I_COCOS_PLAVIX_DOSE^Plavix_dose^Blood_thinner_specified^2
-
+        public void BuildVerificationArrays(String pathToMetaDataFile, String pathToVerificationFile, Boolean debugMode)  // 3.0 Data verification structures 
+        {            
             ItemGroupDefs.Clear();
             ItemDefForm.Clear();
             CodeList.Clear();
@@ -266,23 +236,7 @@ namespace OCDataImporter
                             CLine = CLine.Substring(0, CLine.Length - 1);
                             MSList.Add(CLine);
                         }
-                    }
-                    else if (reader.Name == "StudyEventDef")
-                    {
-                        if (reader.AttributeCount > 0)
-                        {
-                            string SEOID = reader.GetAttribute(0);
-                            if (reader.GetAttribute(2) == "Yes") repeatingEvents += SEOID + " ";
-                        }
-                    }
-                    else if (reader.Name == "ItemGroupDef")
-                    {
-                        if (reader.AttributeCount > 0)
-                        {
-                            string SEOID = reader.GetAttribute(0);
-                            if (reader.GetAttribute(2) == "Yes") repeatingGroups += SEOID + " ";
-                        }
-                    }
+                    }                    
                     else
                     {
                         res = reader.Read();
@@ -297,10 +251,10 @@ namespace OCDataImporter
   //              exit_error("Metadatafile Line=" + linenr.ToString() + " -> " + ex.Message);
                 throw new OCDataImporterException("Can't get XML definitions for verification data from the metafile; unexpected exception at line: " + linenr.ToString(), ex);
             }
-            /*
-            if (DEBUGMODE)
+
+            if (debugMode)
             {
-                using (StreamWriter swlog = new StreamWriter(workdir + "\\OCDataImporter_verification.txt"))
+                using (StreamWriter swlog = new StreamWriter(pathToVerificationFile))
                 {
                     swlog.WriteLine("*** ItemGroupDefs");
                     foreach (string ss in ItemGroupDefs) swlog.WriteLine(ss);
@@ -319,13 +273,11 @@ namespace OCDataImporter
                     swlog.WriteLine("*** SCOList");
                     foreach (string ss in SCOList) swlog.WriteLine(ss);
                 }
-            }
-             */
+            }             
         }
 
 
-
-        public string ValidateItem(string key, string FormOID, string ItemOID, string ItemVal, int linenr)
+        public string ValidateItem(string key, string FormOID, string ItemOID, string ItemVal, int linenr, String dateFormat)
         {
             // check integer or float, has only digits
             // check length = itemval.Length
@@ -450,29 +402,21 @@ namespace OCDataImporter
                 }
             }
             string huidige = "";
-            bool comma = false;
-            string uiSep = CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator;
-            if (uiSep.Equals(",")) comma = true;
             try
             {
                 foreach (string one in RCList)
                 {
-                    //I_TEST_ITEM4^text^GT^10
-                    //I_TEST_ITEM5^text^GE^1
-                    //I_TEST_ITEM5^text^LE^5
                     huidige = one;
                     string[] RCS = one.Split('^');
-                    string RCVal = RCS[3].Trim();
+                    String RCVal = RCS[3].Trim();
                     float fItemVal = 0;
                     float fRCVal = 0;
                     if ((RCS[0] == ItemOID) && ItemVal != "")
                     {
                         if (RCS[1] == "float")
                         {
-                            if (comma) fItemVal = System.Convert.ToSingle(ItemVal.Replace('.', ','));
-                            else fItemVal = System.Convert.ToSingle(ItemVal);
-                            if (comma) fRCVal = System.Convert.ToSingle(RCVal.Replace('.', ','));
-                            else fRCVal = System.Convert.ToSingle(RCVal);
+                            fItemVal = Single.Parse(ItemVal, CultureInfo.InvariantCulture);
+                            fRCVal = Single.Parse(RCVal, CultureInfo.InvariantCulture);
                         }
                         if ((RCS[2] == "GT" || RCS[2] == "LT" || RCS[2] == "NE") && (ItemVal == RCVal)) warningLog.appendMessage(fixedwarning + "Range Check fail: Value " + ItemVal + " does not satisfy " + RCS[2] + " " + RCVal);
                         if ((RCS[2] == "EQ") && (ItemVal != RCVal)) warningLog.appendMessage(fixedwarning + "Range Check fail: Value " + ItemVal + " should be equal to " + RCVal);
@@ -484,9 +428,25 @@ namespace OCDataImporter
                         }
                         if (RCS[2] == "LT" || RCS[2] == "LE")
                         {
-                            if (RCS[1] == "text") if (string.Compare(RCVal, ItemVal) < 0) warningLog.appendMessage(fixedwarning + "Range Check fail: Value " + ItemVal + " is not " + RCS[2] + " " + RCVal);
-                            if (RCS[1] == "integer") if (System.Convert.ToInt32(RCVal) < System.Convert.ToInt32(ItemVal)) warningLog.appendMessage(fixedwarning + "Range Check fail: Value " + ItemVal + " is not " + RCS[2] + " " + RCVal);
-                            if (RCS[1] == "float") if (fRCVal < fItemVal) warningLog.appendMessage(fixedwarning + "Range Check fail: Value " + ItemVal + " is not " + RCS[2] + " " + RCVal);
+                            if (RCS[1] == "text") {
+                                if (string.Compare(RCVal, ItemVal) < 0)
+                                {
+                                    warningLog.appendMessage(fixedwarning + "Range Check fail: Value " + ItemVal + " is not " + RCS[2] + " " + RCVal);
+                                }
+                            }
+
+                            if (RCS[1] == "integer") {
+                                if (System.Convert.ToInt32(RCVal) < System.Convert.ToInt32(ItemVal))
+                                {
+                                    warningLog.appendMessage(fixedwarning + "Range Check fail: Value " + ItemVal + " is not " + RCS[2] + " " + RCVal);
+                                }
+                            }
+                            if (RCS[1] == "float")
+                            {
+                                if (fRCVal < fItemVal) {
+                                    warningLog.appendMessage(fixedwarning + "Range Check fail: Value " + ItemVal + " is not " + RCS[2] + " " + RCVal);
+                                    }
+                            }
                         }
                     }
                 }

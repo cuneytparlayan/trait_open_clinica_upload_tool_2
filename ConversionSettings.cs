@@ -14,8 +14,7 @@ namespace OCDataImporter
         public String selectedStudyEvent{ get; set; }
         public String selectedEventRepeating { get; set; }
         public String studyOID { get; set; }
-        public String workdir { get; set; }
-        public char delimiter { get; set; }
+        public String workdir { get; set; }        
         public String pathToInputFile { get; set; }
         public String SUBJECTSEX_F { get; set; }
         public String SUBJECTSEX_M { get; set; }
@@ -29,6 +28,13 @@ namespace OCDataImporter
         public int outFMaxLines { get; set; }
 
 
-        public DataGridView dataGridView { get; set; }
+        public void reset() {
+            workdir = "";
+            pathToMetaDataFile = "";
+            pathToInputFile = "";
+            checkForDuplicateSubjects = false;
+        }
+
+        
     }
 }

@@ -89,15 +89,7 @@ namespace OCDataImporter
             }
             return (var);
         }
-             
-
-        public static void safeClose(Stream stream)
-        {
-            if (stream != null)
-            {
-                stream.Close();
-            }
-        }       
+                     
 
         public static bool IsNumber(String s)
         {

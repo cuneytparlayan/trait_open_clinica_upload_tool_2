@@ -32,30 +32,36 @@ namespace OCDataImporter
         private StudyMetaDataValidator studyMetaDataValidator;
         private ArrayList InsertSubject = new ArrayList();
         private IViewUpdater viewUpdater;
-        
-        public WarningLog warningLog {get; private set;}
-            
 
-        public Converter(ConversionSettings conversionSettings, StudyMetaDataValidator studyMetaDataValidator, IViewUpdater viewUpdater)
+        
+
+        public int numberOfOutputFiles { get; private set; }
+
+        private DataGridView dataGridView;
+        private WarningLog warningLog;    
+
+        public Converter(ConversionSettings conversionSettings, StudyMetaDataValidator studyMetaDataValidator, DataGridView dataGridView, WarningLog warningLog, IViewUpdater viewUpdater)
         {
             this.conversionSettings = conversionSettings;
             this.studyMetaDataValidator = studyMetaDataValidator;
             this.viewUpdater = viewUpdater;
+            this.dataGridView = dataGridView;
+            this.warningLog = warningLog;
         }
 
 
-        public void DoWork()
+        public void DoWork(DataGrid dataGrid)
         {
-            warningLog = new WarningLog();
+            
             string theDate = DateTime.Now.ToString("yyyy-MM-dd");
             string theWrittenSE = "";
             string theWrittenGR = "";
             string[] theHeaders;
             int event_index_row = -1;
             int group_index_row = -1;
+                        
             
-            DataGridView dataGridView = conversionSettings.dataGridView;
-            DataGrid dataGrid = new DataGrid(conversionSettings, studyMetaDataValidator, viewUpdater);
+
             if (dataGrid.isValid() == false)
             {
                 return;
@@ -73,7 +79,7 @@ namespace OCDataImporter
             }
             int numberOfLinesOutputFile = 0;
             String outputFileBaseName = conversionSettings.workdir + "\\DataImport_";
-            int numberOfOutputFiles = 1;
+            numberOfOutputFiles = 1;
             String outputFilePath = outputFileBaseName + numberOfOutputFiles + ".xml";
             OutputFile odmOutputFile = new OutputFile(outputFilePath);
             masterHeader(odmOutputFile);
@@ -97,17 +103,18 @@ namespace OCDataImporter
 
                 String[] linesArray = File.ReadAllLines(conversionSettings.pathToInputFile);
                 int linecount = 0;
-                foreach (String line in linesArray) {
-                                                            
+                foreach (String line in linesArray)
+                {
+
                     // line = line.Trim();  // 1.1b
                     if (line.Length == 0) continue;
-                    
+
                     studyMetaDataValidator.reset();
-                    
+
                     linecount++;
                     if (linecount == 1)
                     {
-                        theHeaders = line.Split(conversionSettings.delimiter); // get row event and group indexes, if defined that way.
+                        theHeaders = line.Split(dataGrid.delimiter); // get row event and group indexes, if defined that way.
                         for (int i = 0; i < theHeaders.Length; i++)
                         {
                             if (theHeaders[i].ToUpper() == "EVENT_INDEX") event_index_row = i;    // 2.2 Input file format allows EVENT_INDEX and GROUP_INDEX to define repeating items in rows
@@ -116,33 +123,36 @@ namespace OCDataImporter
                         continue; // skip first line; contains only headers
                     }
                     int mySepCount = 1;
-                    viewUpdater.updateProgressbarStep(line.Length);                    
-                    for (int i = 0; i < line.Length; i++) if (line[i] == conversionSettings.delimiter) mySepCount++;
-                    if (conversionSettings.sepCount != mySepCount)
+                    viewUpdater.updateProgressbarStep(line.Length);
+                    for (int i = 0; i < line.Length; i++) if (line[i] == dataGrid.delimiter) mySepCount++;
+                    if (dataGrid.sepcount != mySepCount)
                     {
                         string errtext = "Input data file format incorrect at line = " + linecount.ToString() + " Expecting: " + conversionSettings.sepCount.ToString() + "; found: " + mySepCount.ToString() + "  items; this is the faulty line: " + line;
                         warningLog.appendMessage(errtext);
                         continue;
                     }
-                    string[] split = line.Split(conversionSettings.delimiter);
+                    string[] split = line.Split(dataGrid.delimiter);
                     String subjectID = split[dataGrid.subjectIDIndex];
-                    if (conversionSettings.checkForDuplicateSubjects) 
-                    {                        
-                        if (subjectIDList.Contains(subjectID)) {
+                    subjectID = subjectID.Trim();
+                    if (conversionSettings.checkForDuplicateSubjects)
+                    {
+                        if (subjectIDList.Contains(subjectID))
+                        {
                             string errtext = "Duplicate subjectID " + subjectID + " at line = " + linecount.ToString();
                             warningLog.appendMessage(errtext);
-                        }                        
+                        }
                     }
                     subjectIDList.Add(subjectID);
                     viewUpdater.performProgressbarStep();
 
                     //  Handle first DG line
                     int DGFirstLine = 0;
+                    String lineToSplit = dataGridView.Rows[DGFirstLine].Cells[DGIndexOfOCItem].Value.ToString();
                     string[] ocparts = dataGridView.Rows[DGFirstLine].Cells[DGIndexOfOCItem].Value.ToString().Split('.');
                     String TheStudyEventOID = ocparts[0];
-                    String TheFormOID = ocparts[1];
-                    String TheItemGroupDef = ocparts[2];
-                    String TheItemId = ocparts[3];
+                    String TheFormOID = "";
+                    String TheItemGroupDef = "";
+                    String TheItemId = "";
                     string theSERK = "1";
                     string theGRRK = "NOT";
                     string theStudyDataColumn = "";
@@ -151,8 +161,11 @@ namespace OCDataImporter
                         DGFirstLine++;
                         try // fix 2.0.3 -> If no items are matched; can't increase DGFirstLine, causes index out of range 
                         {
-                            ocparts = dataGridView.Rows[DGFirstLine].Cells[DGIndexOfOCItem].Value.ToString().Split('.');                                                        
-                            if (TheItemGroupDef.IndexOf('-') > 0) TheItemGroupDef = TheItemGroupDef.Substring(0, TheItemGroupDef.IndexOf('-'));                            
+                            ocparts = dataGridView.Rows[DGFirstLine].Cells[DGIndexOfOCItem].Value.ToString().Split('.');
+                            TheFormOID = ocparts[1];
+                            TheItemGroupDef = ocparts[2];
+                            TheItemId = ocparts[3];
+                            if (TheItemGroupDef.IndexOf('-') > 0) TheItemGroupDef = TheItemGroupDef.Substring(0, TheItemGroupDef.IndexOf('-'));
                             TheStudyEventOID = ocparts[0];
                             theStudyDataColumn = dataGridView.Rows[DGFirstLine].Cells[DGIndexOfDataItem].Value.ToString();
                         }
@@ -163,6 +176,7 @@ namespace OCDataImporter
                             TheStudyEventOID = "none";
                             theStudyDataColumn = "none";
                             TheItemId = "none";
+                            warningLog.appendMessage("Problem occured: " + ex.Message);
                         }
                     }
                     else  // 2.1 fix on above fix
@@ -203,7 +217,7 @@ namespace OCDataImporter
                     }
                     // 2.0.5 Do NOT print formdata with no items 
                     string theXMLEvent = "";
-                    
+
                     if (event_index_row != -1) theSERK = split[event_index_row];
                     if (group_index_row != -1) theGRRK = split[group_index_row];
                     string SStheKEY = "SS_" + subjectID;
@@ -235,7 +249,7 @@ namespace OCDataImporter
                         check_index_of_item(linecount, indexOfItem);
                         itemval = split[indexOfItem];
                         // itemval = Repl(dataGridView1.Rows[0].Cells[DGIndexOfDataItem].Value.ToString(), itemval);
-                        itemval = studyMetaDataValidator.ValidateItem(subjectID, TheFormOID, TheItemId, itemval, linecount);
+                        itemval = studyMetaDataValidator.ValidateItem(subjectID, TheFormOID, TheItemId, itemval, linecount, conversionSettings.dateFormat);
                         if (itemval != "")
                         {
                             theXMLForm += "                    <ItemData ItemOID=\"" + TheItemId + "\" Value=\"" + SecurityElement.Escape(itemval) + "\" />" + LINE_SEPARATOR;
@@ -257,7 +271,7 @@ namespace OCDataImporter
                                     check_index_of_item(linecount, indexOfItem);
                                     itemval = split[indexOfItem];
                                     // itemval = Repl(dataGridView1.Rows[i].Cells[DGIndexOfDataItem].Value.ToString(), itemval);
-                                    itemval = studyMetaDataValidator.ValidateItem(subjectID, TheFormOID, nwdingen[3], itemval, linecount);
+                                    itemval = studyMetaDataValidator.ValidateItem(subjectID, TheFormOID, nwdingen[3], itemval, linecount, conversionSettings.dateFormat);
                                     if (itemval != "")
                                     {
                                         theXMLForm += "                    <ItemData ItemOID=\"" + nwdingen[3] + "\" Value=\"" + SecurityElement.Escape(itemval) + "\" />" + LINE_SEPARATOR;
@@ -289,7 +303,7 @@ namespace OCDataImporter
                                     check_index_of_item(linecount, indexOfItem);
                                     itemval = split[indexOfItem];
                                     // itemval = Repl(dataGridView1.Rows[i].Cells[DGIndexOfDataItem].Value.ToString(), itemval);
-                                    itemval = studyMetaDataValidator.ValidateItem(subjectID, TheFormOID, nwdingen[3], itemval, linecount);
+                                    itemval = studyMetaDataValidator.ValidateItem(subjectID, TheFormOID, nwdingen[3], itemval, linecount, conversionSettings.dateFormat);
                                     if (itemval != "")
                                     {
                                         theXMLForm += "                    <ItemData ItemOID=\"" + nwdingen[3] + "\" Value=\"" + SecurityElement.Escape(itemval) + "\" />" + LINE_SEPARATOR;
@@ -333,7 +347,7 @@ namespace OCDataImporter
                                     check_index_of_item(linecount, indexOfItem);
                                     itemval = split[indexOfItem];
                                     // itemval = Repl(dataGridView1.Rows[i].Cells[DGIndexOfDataItem].Value.ToString(), itemval);
-                                    itemval = studyMetaDataValidator.ValidateItem(subjectID, TheFormOID, nwdingen[3], itemval, linecount);
+                                    itemval = studyMetaDataValidator.ValidateItem(subjectID, TheFormOID, nwdingen[3], itemval, linecount, conversionSettings.dateFormat);
                                     if (itemval != "")
                                     {
                                         theXMLForm += "                    <ItemData ItemOID=\"" + nwdingen[3] + "\" Value=\"" + SecurityElement.Escape(itemval) + "\" />" + LINE_SEPARATOR;
@@ -402,7 +416,7 @@ namespace OCDataImporter
                                     check_index_of_item(linecount, indexOfItem);
                                     itemval = split[indexOfItem];
                                     // itemval = Repl(dataGridView1.Rows[i].Cells[DGIndexOfDataItem].Value.ToString(), itemval);
-                                    itemval = studyMetaDataValidator.ValidateItem(subjectID, TheFormOID, nwdingen[3], itemval, linecount);
+                                    itemval = studyMetaDataValidator.ValidateItem(subjectID, TheFormOID, nwdingen[3], itemval, linecount, conversionSettings.dateFormat);
                                     if (itemval != "")
                                     {
                                         theXMLForm += "                    <ItemData ItemOID=\"" + nwdingen[3] + "\" Value=\"" + SecurityElement.Escape(itemval) + "\" />" + LINE_SEPARATOR;
@@ -452,19 +466,31 @@ namespace OCDataImporter
                         numberOfLinesOutputFile = 0;
                         numberOfOutputFiles = numberOfOutputFiles + 1;
                         outputFilePath = outputFileBaseName + numberOfOutputFiles + ".xml";
+                        odmOutputFile.Close();
                         odmOutputFile = new OutputFile(outputFilePath);
-                        masterHeader(odmOutputFile);
                         masterHeader(odmOutputFile);
                     }
                     // generate insert statements
                     int theSERKInt = System.Convert.ToInt16(theSERK);
                     string theDOB = "";
-                    if (dataGrid.DOBIndex >= 0) theDOB = Utilities.ConvertToODMFormat(split[dataGrid.DOBIndex], conversionSettings.dateFormat);
+                    if (dataGrid.DOBIndex >= 0)
+                    {
+                        theDOB = Utilities.ConvertToODMFormat(split[dataGrid.DOBIndex], conversionSettings.dateFormat);
+                    }
                     string theSTD = "";
-                    if (dataGrid.STDIndex >= 0) theSTD = Utilities.ConvertToODMFormat(split[dataGrid.STDIndex], conversionSettings.dateFormat); // This is needed for non repeating events
+                    if (dataGrid.STDIndex >= 0)
+                    {
+                        theSTD = Utilities.ConvertToODMFormat(split[dataGrid.STDIndex], conversionSettings.dateFormat); // This is needed for non repeating events
+                    }
                     string thePID = "";
-                    if (dataGrid.PIDIndex < 0) thePID = subjectID;
-                    else thePID = split[dataGrid.PIDIndex];
+                    if (dataGrid.PIDIndex < 0)
+                    {
+                        thePID = subjectID;
+                    }
+                    else
+                    {
+                        thePID = split[dataGrid.PIDIndex];
+                    }
 
                     if (theDOB.StartsWith("Error") || theDOB == "" || dataGrid.DOBIndex < 0)
                     {
@@ -507,9 +533,9 @@ namespace OCDataImporter
                             // date_start of study event -> get it from file. If blank, don't create the event. OC will reject any data reletad to an event without a start date. 
                             string part1 = "";
                             string part2 = "_E" + say.ToString();
-                            if (dataGrid.EventStartDates.Contains(part2)) // there is a date; get it
+                            if (dataGrid.eventStartDates.Contains(part2)) // there is a date; get it
                             {
-                                part1 = dataGrid.EventStartDates.Substring(dataGrid.EventStartDates.IndexOf(part2) + 1);
+                                part1 = dataGrid.eventStartDates.Substring(dataGrid.eventStartDates.IndexOf(part2) + 1);
                                 part1 = part1.Substring(part1.IndexOf("^") + 1);
                                 part1 = part1.Substring(0, part1.IndexOf("$"));  // part1 is the index of date
                                 theSTD = Utilities.ConvertToODMFormat(split[System.Convert.ToInt16(part1)], conversionSettings.dateFormat);
@@ -545,7 +571,7 @@ namespace OCDataImporter
                                 else  // no date specified in data file
                                 {
                                     if (conversionSettings.useTodaysDateIfNoEventDate)  // 2.1.3 Generate inserts for events without dates using todays date, only if user wants to, otherwise 
-                                                                                        // TODO ask Cuneyt what otherwise 
+                                    // TODO ask Cuneyt what otherwise 
                                     {
                                         insertsSQLFile.Append(INSERT_3);
                                         insertsSQLFile.Append("    VALUES ((SELECT study_event_definition_id FROM study_event_definition WHERE oc_oid = '" + theWrittenSE + "'),");
@@ -559,15 +585,14 @@ namespace OCDataImporter
                         }
                         deletesOnlyEventsSQLFile.Append("DELETE FROM study_event where study_subject_id = (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "');");
                     }
-                    deletesSQLFile.Append( "DELETE FROM study_event where study_subject_id = (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "');");
-                    deletesSQLFile.Append( "DELETE FROM study_subject where oc_oid = '" + SStheKEY + "';");
-                    deletesSQLFile.Append( "DELETE FROM subject where unique_identifier = '" + thePID + "';");
+                    deletesSQLFile.Append("DELETE FROM study_event where study_subject_id = (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "');");
+                    deletesSQLFile.Append("DELETE FROM study_subject where oc_oid = '" + SStheKEY + "';");
+                    deletesSQLFile.Append("DELETE FROM subject where unique_identifier = '" + thePID + "';");
                     // Control hidden values and mandatory values
 
                     studyMetaDataValidator.validateHiddens(TheFormOID, linecount, SStheKEY);
-                    
-                    masterClose(odmOutputFile);
                 }
+                masterClose(odmOutputFile);
             }
             catch (Exception ex)
             {
@@ -575,42 +600,16 @@ namespace OCDataImporter
                 if (errtext.Contains("ThreadAbortException") == false)
                 {
                     throw new OCDataImporterException(errtext, ex);
-//                   MessageBox.Show(errtext, "OCDataImporter", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-//                   exit_error(ex.ToString());
                 }
             }
-            // End work
-
-            // TODO this block must be moved to the controler (Form1.cs)
-            /*
-            buttonStartConversion.Enabled = false;
-            buttonStartConversion.BackColor = SystemColors.Control;
-            button_start.Enabled = false;
-            buttonExit.Enabled = true;
-            buttonBrowse.Enabled = false;
-            buttonCancel.Enabled = false;
-            buttonCancel.BackColor = SystemColors.Control;
-            linkLabelBuildDG.Enabled = false;
-            linkbuttonSHCols.Enabled = false;
-            linkLabel1.Enabled = false;
-            textBoxInput.Focus();
-            this.Cursor = Cursors.Arrow;
-            progressBar1.Value = PROGBARSIZE;
-            if (WARCOUNT == 0)
+            finally
             {
-                WARCOUNT = -1;
-                warningLog.appendMessage(DateTime.Now + " Finished successfully.");
-                MessageBox.Show("Process finished successfully", "OCDataImporter", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                deletesOnlyEventsSQLFile.Close();
+                deletesSQLFile.Close();
+                insertsOnlyEventsSQLFile.Close();
+                insertsSQLFile.Close();
+                odmOutputFile.Close();
             }
-            else
-            {
-                MessageBox.Show("Process ended with errors or warnings: See OCDataImporter_log.txt and/or OCDataImporter_warning.txt for details", "OCDataImporter", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                textBoxOutput.Text += "*** There are errors or warnings: See OCDataImporter_log.txt and/or OCDataImporter_warning.txt for details ***";
-            }
-            if (numberOfOutputFiles > 1) textBoxOutput.Text += " Total: " + numberOfOutputFiles.ToString() + " ODM files.";
-            textBoxOutput.SelectionStart = textBoxOutput.Text.Length;
-            textBoxOutput.ScrollToCaret();
-            */
         }
        
 
@@ -624,6 +623,7 @@ namespace OCDataImporter
                 //exit_error(errtext);
             }
         }            
+
 
         private void masterHeader(OutputFile outputFile)
         {
@@ -661,7 +661,7 @@ namespace OCDataImporter
             return (found);
         }
 
-        public string CheckRepeatKey(string rk, int line)
+        private string CheckRepeatKey(string rk, int line)
         {
             if (Utilities.IsNumber(rk)) return (rk);
             warningLog.appendMessage("Event and/or Group repeat index can't be determined at line: " + line.ToString());
