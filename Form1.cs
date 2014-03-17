@@ -295,7 +295,7 @@ namespace OCDataImporter
 
         void MenuHelpAboutOnClick(object obj, EventArgs ea)
         {
-            MessageBox.Show(VERSION_LABEL + " - Made by: C. Parlayan, VU Medical Center, Dept. of Pathology, Amsterdam, The Netherlands - 2010-2014", Text);
+            MessageBox.Show(VERSION_LABEL + " - Made by: C. Parlayan/J. Rousseau, VU Medical Center, Amsterdam, The Netherlands - 2010-2014", Text);
         }        
 
         public void FillTheParams()
