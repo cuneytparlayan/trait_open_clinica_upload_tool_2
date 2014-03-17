@@ -499,6 +499,12 @@ namespace OCDataImporter
 
         private void buttonStartConversion_Click_1(object sender, EventArgs e)
         {
+
+            if (Utilities.IsNumber(textBoxMaxLines.Text) == false)
+            {
+                MessageBox.Show("Split factor must be a number, 0 means no splitting.", "OCDataImporter");
+                return;
+            }
             BuildRepeatingEventString();
             BuildRepeatingGroupString();
             initializeUserInterfaceElements();
@@ -517,6 +523,8 @@ namespace OCDataImporter
             conversionSettings.checkForDuplicateSubjects = checkBoxDup.Checked;
             conversionSettings.useTodaysDateIfNoEventDate = radioButtonUseTD.Checked;
             conversionSettings.dateFormat = comboBoxDateFormat.SelectedItem.ToString();
+            conversionSettings.defaultLocation = textBoxLocation.Text;
+            conversionSettings.outFMaxLines = System.Convert.ToInt32(textBoxMaxLines.Text);
 
             dumpTheGrid();
             Converter converter = new Converter(conversionSettings, studyMetaDataValidator, dataGridView1, warningLog, this);
