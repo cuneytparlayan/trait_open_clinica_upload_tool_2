@@ -78,10 +78,7 @@ using System.Security.AccessControl;
                             
 *******************************************************************************************/
 namespace OCDataImporter
-{
-    
-    
-    
+{    
     public partial class Form1 : Form, IViewUpdater
     {
         
@@ -110,17 +107,11 @@ namespace OCDataImporter
         ArrayList SCOList = new ArrayList();
         ArrayList Warnings = new ArrayList();
         ArrayList AllValuesInOneRow = new ArrayList();
-        ArrayList Hiddens = new ArrayList();
-        
-        
+        ArrayList Hiddens = new ArrayList();       
         
         ArrayList InsertKeys = new ArrayList();
         
-        
         string LOG = "";
-        
-        
-        
         
         char Delimiter = ';';
         char tab = '\u0009';
@@ -139,10 +130,6 @@ namespace OCDataImporter
         private const int DGIndexOfDOB = 6;
         private const int DGIndexOfSTD = 7;
         
-        
-        
-        
-        
         string selectedEventRepeating = "No";
         
         static public string insert1a = "INSERT INTO subject(status_id, gender, unique_identifier, date_created, owner_id, dob_collected, date_of_birth)";
@@ -158,8 +145,8 @@ namespace OCDataImporter
         
         public Form1()
         {
-            InitializeComponent();            
-
+            InitializeComponent();
+            label1.Text = OCDataImporter.Form1.VERSION_LABEL;
             conversionSettings = new ConversionSettings();
             warningLog = new WarningLog();
             studyMetaDataValidator = new StudyMetaDataValidator(warningLog);
@@ -2906,6 +2893,8 @@ namespace OCDataImporter
                 MessageBox.Show("Please enter location", "OCDataImporter");
                 return;
             }
+            conversionSettings.SUBJECTSEX_M = textBoxSubjectSexM.Text;
+            conversionSettings.SUBJECTSEX_F = textBoxSubjectSexF.Text;
             StateProcess();
         }
 

@@ -10,14 +10,6 @@ using System.Security;
 
 namespace OCDataImporter
 {   
- /*
-  * Open questions to discuss with Cuneyt:
-  *     - the Repl function has been removed (commented-out). I believe we agreed that this functionality 
-  *     will be removed since users can perform replacements much easier in a spreadsheet application like Excel
-  *     - the subject label replacement from an external file has been commented-out. Ask Cuneyt if this is OK.
-  *     
-  */
-
     class Converter
     {
 
@@ -248,7 +240,6 @@ namespace OCDataImporter
                         indexOfItem = dataGrid.GetIndexOfItem(dataGridView.Rows[DGFirstLine].Cells[DGIndexOfOCItem].Value.ToString());
                         check_index_of_item(linecount, indexOfItem);
                         itemval = split[indexOfItem];
-                        // itemval = Repl(dataGridView1.Rows[0].Cells[DGIndexOfDataItem].Value.ToString(), itemval);
                         itemval = studyMetaDataValidator.ValidateItem(subjectID, TheFormOID, TheItemId, itemval, linecount, conversionSettings.dateFormat);
                         if (itemval != "")
                         {
@@ -270,7 +261,6 @@ namespace OCDataImporter
                                     indexOfItem = dataGrid.GetIndexOfItem(dataGridView.Rows[i].Cells[DGIndexOfOCItem].Value.ToString());
                                     check_index_of_item(linecount, indexOfItem);
                                     itemval = split[indexOfItem];
-                                    // itemval = Repl(dataGridView1.Rows[i].Cells[DGIndexOfDataItem].Value.ToString(), itemval);
                                     itemval = studyMetaDataValidator.ValidateItem(subjectID, TheFormOID, nwdingen[3], itemval, linecount, conversionSettings.dateFormat);
                                     if (itemval != "")
                                     {
@@ -302,7 +292,6 @@ namespace OCDataImporter
                                     indexOfItem = dataGrid.GetIndexOfItem(dataGridView.Rows[i].Cells[DGIndexOfOCItem].Value.ToString());
                                     check_index_of_item(linecount, indexOfItem);
                                     itemval = split[indexOfItem];
-                                    // itemval = Repl(dataGridView1.Rows[i].Cells[DGIndexOfDataItem].Value.ToString(), itemval);
                                     itemval = studyMetaDataValidator.ValidateItem(subjectID, TheFormOID, nwdingen[3], itemval, linecount, conversionSettings.dateFormat);
                                     if (itemval != "")
                                     {
@@ -346,7 +335,6 @@ namespace OCDataImporter
                                     indexOfItem = dataGrid.GetIndexOfItem(dataGridView.Rows[i].Cells[DGIndexOfOCItem].Value.ToString());
                                     check_index_of_item(linecount, indexOfItem);
                                     itemval = split[indexOfItem];
-                                    // itemval = Repl(dataGridView1.Rows[i].Cells[DGIndexOfDataItem].Value.ToString(), itemval);
                                     itemval = studyMetaDataValidator.ValidateItem(subjectID, TheFormOID, nwdingen[3], itemval, linecount, conversionSettings.dateFormat);
                                     if (itemval != "")
                                     {
@@ -415,7 +403,6 @@ namespace OCDataImporter
                                     indexOfItem = dataGrid.GetIndexOfItem(dataGridView.Rows[i].Cells[DGIndexOfOCItem].Value.ToString());
                                     check_index_of_item(linecount, indexOfItem);
                                     itemval = split[indexOfItem];
-                                    // itemval = Repl(dataGridView1.Rows[i].Cells[DGIndexOfDataItem].Value.ToString(), itemval);
                                     itemval = studyMetaDataValidator.ValidateItem(subjectID, TheFormOID, nwdingen[3], itemval, linecount, conversionSettings.dateFormat);
                                     if (itemval != "")
                                     {
@@ -430,7 +417,6 @@ namespace OCDataImporter
                     if (dataGrid.sexIndex >= 0)
                     {
                         SubSex = split[dataGrid.sexIndex];
-                        // SubSex = Repl(dataGrid.sexItem, SubSex);
                         SubSex = SubSex.Trim();
                     }
                     if (SubSex == conversionSettings.SUBJECTSEX_M) SubSex = "m";  // 1.0f
