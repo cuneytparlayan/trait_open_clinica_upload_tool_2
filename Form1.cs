@@ -1986,13 +1986,14 @@ namespace OCDataImporter
 
             GetStudyEventDef(conversionSettings.pathToMetaDataFile);
 
-            if (comboBoxSE.Items.Count == 0)
+            if ((comboBoxSE.Items.Count == 0) || (comboBoxCRF.Items.Count == 0)) 
             {
-                MessageBox.Show("No study event definitions found in selected file; please check the format of the file", "OCDataImporter");
+                MessageBox.Show("No study event and CRF definitions found in selected file; please check the format of the file and verify if the metadata file corresponds to the data file", "OCDataImporter");
                 textBoxInput.Focus();
                 buttonStartConversion.Enabled = true;
                 return;
             }
+
             conversionSettings.selectedStudyEvent = comboBoxSE.SelectedItem.ToString();
             conversionSettings.selectedCRF = comboBoxCRF.SelectedItem.ToString();
 

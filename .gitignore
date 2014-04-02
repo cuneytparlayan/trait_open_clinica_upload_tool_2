@@ -1,2 +1,11 @@
 obj
 bin
+/test/DataImport_1.xml
+/test/Deletes.sql
+/test/Deletes_ONLY_STUDY_EVENTS.sql
+/test/Inserts.sql
+/test/Inserts_ONLY_STUDY_EVENTS.sql
+/test/test-set_grid.dmp
+/test/test-set_parameters.dmp
+/test/OCDataImporter_verification.txt
+/release-latest/OCDataImporter.exe

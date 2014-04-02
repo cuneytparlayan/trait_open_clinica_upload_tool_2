@@ -1,0 +1,1602 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ODM FileOID="Study-MetaD20140220095829+0100" Description="Study Metadata" CreationDateTime="2014-02-20T09:58:29+01:00" FileType="Snapshot" ODMVersion="1.3" xmlns="http://www.cdisc.org/ns/odm/v1.3" xmlns:OpenClinica="http://www.openclinica.org/ns/odm_ext_v130/v3.1" xmlns:OpenClinicaRules="http://www.openclinica.org/ns/rules/v3.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.cdisc.org/ns/odm/v1.3 OpenClinica-ODM1-3-0-OC2-0.xsd">
+    <Study OID="S_TESTBEDD">
+        <GlobalVariables>
+            <StudyName>Testbed-DataUploadTool</StudyName>
+            <StudyDescription>
+                Testing bed to perform Continious Integration tests for the DataUploadTool.
+            </StudyDescription>
+            <ProtocolName>Testbed-DataUploadTool</ProtocolName>
+        </GlobalVariables>
+        <BasicDefinitions>
+            <MeasurementUnit OID="MU_1582" Name="☏">
+                <Symbol>
+                    <TranslatedText>☏</TranslatedText>
+                </Symbol>
+            </MeasurementUnit>
+            <MeasurementUnit OID="MU_2436" Name="⓭">
+                <Symbol>
+                    <TranslatedText>⓭</TranslatedText>
+                </Symbol>
+            </MeasurementUnit>
+            <MeasurementUnit OID="MU_320" Name="⓶">
+                <Symbol>
+                    <TranslatedText>⓶</TranslatedText>
+                </Symbol>
+            </MeasurementUnit>
+            <MeasurementUnit OID="MU_7280" Name="☃">
+                <Symbol>
+                    <TranslatedText>☃</TranslatedText>
+                </Symbol>
+            </MeasurementUnit>
+            <MeasurementUnit OID="MU_8989" Name="♶">
+                <Symbol>
+                    <TranslatedText>♶</TranslatedText>
+                </Symbol>
+            </MeasurementUnit>
+            <MeasurementUnit OID="MU_9642" Name="♬">
+                <Symbol>
+                    <TranslatedText>♬</TranslatedText>
+                </Symbol>
+            </MeasurementUnit>
+            <MeasurementUnit OID="MU_SPANSTYLEFONTSIZELARGESPAN" Name="&lt;span style=&quot;font-size:large&quot;&gt;⚖&lt;/span&gt;">
+                <Symbol>
+                    <TranslatedText>&lt;span style="font-size:large"&gt;⚖&lt;/span&gt;</TranslatedText>
+                </Symbol>
+            </MeasurementUnit>
+            <MeasurementUnit OID="MU_SPANSTYLEFONTSIZELARGESPAN_1528" Name="&lt;span style=&quot;font-size:large&quot;&gt;✆&lt;/span&gt;">
+                <Symbol>
+                    <TranslatedText>&lt;span style="font-size:large"&gt;✆&lt;/span&gt;</TranslatedText>
+                </Symbol>
+            </MeasurementUnit>
+            <MeasurementUnit OID="MU_SPANSTYLEFONTSIZELARGESPAN_2962" Name="&lt;span style=&quot;font-size:large&quot;&gt;⎇&lt;/span&gt;">
+                <Symbol>
+                    <TranslatedText>&lt;span style="font-size:large"&gt;⎇&lt;/span&gt;</TranslatedText>
+                </Symbol>
+            </MeasurementUnit>
+            <MeasurementUnit OID="MU_SPANSTYLEFONTSIZELARGESPAN_4461" Name="&lt;span style=&quot;font-size:large&quot;&gt;⏎&lt;/span&gt;">
+                <Symbol>
+                    <TranslatedText>&lt;span style="font-size:large"&gt;⏎&lt;/span&gt;</TranslatedText>
+                </Symbol>
+            </MeasurementUnit>
+            <MeasurementUnit OID="MU_SPANSTYLEFONTSIZELARGESPAN_4728" Name="&lt;span style=&quot;font-size:large&quot;&gt;⌘&lt;/span&gt;">
+                <Symbol>
+                    <TranslatedText>&lt;span style="font-size:large"&gt;⌘&lt;/span&gt;</TranslatedText>
+                </Symbol>
+            </MeasurementUnit>
+            <MeasurementUnit OID="MU_SPANSTYLEFONTSIZELARGESPAN_5081" Name="&lt;span style=&quot;font-size:large&quot;&gt;⌧&lt;/span&gt;">
+                <Symbol>
+                    <TranslatedText>&lt;span style="font-size:large"&gt;⌧&lt;/span&gt;</TranslatedText>
+                </Symbol>
+            </MeasurementUnit>
+            <MeasurementUnit OID="MU_SPANSTYLEFONTSIZELARGESPAN_757" Name="&lt;span style=&quot;font-size:large&quot;&gt;♼&lt;/span&gt;">
+                <Symbol>
+                    <TranslatedText>&lt;span style="font-size:large"&gt;♼&lt;/span&gt;</TranslatedText>
+                </Symbol>
+            </MeasurementUnit>
+        </BasicDefinitions>
+        <MetaDataVersion OID="v1.0.0" Name="MetaDataVersion_v1.0.0">
+            <Protocol>
+                <StudyEventRef StudyEventOID="SE_INPUTTYPESOPENCLINICA" OrderNumber="2" Mandatory="Yes"/>
+            </Protocol>
+            <StudyEventDef OID="SE_INPUTTYPESOPENCLINICA" Name="InputTypesOpenClinica" Repeating="No" Type="Scheduled">
+                <FormRef FormOID="F_TESTBED_DATA_V002" Mandatory="Yes"/>
+                <FormRef FormOID="F_TESTBED_DATA_V001" Mandatory="Yes"/>
+                <OpenClinica:EventDefinitionDetails StudyEventOID="SE_INPUTTYPESOPENCLINICA">
+                    <OpenClinica:Description>Event which inputs all the possible types available in OpenClinica</OpenClinica:Description>
+                </OpenClinica:EventDefinitionDetails>
+            </StudyEventDef>
+            <FormDef OID="F_TESTBED_DATA_V002" Name="TESTBED_DATA_UPLOAD_TOOL - v0.02" Repeating="No">
+                <ItemGroupRef ItemGroupOID="IG_TESTB_UNGROUPED" Mandatory="Yes"/>
+                <ItemGroupRef ItemGroupOID="IG_TESTB_SINGLE_SELECT" Mandatory="Yes"/>
+                <ItemGroupRef ItemGroupOID="IG_TESTB_MULTIPLE_SELECT" Mandatory="Yes"/>
+                <OpenClinica:FormDetails FormOID="F_TESTBED_DATA_V002" ParentFormOID="F_TESTBED_DATA">
+                    <OpenClinica:SectionDetails>
+                        <OpenClinica:Section SectionLabel="ALL_OC_TYPES" SectionTitle="All the possible OpenClinica types" SectionSubtitle="" SectionInstructions="" SectionPageNumber="1"/>
+                        <OpenClinica:Section SectionLabel="HIDDEN_INPUT" SectionTitle="Hidden input" SectionSubtitle="" SectionInstructions="" SectionPageNumber="2"/>
+                        <OpenClinica:Section SectionLabel="FUNCTIONS" SectionTitle="Functions" SectionSubtitle="" SectionInstructions="" SectionPageNumber=""/>
+                    </OpenClinica:SectionDetails>
+                    <OpenClinica:VersionDescription>Second version</OpenClinica:VersionDescription>
+                    <OpenClinica:RevisionNotes>Initial version Jacob Rousseau v0.1
+Addition of the functions v0.2</OpenClinica:RevisionNotes>
+                    <OpenClinica:PresentInEventDefinition StudyEventOID="SE_INPUTTYPESOPENCLINICA" IsDefaultVersion="No" PasswordRequired="No" DoubleDataEntry="No" HideCRF="No" SourceDataVerification="not_required"/>
+                </OpenClinica:FormDetails>
+            </FormDef>
+            <FormDef OID="F_TESTBED_DATA_V001" Name="TESTBED_DATA_UPLOAD_TOOL - v0.01" Repeating="No">
+                <ItemGroupRef ItemGroupOID="IG_TESTB_UNGROUPED" Mandatory="Yes"/>
+                <ItemGroupRef ItemGroupOID="IG_TESTB_SINGLE_SELECT" Mandatory="Yes"/>
+                <ItemGroupRef ItemGroupOID="IG_TESTB_MULTIPLE_SELECT" Mandatory="No"/>
+                <OpenClinica:FormDetails FormOID="F_TESTBED_DATA_V001" ParentFormOID="F_TESTBED_DATA">
+                    <OpenClinica:SectionDetails>
+                        <OpenClinica:Section SectionLabel="ALL_OC_TYPES" SectionTitle="All the possible OpenClinica types" SectionSubtitle="" SectionInstructions="" SectionPageNumber="1"/>
+                        <OpenClinica:Section SectionLabel="HIDDEN_INPUT" SectionTitle="Hidden input" SectionSubtitle="" SectionInstructions="" SectionPageNumber="2"/>
+                    </OpenClinica:SectionDetails>
+                    <OpenClinica:VersionDescription>First Draft</OpenClinica:VersionDescription>
+                    <OpenClinica:RevisionNotes>Initial version Jacob Rousseau</OpenClinica:RevisionNotes>
+                    <OpenClinica:PresentInEventDefinition StudyEventOID="SE_INPUTTYPESOPENCLINICA" IsDefaultVersion="Yes" PasswordRequired="No" DoubleDataEntry="No" HideCRF="No" SourceDataVerification="not_required"/>
+                </OpenClinica:FormDetails>
+            </FormDef>
+            <ItemGroupDef OID="IG_TESTB_UNGROUPED" Name="IG_TESTB_UNGROUPED" Repeating="No" SASDatasetName="UNGROUPE">
+                <ItemRef ItemOID="I_TESTB_STRING_TYPE" OrderNumber="1" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_STRING_TYPE_WITH_WIDTH" OrderNumber="2" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_REAL_TYPE" OrderNumber="3" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_REAL_TYPE_WITH_WIDTH" OrderNumber="4" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_INTEGER_TYPE" OrderNumber="5" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_INTEGER_TYPE_WITH_WIDTH" OrderNumber="6" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_DATE_TYPE" OrderNumber="7" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_PDATE_TYPE" OrderNumber="8" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_TOGGLE_SHOW_HIDE" OrderNumber="9" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_STRING_TYPE_TOGGLED" OrderNumber="10" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_ENUMERATION_INT_RADIO_TOGGL" OrderNumber="11" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_INTEGER_TYPE_WITH_FUNC_LTE" OrderNumber="12" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_REAL_TYPE_WITH_FUNC_LTE" OrderNumber="13" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_INTEGER_TYPE_WITH_FUNC_GTE" OrderNumber="14" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_REAL_TYPE_WITH_FUNC_GTE" OrderNumber="15" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_INTEGER_TYPE_WITH_FUNC_LT" OrderNumber="16" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_REAL_TYPE_WITH_FUNC_LT" OrderNumber="17" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_INTEGER_TYPE_WITH_FUNC_GT" OrderNumber="18" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_REAL_TYPE_WITH_FUNC_GT" OrderNumber="19" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_INTEGER_TYPE_WITH_FUNC_RANG" OrderNumber="20" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_REAL_TYPE_WITH_FUNC_RANGE" OrderNumber="21" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_INTEGER_TYPE_WITH_FUNC_NOT_" OrderNumber="22" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_REAL_TYPE_WITH_FUNC_NOT_EQU" OrderNumber="23" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_INTEGER_TYPE_WITH_FUNC_EQUA" OrderNumber="24" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_REAL_TYPE_WITH_FUNC_EQUAL" OrderNumber="25" Mandatory="Yes"/>
+                <OpenClinica:ItemGroupDetails ItemGroupOID="IG_TESTB_UNGROUPED">
+                    <OpenClinica:PresentInForm FormOID="F_TESTBED_DATA_V002" ShowGroup="Yes">
+                        <OpenClinica:ItemGroupRepeat RepeatNumber="1" RepeatMax="1"/>
+                    </OpenClinica:PresentInForm>
+                    <OpenClinica:PresentInForm FormOID="F_TESTBED_DATA_V001" ShowGroup="Yes">
+                        <OpenClinica:ItemGroupRepeat RepeatNumber="1" RepeatMax="1"/>
+                    </OpenClinica:PresentInForm>
+                </OpenClinica:ItemGroupDetails>
+            </ItemGroupDef>
+            <ItemGroupDef OID="IG_TESTB_SINGLE_SELECT" Name="SINGLE_SELECT" Repeating="Yes" SASDatasetName="SINGLE_S" Comment="Single select">
+                <ItemRef ItemOID="I_TESTB_ENUMERATION_INT_SINGLESELEC" OrderNumber="1" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_ENUMERATION_STRING_SINGLESE" OrderNumber="2" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_ENUMERATION_REAL_SINGLESELE" OrderNumber="3" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_ENUMERATION_INT_RADIO" OrderNumber="4" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_ENUMERATION_STRING_RADIO" OrderNumber="5" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_ENUMERATION_REAL_RADIO" OrderNumber="6" Mandatory="Yes"/>
+                <OpenClinica:ItemGroupDetails ItemGroupOID="IG_TESTB_SINGLE_SELECT">
+                    <OpenClinica:PresentInForm FormOID="F_TESTBED_DATA_V002" ShowGroup="Yes">
+                        <OpenClinica:ItemGroupRepeat RepeatNumber="1" RepeatMax="40"/>
+                        <OpenClinica:ItemGroupHeader>Single select</OpenClinica:ItemGroupHeader>
+                    </OpenClinica:PresentInForm>
+                    <OpenClinica:PresentInForm FormOID="F_TESTBED_DATA_V001" ShowGroup="Yes">
+                        <OpenClinica:ItemGroupRepeat RepeatNumber="1" RepeatMax="40"/>
+                        <OpenClinica:ItemGroupHeader>Single select</OpenClinica:ItemGroupHeader>
+                    </OpenClinica:PresentInForm>
+                </OpenClinica:ItemGroupDetails>
+            </ItemGroupDef>
+            <ItemGroupDef OID="IG_TESTB_MULTIPLE_SELECT" Name="MULTIPLE_SELECT" Repeating="Yes" SASDatasetName="MULTIPLE" Comment="Multipe select">
+                <ItemRef ItemOID="I_TESTB_ENUMERATION_INT_MULTIPLESEL" OrderNumber="1" Mandatory="Yes"/>
+                <ItemRef ItemOID="I_TESTB_ENUMERATION_STRING_MULTIPLE" OrderNumber="2" Mandatory="No"/>
+                <ItemRef ItemOID="I_TESTB_ENUMERATION_REAL_MULTIPESEL" OrderNumber="3" Mandatory="Yes"/>
+                <OpenClinica:ItemGroupDetails ItemGroupOID="IG_TESTB_MULTIPLE_SELECT">
+                    <OpenClinica:PresentInForm FormOID="F_TESTBED_DATA_V002" ShowGroup="Yes">
+                        <OpenClinica:ItemGroupRepeat RepeatNumber="1" RepeatMax="40"/>
+                        <OpenClinica:ItemGroupHeader>Multipe select</OpenClinica:ItemGroupHeader>
+                    </OpenClinica:PresentInForm>
+                    <OpenClinica:PresentInForm FormOID="F_TESTBED_DATA_V001" ShowGroup="Yes">
+                        <OpenClinica:ItemGroupRepeat RepeatNumber="1" RepeatMax="40"/>
+                        <OpenClinica:ItemGroupHeader>Multipe select</OpenClinica:ItemGroupHeader>
+                    </OpenClinica:PresentInForm>
+                </OpenClinica:ItemGroupDetails>
+            </ItemGroupDef>
+            <ItemDef OID="I_TESTB_STRING_TYPE" Name="STRING_TYPE" DataType="text" Length="200" SASFieldName="STRING_T" Comment="String without width" OpenClinica:FormOIDs="F_TESTBED_DATA_V002,F_TESTBED_DATA_V001">
+                <Question>
+                    <TranslatedText>
+                    Non-enumerated types  - String
+                    </TranslatedText>
+                </Question>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_STRING_TYPE">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="1">
+                        <OpenClinica:LeftItemText>String</OpenClinica:LeftItemText>
+                        <OpenClinica:ItemHeader>Non-enumerated types</OpenClinica:ItemHeader>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V001" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="1">
+                        <OpenClinica:LeftItemText>String</OpenClinica:LeftItemText>
+                        <OpenClinica:ItemHeader>Non-enumerated types</OpenClinica:ItemHeader>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_STRING_TYPE_WITH_WIDTH" Name="STRING_TYPE_WITH_WIDTH" DataType="text" Length="10" SASFieldName="STRIN001" Comment="String with width decimal" OpenClinica:FormOIDs="F_TESTBED_DATA_V002,F_TESTBED_DATA_V001">
+                <Question>
+                    <TranslatedText>
+                    String 10(0)
+                    </TranslatedText>
+                </Question>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_STRING_TYPE_WITH_WIDTH">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="2">
+                        <OpenClinica:LeftItemText>String 10(0)</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V001" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="2">
+                        <OpenClinica:LeftItemText>String 10(0)</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_REAL_TYPE" Name="REAL_TYPE" DataType="float" Length="25" SignificantDigits="6" SASFieldName="REAL_TYP" Comment="Real without width decimal" OpenClinica:FormOIDs="F_TESTBED_DATA_V002,F_TESTBED_DATA_V001">
+                <Question>
+                    <TranslatedText>
+                    Real
+                    </TranslatedText>
+                </Question>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_REAL_TYPE">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="3">
+                        <OpenClinica:LeftItemText>Real</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V001" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="3">
+                        <OpenClinica:LeftItemText>Real</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_REAL_TYPE_WITH_WIDTH" Name="REAL_TYPE_WITH_WIDTH" DataType="float" Length="6" SignificantDigits="4" SASFieldName="REAL_002" Comment="Real with width decimal" OpenClinica:FormOIDs="F_TESTBED_DATA_V002,F_TESTBED_DATA_V001">
+                <Question>
+                    <TranslatedText>
+                    Real 6(4)
+                    </TranslatedText>
+                </Question>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_REAL_TYPE_WITH_WIDTH">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="4">
+                        <OpenClinica:LeftItemText>Real 6(4)</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V001" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="4">
+                        <OpenClinica:LeftItemText>Real 6(4)</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_INTEGER_TYPE" Name="INTEGER_TYPE" DataType="integer" Length="10" SASFieldName="INTEGER_" Comment="Integer without width decimal" OpenClinica:FormOIDs="F_TESTBED_DATA_V002,F_TESTBED_DATA_V001">
+                <Question>
+                    <TranslatedText>
+                    Integer
+                    </TranslatedText>
+                </Question>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_INTEGER_TYPE">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="5">
+                        <OpenClinica:LeftItemText>Integer</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V001" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="5">
+                        <OpenClinica:LeftItemText>Integer</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_INTEGER_TYPE_WITH_WIDTH" Name="INTEGER_TYPE_WITH_WIDTH" DataType="integer" Length="4" SASFieldName="INTEG003" Comment="Integer with width decimal" OpenClinica:FormOIDs="F_TESTBED_DATA_V002,F_TESTBED_DATA_V001">
+                <Question>
+                    <TranslatedText>
+                    Integer 4(0)
+                    </TranslatedText>
+                </Question>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_INTEGER_TYPE_WITH_WIDTH">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="6">
+                        <OpenClinica:LeftItemText>Integer 4(0)</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V001" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="6">
+                        <OpenClinica:LeftItemText>Integer 4(0)</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_DATE_TYPE" Name="DATE_TYPE" DataType="date" SASFieldName="DATE_TYP" Comment="Date" OpenClinica:FormOIDs="F_TESTBED_DATA_V002,F_TESTBED_DATA_V001">
+                <Question>
+                    <TranslatedText>
+                    Date
+                    </TranslatedText>
+                </Question>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_DATE_TYPE">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="7">
+                        <OpenClinica:LeftItemText>Date</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V001" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="7">
+                        <OpenClinica:LeftItemText>Date</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_PDATE_TYPE" Name="PDATE_TYPE" DataType="partialDate" SASFieldName="PDATE_TY" Comment="Partial date with a RegExp Validation" OpenClinica:FormOIDs="F_TESTBED_DATA_V002,F_TESTBED_DATA_V001">
+                <Question>
+                    <TranslatedText>
+                    Format dd-MMM-yyyy where &lt;b&gt;dd-&lt;/b&gt; is optional
+                    </TranslatedText>
+                </Question>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_PDATE_TYPE">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="8">
+                        <OpenClinica:LeftItemText>Format dd-MMM-yyyy where &lt;b&gt;dd-&lt;/b&gt; is optional</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V001" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="8">
+                        <OpenClinica:LeftItemText>Format dd-MMM-yyyy where &lt;b&gt;dd-&lt;/b&gt; is optional</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_TOGGLE_SHOW_HIDE" Name="TOGGLE_SHOW_HIDE" DataType="integer" Length="1" SASFieldName="TOGGLE_S" Comment="Toggle which turns items on when the toggle has value Y" OpenClinica:FormOIDs="F_TESTBED_DATA_V002,F_TESTBED_DATA_V001">
+                <Question>
+                    <TranslatedText>
+                    Toggled items  - Toggle visiblity
+                    </TranslatedText>
+                </Question>
+                <CodeListRef CodeListOID="CL_49"/>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_TOGGLE_SHOW_HIDE">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="2" PHI="No" ShowItem="Yes" OrderInForm="32">
+                        <OpenClinica:LeftItemText>Toggle visiblity</OpenClinica:LeftItemText>
+                        <OpenClinica:ItemHeader>Toggled items</OpenClinica:ItemHeader>
+                        <OpenClinica:SectionLabel>HIDDEN_INPUT</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="radio" ResponseLayout="horizontal"/>
+                    </OpenClinica:ItemPresentInForm>
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V001" PageNumber="2" PHI="No" ShowItem="Yes" OrderInForm="18">
+                        <OpenClinica:LeftItemText>Toggle visiblity</OpenClinica:LeftItemText>
+                        <OpenClinica:ItemHeader>Toggled items</OpenClinica:ItemHeader>
+                        <OpenClinica:SectionLabel>HIDDEN_INPUT</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="radio" ResponseLayout="horizontal"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_STRING_TYPE_TOGGLED" Name="STRING_TYPE_TOGGLED" DataType="text" Length="10" SASFieldName="STRIN004" Comment="String without width" OpenClinica:FormOIDs="F_TESTBED_DATA_V002,F_TESTBED_DATA_V001">
+                <Question>
+                    <TranslatedText>
+                    String Item visible when toggle = 'Yes
+                    </TranslatedText>
+                </Question>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_STRING_TYPE_TOGGLED">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="2" PHI="No" ShowItem="No" OrderInForm="33">
+                        <OpenClinica:LeftItemText>String Item visible when toggle = 'Yes</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>HIDDEN_INPUT</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text" ResponseLayout="horizontal"/>
+                        <OpenClinica:SimpleConditionalDisplay>
+                            <OpenClinica:ControlItemName>TOGGLE_SHOW_HIDE</OpenClinica:ControlItemName>
+                            <OpenClinica:OptionValue>1</OpenClinica:OptionValue>
+                            <OpenClinica:Message>Toggle is off but you have entered a value. Please remove it</OpenClinica:Message>
+                        </OpenClinica:SimpleConditionalDisplay>
+                    </OpenClinica:ItemPresentInForm>
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V001" PageNumber="2" PHI="No" ShowItem="No" OrderInForm="19">
+                        <OpenClinica:LeftItemText>String Item visible when toggle = 'Yes</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>HIDDEN_INPUT</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text" ResponseLayout="horizontal"/>
+                        <OpenClinica:SimpleConditionalDisplay>
+                            <OpenClinica:ControlItemName>TOGGLE_SHOW_HIDE</OpenClinica:ControlItemName>
+                            <OpenClinica:OptionValue>1</OpenClinica:OptionValue>
+                            <OpenClinica:Message>Toggle is off but you have entered a value. Please remove it</OpenClinica:Message>
+                        </OpenClinica:SimpleConditionalDisplay>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_ENUMERATION_INT_RADIO_TOGGL" Name="ENUMERATION_INT_RADIO_TOGGLED" DataType="integer" Length="2" SASFieldName="ENUMERAT" Comment="Enumeration with Integer values 10,11,12,13" OpenClinica:FormOIDs="F_TESTBED_DATA_V002,F_TESTBED_DATA_V001">
+                <Question>
+                    <TranslatedText>
+                    Radionbuttion Item visible when toggle = 'Yes
+                    </TranslatedText>
+                </Question>
+                <CodeListRef CodeListOID="CL_50"/>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_ENUMERATION_INT_RADIO_TOGGL">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="2" PHI="No" ShowItem="No" OrderInForm="34">
+                        <OpenClinica:LeftItemText>Radionbuttion Item visible when toggle = 'Yes</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>HIDDEN_INPUT</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="radio" ResponseLayout="vertical"/>
+                        <OpenClinica:SimpleConditionalDisplay>
+                            <OpenClinica:ControlItemName>TOGGLE_SHOW_HIDE</OpenClinica:ControlItemName>
+                            <OpenClinica:OptionValue>1</OpenClinica:OptionValue>
+                            <OpenClinica:Message>Toggle is off but you have entered a value. Please remove it</OpenClinica:Message>
+                        </OpenClinica:SimpleConditionalDisplay>
+                    </OpenClinica:ItemPresentInForm>
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V001" PageNumber="2" PHI="No" ShowItem="No" OrderInForm="20">
+                        <OpenClinica:LeftItemText>Radionbuttion Item visible when toggle = 'Yes</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>HIDDEN_INPUT</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="radio" ResponseLayout="vertical"/>
+                        <OpenClinica:SimpleConditionalDisplay>
+                            <OpenClinica:ControlItemName>TOGGLE_SHOW_HIDE</OpenClinica:ControlItemName>
+                            <OpenClinica:OptionValue>1</OpenClinica:OptionValue>
+                            <OpenClinica:Message>Toggle is off but you have entered a value. Please remove it</OpenClinica:Message>
+                        </OpenClinica:SimpleConditionalDisplay>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_INTEGER_TYPE_WITH_FUNC_LTE" Name="INTEGER_TYPE_WITH_FUNC_LTE" DataType="integer" Length="4" SASFieldName="INTEG005" Comment="Integer with function less than equal" OpenClinica:FormOIDs="F_TESTBED_DATA_V002">
+                <Question>
+                    <TranslatedText>
+                    Functions  - Value must be smaller than or equal to 4  - Integer
+                    </TranslatedText>
+                </Question>
+                <RangeCheck Comparator="LE" SoftHard="Hard">
+                    <CheckValue>4</CheckValue>
+                    <ErrorMessage><TranslatedText>Value must be smaller than or equal to 4</TranslatedText></ErrorMessage>
+                </RangeCheck>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_INTEGER_TYPE_WITH_FUNC_LTE">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="2" PHI="No" ShowItem="Yes" OrderInForm="18">
+                        <OpenClinica:LeftItemText>Value must be smaller than or equal to 4</OpenClinica:LeftItemText>
+                        <OpenClinica:RightItemText>Integer</OpenClinica:RightItemText>
+                        <OpenClinica:ItemHeader>Functions</OpenClinica:ItemHeader>
+                        <OpenClinica:SectionLabel>FUNCTIONS</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_REAL_TYPE_WITH_FUNC_LTE" Name="REAL_TYPE_WITH_FUNC_LTE" DataType="float" Length="4" SignificantDigits="2" SASFieldName="REAL_006" Comment="Real with function less than equal" OpenClinica:FormOIDs="F_TESTBED_DATA_V002">
+                <Question>
+                    <TranslatedText>
+                    Value must be smaller than or equal to 4.0  - Real
+                    </TranslatedText>
+                </Question>
+                <RangeCheck Comparator="LE" SoftHard="Hard">
+                    <CheckValue>4.0</CheckValue>
+                    <ErrorMessage><TranslatedText>Value must be smaller than or equal to 4.0</TranslatedText></ErrorMessage>
+                </RangeCheck>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_REAL_TYPE_WITH_FUNC_LTE">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="2" PHI="No" ShowItem="Yes" OrderInForm="19">
+                        <OpenClinica:LeftItemText>Value must be smaller than or equal to 4.0</OpenClinica:LeftItemText>
+                        <OpenClinica:RightItemText>Real</OpenClinica:RightItemText>
+                        <OpenClinica:SectionLabel>FUNCTIONS</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_INTEGER_TYPE_WITH_FUNC_GTE" Name="INTEGER_TYPE_WITH_FUNC_GTE" DataType="integer" Length="4" SASFieldName="INTEG007" Comment="Integer with function greater than equal" OpenClinica:FormOIDs="F_TESTBED_DATA_V002">
+                <Question>
+                    <TranslatedText>
+                    Value must be greater than or equal to 5  - Integer
+                    </TranslatedText>
+                </Question>
+                <RangeCheck Comparator="GE" SoftHard="Hard">
+                    <CheckValue>5</CheckValue>
+                    <ErrorMessage><TranslatedText>Value must be greater than or equal to 5</TranslatedText></ErrorMessage>
+                </RangeCheck>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_INTEGER_TYPE_WITH_FUNC_GTE">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="2" PHI="No" ShowItem="Yes" OrderInForm="20">
+                        <OpenClinica:LeftItemText>Value must be greater than or equal to 5</OpenClinica:LeftItemText>
+                        <OpenClinica:RightItemText>Integer</OpenClinica:RightItemText>
+                        <OpenClinica:SectionLabel>FUNCTIONS</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_REAL_TYPE_WITH_FUNC_GTE" Name="REAL_TYPE_WITH_FUNC_GTE" DataType="float" Length="4" SignificantDigits="2" SASFieldName="REAL_008" Comment="Real with function greater than equal" OpenClinica:FormOIDs="F_TESTBED_DATA_V002">
+                <Question>
+                    <TranslatedText>
+                    Value must be greater than or equal to 5.0  - Real
+                    </TranslatedText>
+                </Question>
+                <RangeCheck Comparator="GE" SoftHard="Hard">
+                    <CheckValue>5.0</CheckValue>
+                    <ErrorMessage><TranslatedText>Value must be greater than or equal to 5.0</TranslatedText></ErrorMessage>
+                </RangeCheck>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_REAL_TYPE_WITH_FUNC_GTE">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="2" PHI="No" ShowItem="Yes" OrderInForm="21">
+                        <OpenClinica:LeftItemText>Value must be greater than or equal to 5.0</OpenClinica:LeftItemText>
+                        <OpenClinica:RightItemText>Real</OpenClinica:RightItemText>
+                        <OpenClinica:SectionLabel>FUNCTIONS</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_INTEGER_TYPE_WITH_FUNC_LT" Name="INTEGER_TYPE_WITH_FUNC_LT" DataType="integer" Length="4" SASFieldName="INTEG009" Comment="Integer with function less than" OpenClinica:FormOIDs="F_TESTBED_DATA_V002">
+                <Question>
+                    <TranslatedText>
+                    Value must be smaller than 6  - Integer
+                    </TranslatedText>
+                </Question>
+                <RangeCheck Comparator="LT" SoftHard="Hard">
+                    <CheckValue>6</CheckValue>
+                    <ErrorMessage><TranslatedText>Value must be smaller than 6</TranslatedText></ErrorMessage>
+                </RangeCheck>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_INTEGER_TYPE_WITH_FUNC_LT">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="2" PHI="No" ShowItem="Yes" OrderInForm="22">
+                        <OpenClinica:LeftItemText>Value must be smaller than 6</OpenClinica:LeftItemText>
+                        <OpenClinica:RightItemText>Integer</OpenClinica:RightItemText>
+                        <OpenClinica:SectionLabel>FUNCTIONS</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_REAL_TYPE_WITH_FUNC_LT" Name="REAL_TYPE_WITH_FUNC_LT" DataType="float" Length="4" SignificantDigits="2" SASFieldName="REAL_00a" Comment="Real with function less than" OpenClinica:FormOIDs="F_TESTBED_DATA_V002">
+                <Question>
+                    <TranslatedText>
+                    Value must be smaller than 6.0  - Real
+                    </TranslatedText>
+                </Question>
+                <RangeCheck Comparator="LT" SoftHard="Hard">
+                    <CheckValue>6.0</CheckValue>
+                    <ErrorMessage><TranslatedText>Value must be smaller than 6.0</TranslatedText></ErrorMessage>
+                </RangeCheck>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_REAL_TYPE_WITH_FUNC_LT">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="2" PHI="No" ShowItem="Yes" OrderInForm="23">
+                        <OpenClinica:LeftItemText>Value must be smaller than 6.0</OpenClinica:LeftItemText>
+                        <OpenClinica:RightItemText>Real</OpenClinica:RightItemText>
+                        <OpenClinica:SectionLabel>FUNCTIONS</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_INTEGER_TYPE_WITH_FUNC_GT" Name="INTEGER_TYPE_WITH_FUNC_GT" DataType="integer" Length="4" SASFieldName="INTEG00b" Comment="Integer with function greater than" OpenClinica:FormOIDs="F_TESTBED_DATA_V002">
+                <Question>
+                    <TranslatedText>
+                    Value must be greater than 7  - Integer
+                    </TranslatedText>
+                </Question>
+                <RangeCheck Comparator="GT" SoftHard="Hard">
+                    <CheckValue>7</CheckValue>
+                    <ErrorMessage><TranslatedText>Value must be greater than 7</TranslatedText></ErrorMessage>
+                </RangeCheck>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_INTEGER_TYPE_WITH_FUNC_GT">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="2" PHI="No" ShowItem="Yes" OrderInForm="24">
+                        <OpenClinica:LeftItemText>Value must be greater than 7</OpenClinica:LeftItemText>
+                        <OpenClinica:RightItemText>Integer</OpenClinica:RightItemText>
+                        <OpenClinica:SectionLabel>FUNCTIONS</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_REAL_TYPE_WITH_FUNC_GT" Name="REAL_TYPE_WITH_FUNC_GT" DataType="float" Length="4" SignificantDigits="2" SASFieldName="REAL_00c" Comment="Real with function greater than" OpenClinica:FormOIDs="F_TESTBED_DATA_V002">
+                <Question>
+                    <TranslatedText>
+                    Value must be greater than 7.0  - Real
+                    </TranslatedText>
+                </Question>
+                <RangeCheck Comparator="GT" SoftHard="Hard">
+                    <CheckValue>7.0</CheckValue>
+                    <ErrorMessage><TranslatedText>Value must be greater than 7.0</TranslatedText></ErrorMessage>
+                </RangeCheck>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_REAL_TYPE_WITH_FUNC_GT">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="2" PHI="No" ShowItem="Yes" OrderInForm="25">
+                        <OpenClinica:LeftItemText>Value must be greater than 7.0</OpenClinica:LeftItemText>
+                        <OpenClinica:RightItemText>Real</OpenClinica:RightItemText>
+                        <OpenClinica:SectionLabel>FUNCTIONS</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_INTEGER_TYPE_WITH_FUNC_RANG" Name="INTEGER_TYPE_WITH_FUNC_RANGE" DataType="integer" Length="4" SASFieldName="INTEG00d" Comment="Integer with function range" OpenClinica:FormOIDs="F_TESTBED_DATA_V002">
+                <Question>
+                    <TranslatedText>
+                    Value must be between 1 and 2  - Integer
+                    </TranslatedText>
+                </Question>
+                <RangeCheck Comparator="GE" SoftHard="Hard">
+                    <CheckValue>1</CheckValue>
+                    <ErrorMessage><TranslatedText>Value must be between 1 and 2</TranslatedText></ErrorMessage>
+                </RangeCheck>
+                <RangeCheck Comparator="LE" SoftHard="Hard">
+                    <CheckValue>2</CheckValue>
+                    <ErrorMessage><TranslatedText>Value must be between 1 and 2</TranslatedText></ErrorMessage>
+                </RangeCheck>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_INTEGER_TYPE_WITH_FUNC_RANG">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="2" PHI="No" ShowItem="Yes" OrderInForm="26">
+                        <OpenClinica:LeftItemText>Value must be between 1 and 2</OpenClinica:LeftItemText>
+                        <OpenClinica:RightItemText>Integer</OpenClinica:RightItemText>
+                        <OpenClinica:SectionLabel>FUNCTIONS</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_REAL_TYPE_WITH_FUNC_RANGE" Name="REAL_TYPE_WITH_FUNC_RANGE" DataType="float" Length="4" SignificantDigits="2" SASFieldName="REAL_00e" Comment="Real with function range" OpenClinica:FormOIDs="F_TESTBED_DATA_V002">
+                <Question>
+                    <TranslatedText>
+                    Value must be between 1.0 and 2.0  - Real
+                    </TranslatedText>
+                </Question>
+                <RangeCheck Comparator="GE" SoftHard="Hard">
+                    <CheckValue>1.0</CheckValue>
+                    <ErrorMessage><TranslatedText>Value must be between 1.0 and 2.0</TranslatedText></ErrorMessage>
+                </RangeCheck>
+                <RangeCheck Comparator="LE" SoftHard="Hard">
+                    <CheckValue>2.0</CheckValue>
+                    <ErrorMessage><TranslatedText>Value must be between 1.0 and 2.0</TranslatedText></ErrorMessage>
+                </RangeCheck>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_REAL_TYPE_WITH_FUNC_RANGE">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="2" PHI="No" ShowItem="Yes" OrderInForm="27">
+                        <OpenClinica:LeftItemText>Value must be between 1.0 and 2.0</OpenClinica:LeftItemText>
+                        <OpenClinica:RightItemText>Real</OpenClinica:RightItemText>
+                        <OpenClinica:SectionLabel>FUNCTIONS</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_INTEGER_TYPE_WITH_FUNC_NOT_" Name="INTEGER_TYPE_WITH_FUNC_NOT_EQUAL" DataType="integer" Length="4" SASFieldName="INTEG00f" Comment="Integer with function not equal" OpenClinica:FormOIDs="F_TESTBED_DATA_V002">
+                <Question>
+                    <TranslatedText>
+                    Value must not be equal to 8  - Integer
+                    </TranslatedText>
+                </Question>
+                <RangeCheck Comparator="NE" SoftHard="Hard">
+                    <CheckValue>8 </CheckValue>
+                    <ErrorMessage><TranslatedText>Value must not be equal to 8</TranslatedText></ErrorMessage>
+                </RangeCheck>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_INTEGER_TYPE_WITH_FUNC_NOT_">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="2" PHI="No" ShowItem="Yes" OrderInForm="28">
+                        <OpenClinica:LeftItemText>Value must not be equal to 8</OpenClinica:LeftItemText>
+                        <OpenClinica:RightItemText>Integer</OpenClinica:RightItemText>
+                        <OpenClinica:SectionLabel>FUNCTIONS</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_REAL_TYPE_WITH_FUNC_NOT_EQU" Name="REAL_TYPE_WITH_FUNC_NOT_EQUAL" DataType="float" Length="4" SignificantDigits="2" SASFieldName="REAL_00g" Comment="Real with function not equal" OpenClinica:FormOIDs="F_TESTBED_DATA_V002">
+                <Question>
+                    <TranslatedText>
+                    Value must not be equal to 9.0  - Real
+                    </TranslatedText>
+                </Question>
+                <RangeCheck Comparator="NE" SoftHard="Hard">
+                    <CheckValue>9.0 </CheckValue>
+                    <ErrorMessage><TranslatedText>Value must not be equal to 9.0</TranslatedText></ErrorMessage>
+                </RangeCheck>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_REAL_TYPE_WITH_FUNC_NOT_EQU">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="2" PHI="No" ShowItem="Yes" OrderInForm="29">
+                        <OpenClinica:LeftItemText>Value must not be equal to 9.0</OpenClinica:LeftItemText>
+                        <OpenClinica:RightItemText>Real</OpenClinica:RightItemText>
+                        <OpenClinica:SectionLabel>FUNCTIONS</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_INTEGER_TYPE_WITH_FUNC_EQUA" Name="INTEGER_TYPE_WITH_FUNC_EQUAL" DataType="integer" Length="4" SASFieldName="INTEG00h" Comment="Integer with function equal" OpenClinica:FormOIDs="F_TESTBED_DATA_V002">
+                <Question>
+                    <TranslatedText>
+                    Value must be equal to 10  - Integer
+                    </TranslatedText>
+                </Question>
+                <RangeCheck Comparator="EQ" SoftHard="Hard">
+                    <CheckValue>10 </CheckValue>
+                    <ErrorMessage><TranslatedText>Value must be equal to 10</TranslatedText></ErrorMessage>
+                </RangeCheck>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_INTEGER_TYPE_WITH_FUNC_EQUA">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="2" PHI="No" ShowItem="Yes" OrderInForm="30">
+                        <OpenClinica:LeftItemText>Value must be equal to 10</OpenClinica:LeftItemText>
+                        <OpenClinica:RightItemText>Integer</OpenClinica:RightItemText>
+                        <OpenClinica:SectionLabel>FUNCTIONS</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_REAL_TYPE_WITH_FUNC_EQUAL" Name="REAL_TYPE_WITH_FUNC_EQUAL" DataType="float" Length="4" SignificantDigits="2" SASFieldName="REAL_00i" Comment="Real with function equal" OpenClinica:FormOIDs="F_TESTBED_DATA_V002">
+                <Question>
+                    <TranslatedText>
+                    Value must be equal to 11.0  - Real
+                    </TranslatedText>
+                </Question>
+                <RangeCheck Comparator="EQ" SoftHard="Hard">
+                    <CheckValue>11.0 </CheckValue>
+                    <ErrorMessage><TranslatedText>Value must be equal to 11.0</TranslatedText></ErrorMessage>
+                </RangeCheck>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_REAL_TYPE_WITH_FUNC_EQUAL">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="2" PHI="No" ShowItem="Yes" OrderInForm="31">
+                        <OpenClinica:LeftItemText>Value must be equal to 11.0</OpenClinica:LeftItemText>
+                        <OpenClinica:RightItemText>Real</OpenClinica:RightItemText>
+                        <OpenClinica:SectionLabel>FUNCTIONS</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="text"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_ENUMERATION_INT_SINGLESELEC" Name="ENUMERATION_INT_SINGLESELECT" DataType="integer" Length="1" SASFieldName="ENUME00j" Comment="Enumeration with Integer values 0,1,2,3" OpenClinica:FormOIDs="F_TESTBED_DATA_V002,F_TESTBED_DATA_V001">
+                <Question>
+                    <TranslatedText>
+                    Enumerated types  - Single select Integer
+                    </TranslatedText>
+                </Question>
+                <CodeListRef CodeListOID="CL_40"/>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_ENUMERATION_INT_SINGLESELEC">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="9">
+                        <OpenClinica:LeftItemText>Single select Integer</OpenClinica:LeftItemText>
+                        <OpenClinica:ItemHeader>Enumerated types</OpenClinica:ItemHeader>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="single-select" ResponseLayout="vertical"/>
+                    </OpenClinica:ItemPresentInForm>
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V001" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="9">
+                        <OpenClinica:LeftItemText>Single select Integer</OpenClinica:LeftItemText>
+                        <OpenClinica:ItemHeader>Enumerated types</OpenClinica:ItemHeader>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="single-select" ResponseLayout="vertical"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_ENUMERATION_STRING_SINGLESE" Name="ENUMERATION_STRING_SINGLESELECT" DataType="text" Length="1" SASFieldName="ENUME00k" Comment="Enumeration with String values a,b,c,d" OpenClinica:FormOIDs="F_TESTBED_DATA_V002,F_TESTBED_DATA_V001">
+                <Question>
+                    <TranslatedText>
+                    Single select String
+                    </TranslatedText>
+                </Question>
+                <CodeListRef CodeListOID="CL_41"/>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_ENUMERATION_STRING_SINGLESE">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="10">
+                        <OpenClinica:LeftItemText>Single select String</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="single-select" ResponseLayout="vertical"/>
+                    </OpenClinica:ItemPresentInForm>
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V001" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="10">
+                        <OpenClinica:LeftItemText>Single select String</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="single-select" ResponseLayout="vertical"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_ENUMERATION_REAL_SINGLESELE" Name="ENUMERATION_REAL_SINGLESELECT" DataType="float" Length="3" SignificantDigits="1" SASFieldName="ENUME00l" Comment="Enumeration with Real values 1.0, 2.0, 3.0, 4,0" OpenClinica:FormOIDs="F_TESTBED_DATA_V002,F_TESTBED_DATA_V001">
+                <Question>
+                    <TranslatedText>
+                    Single select Real
+                    </TranslatedText>
+                </Question>
+                <CodeListRef CodeListOID="CL_42"/>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_ENUMERATION_REAL_SINGLESELE">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="11">
+                        <OpenClinica:LeftItemText>Single select Real</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="single-select" ResponseLayout="vertical"/>
+                    </OpenClinica:ItemPresentInForm>
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V001" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="11">
+                        <OpenClinica:LeftItemText>Single select Real</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="single-select" ResponseLayout="vertical"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_ENUMERATION_INT_RADIO" Name="ENUMERATION_INT_RADIO" DataType="integer" Length="1" SASFieldName="ENUME00m" Comment="Enumeration with Integer values 0,1,2,3" OpenClinica:FormOIDs="F_TESTBED_DATA_V002,F_TESTBED_DATA_V001">
+                <Question>
+                    <TranslatedText>
+                    Radio single select Integer
+                    </TranslatedText>
+                </Question>
+                <CodeListRef CodeListOID="CL_46"/>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_ENUMERATION_INT_RADIO">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="15">
+                        <OpenClinica:LeftItemText>Radio single select Integer</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="radio" ResponseLayout="vertical"/>
+                    </OpenClinica:ItemPresentInForm>
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V001" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="15">
+                        <OpenClinica:LeftItemText>Radio single select Integer</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="radio" ResponseLayout="vertical"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_ENUMERATION_STRING_RADIO" Name="ENUMERATION_STRING_RADIO" DataType="text" Length="1" SASFieldName="ENUME00n" Comment="Enumeration with String values a,b,c,d" OpenClinica:FormOIDs="F_TESTBED_DATA_V002,F_TESTBED_DATA_V001">
+                <Question>
+                    <TranslatedText>
+                    Radio single select String
+                    </TranslatedText>
+                </Question>
+                <CodeListRef CodeListOID="CL_47"/>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_ENUMERATION_STRING_RADIO">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="16">
+                        <OpenClinica:LeftItemText>Radio single select String</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="radio" ResponseLayout="vertical"/>
+                    </OpenClinica:ItemPresentInForm>
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V001" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="16">
+                        <OpenClinica:LeftItemText>Radio single select String</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="radio" ResponseLayout="vertical"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_ENUMERATION_REAL_RADIO" Name="ENUMERATION_REAL_RADIO" DataType="float" Length="3" SignificantDigits="1" SASFieldName="ENUME00o" Comment="Enumeration with Real values 1.0, 2.0, 3.0, 4,0" OpenClinica:FormOIDs="F_TESTBED_DATA_V002,F_TESTBED_DATA_V001">
+                <Question>
+                    <TranslatedText>
+                    Radio single select Real
+                    </TranslatedText>
+                </Question>
+                <CodeListRef CodeListOID="CL_48"/>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_ENUMERATION_REAL_RADIO">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="17">
+                        <OpenClinica:LeftItemText>Radio single select Real</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="radio" ResponseLayout="vertical"/>
+                    </OpenClinica:ItemPresentInForm>
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V001" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="17">
+                        <OpenClinica:LeftItemText>Radio single select Real</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="radio" ResponseLayout="vertical"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_ENUMERATION_INT_MULTIPLESEL" Name="ENUMERATION_INT_MULTIPLESELECT" DataType="text" Length="8" SASFieldName="ENUME00p" Comment="Enumeration with Integer values 0,1,2,3" OpenClinica:FormOIDs="F_TESTBED_DATA_V002,F_TESTBED_DATA_V001">
+                <Question>
+                    <TranslatedText>
+                    Multiple select Integer
+                    </TranslatedText>
+                </Question>
+                <OpenClinica:MultiSelectListRef MultiSelectListID="MSL_43"/>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_ENUMERATION_INT_MULTIPLESEL">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="12">
+                        <OpenClinica:LeftItemText>Multiple select Integer</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="multi-select" ResponseLayout="vertical"/>
+                    </OpenClinica:ItemPresentInForm>
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V001" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="12">
+                        <OpenClinica:LeftItemText>Multiple select Integer</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="multi-select" ResponseLayout="vertical"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_ENUMERATION_STRING_MULTIPLE" Name="ENUMERATION_STRING_MULTIPLESELECT" DataType="text" Length="8" SASFieldName="ENUME00q" Comment="Enumeration with String values a,b,c,d" OpenClinica:FormOIDs="F_TESTBED_DATA_V002,F_TESTBED_DATA_V001">
+                <Question>
+                    <TranslatedText>
+                    Multiple select String
+                    </TranslatedText>
+                </Question>
+                <OpenClinica:MultiSelectListRef MultiSelectListID="MSL_44"/>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_ENUMERATION_STRING_MULTIPLE">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="13">
+                        <OpenClinica:LeftItemText>Multiple select String</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="multi-select" ResponseLayout="vertical"/>
+                    </OpenClinica:ItemPresentInForm>
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V001" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="13">
+                        <OpenClinica:LeftItemText>Multiple select String</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="multi-select" ResponseLayout="vertical"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <ItemDef OID="I_TESTB_ENUMERATION_REAL_MULTIPESEL" Name="ENUMERATION_REAL_MULTIPESELECT" DataType="text" Length="16" SASFieldName="ENUME00r" Comment="Enumeration with Real values 1.0, 2.0, 3.0, 4,0" OpenClinica:FormOIDs="F_TESTBED_DATA_V002,F_TESTBED_DATA_V001">
+                <Question>
+                    <TranslatedText>
+                    Multiple select Real
+                    </TranslatedText>
+                </Question>
+                <OpenClinica:MultiSelectListRef MultiSelectListID="MSL_45"/>
+                <OpenClinica:ItemDetails ItemOID="I_TESTB_ENUMERATION_REAL_MULTIPESEL">
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V002" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="14">
+                        <OpenClinica:LeftItemText>Multiple select Real</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="multi-select" ResponseLayout="vertical"/>
+                    </OpenClinica:ItemPresentInForm>
+                    <OpenClinica:ItemPresentInForm FormOID="F_TESTBED_DATA_V001" PageNumber="1" PHI="No" ShowItem="Yes" OrderInForm="14">
+                        <OpenClinica:LeftItemText>Multiple select Real</OpenClinica:LeftItemText>
+                        <OpenClinica:SectionLabel>ALL_OC_TYPES</OpenClinica:SectionLabel>
+                        <OpenClinica:ItemResponse ResponseType="multi-select" ResponseLayout="vertical"/>
+                    </OpenClinica:ItemPresentInForm>
+                </OpenClinica:ItemDetails>
+            </ItemDef>
+            <CodeList OID="CL_49" Name="Y/N" DataType="integer" SASFormatName="Y_N">
+                <CodeListItem CodedValue="0">
+                    <Decode>
+                        <TranslatedText>No</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="1">
+                    <Decode>
+                        <TranslatedText>Yes</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="CL_50" Name="radio-int-toggled" DataType="integer" SASFormatName="RADIO_IN">
+                <CodeListItem CodedValue="10">
+                    <Decode>
+                        <TranslatedText>Ten</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="11">
+                    <Decode>
+                        <TranslatedText>Eleven</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="12">
+                    <Decode>
+                        <TranslatedText>Twelve</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="13">
+                    <Decode>
+                        <TranslatedText>Thirteen</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="CL_40" Name="single-select" DataType="integer" SASFormatName="SINGL01X">
+                <CodeListItem CodedValue="0">
+                    <Decode>
+                        <TranslatedText>Zero</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="1">
+                    <Decode>
+                        <TranslatedText>One</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="2">
+                    <Decode>
+                        <TranslatedText>Two</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="3">
+                    <Decode>
+                        <TranslatedText>Three</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="CL_41" Name="single-select-string" DataType="text" SASFormatName="$SINGLE_">
+                <CodeListItem CodedValue="a">
+                    <Decode>
+                        <TranslatedText>Option A</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="b">
+                    <Decode>
+                        <TranslatedText>Option B</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="c">
+                    <Decode>
+                        <TranslatedText>Option C</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="d">
+                    <Decode>
+                        <TranslatedText>Option D</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="CL_42" Name="single-select-real" DataType="float" SASFormatName="SINGL02X">
+                <CodeListItem CodedValue="1.0">
+                    <Decode>
+                        <TranslatedText>Option 1.0</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="2.0">
+                    <Decode>
+                        <TranslatedText>Option 2.0</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="3.0">
+                    <Decode>
+                        <TranslatedText>Option 3.0</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="4.0">
+                    <Decode>
+                        <TranslatedText>Option 4.0</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="CL_46" Name="radio" DataType="integer" SASFormatName="RADIO">
+                <CodeListItem CodedValue="0">
+                    <Decode>
+                        <TranslatedText>Zero</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="1">
+                    <Decode>
+                        <TranslatedText>One</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="2">
+                    <Decode>
+                        <TranslatedText>Two</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="3">
+                    <Decode>
+                        <TranslatedText>Three</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="CL_47" Name="radio-string" DataType="text" SASFormatName="$RADIO_S">
+                <CodeListItem CodedValue="a">
+                    <Decode>
+                        <TranslatedText>Option A</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="b">
+                    <Decode>
+                        <TranslatedText>Option B</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="c">
+                    <Decode>
+                        <TranslatedText>Option C</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="d">
+                    <Decode>
+                        <TranslatedText>Option D</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="CL_48" Name="radio-real" DataType="float" SASFormatName="RADIO_RE">
+                <CodeListItem CodedValue="1.0">
+                    <Decode>
+                        <TranslatedText>Option 1.0</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="2.0">
+                    <Decode>
+                        <TranslatedText>Option 2.0</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="3.0">
+                    <Decode>
+                        <TranslatedText>Option 3.0</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="4.0">
+                    <Decode>
+                        <TranslatedText>Option 4.0</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="CL_37" Name="Y/N" DataType="integer" SASFormatName="Y_N03X">
+                <CodeListItem CodedValue="0">
+                    <Decode>
+                        <TranslatedText>No</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="1">
+                    <Decode>
+                        <TranslatedText>Yes</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="CL_38" Name="radio-int-toggled" DataType="integer" SASFormatName="RADIO04X">
+                <CodeListItem CodedValue="10">
+                    <Decode>
+                        <TranslatedText>Ten</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="11">
+                    <Decode>
+                        <TranslatedText>Eleven</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="12">
+                    <Decode>
+                        <TranslatedText>Twelve</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="13">
+                    <Decode>
+                        <TranslatedText>Thirteen</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="CL_28" Name="single-select" DataType="integer" SASFormatName="SINGL05X">
+                <CodeListItem CodedValue="0">
+                    <Decode>
+                        <TranslatedText>Zero</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="1">
+                    <Decode>
+                        <TranslatedText>One</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="2">
+                    <Decode>
+                        <TranslatedText>Two</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="3">
+                    <Decode>
+                        <TranslatedText>Three</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="CL_29" Name="single-select-string" DataType="text" SASFormatName="$SING06X">
+                <CodeListItem CodedValue="a">
+                    <Decode>
+                        <TranslatedText>Option A</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="b">
+                    <Decode>
+                        <TranslatedText>Option B</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="c">
+                    <Decode>
+                        <TranslatedText>Option C</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="d">
+                    <Decode>
+                        <TranslatedText>Option D</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="CL_30" Name="single-select-real" DataType="float" SASFormatName="SINGL07X">
+                <CodeListItem CodedValue="1.0">
+                    <Decode>
+                        <TranslatedText>Option 1.0</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="2.0">
+                    <Decode>
+                        <TranslatedText>Option 2.0</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="3.0">
+                    <Decode>
+                        <TranslatedText>Option 3.0</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="4.0">
+                    <Decode>
+                        <TranslatedText>Option 4.0</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="CL_34" Name="radio" DataType="integer" SASFormatName="RADIO08X">
+                <CodeListItem CodedValue="0">
+                    <Decode>
+                        <TranslatedText>Zero</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="1">
+                    <Decode>
+                        <TranslatedText>One</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="2">
+                    <Decode>
+                        <TranslatedText>Two</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="3">
+                    <Decode>
+                        <TranslatedText>Three</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="CL_35" Name="radio-string" DataType="text" SASFormatName="$RADI09X">
+                <CodeListItem CodedValue="a">
+                    <Decode>
+                        <TranslatedText>Option A</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="b">
+                    <Decode>
+                        <TranslatedText>Option B</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="c">
+                    <Decode>
+                        <TranslatedText>Option C</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="d">
+                    <Decode>
+                        <TranslatedText>Option D</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <CodeList OID="CL_36" Name="radio-real" DataType="float" SASFormatName="RADIO10X">
+                <CodeListItem CodedValue="1.0">
+                    <Decode>
+                        <TranslatedText>Option 1.0</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="2.0">
+                    <Decode>
+                        <TranslatedText>Option 2.0</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="3.0">
+                    <Decode>
+                        <TranslatedText>Option 3.0</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+                <CodeListItem CodedValue="4.0">
+                    <Decode>
+                        <TranslatedText>Option 4.0</TranslatedText>
+                    </Decode>
+                </CodeListItem>
+            </CodeList>
+            <OpenClinica:MultiSelectList ID="MSL_43" Name="multiple-select" DataType="text" ActualDataType="text">
+                <OpenClinica:MultiSelectListItem CodedOptionValue="0">
+                    <Decode>
+                        <TranslatedText>Zero</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+                <OpenClinica:MultiSelectListItem CodedOptionValue="1">
+                    <Decode>
+                        <TranslatedText>One</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+                <OpenClinica:MultiSelectListItem CodedOptionValue="2">
+                    <Decode>
+                        <TranslatedText>Two</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+                <OpenClinica:MultiSelectListItem CodedOptionValue="3">
+                    <Decode>
+                        <TranslatedText>Three</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+            </OpenClinica:MultiSelectList>
+            <OpenClinica:MultiSelectList ID="MSL_44" Name="multiple-select-string" DataType="text" ActualDataType="text">
+                <OpenClinica:MultiSelectListItem CodedOptionValue="a">
+                    <Decode>
+                        <TranslatedText>Option A</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+                <OpenClinica:MultiSelectListItem CodedOptionValue="b">
+                    <Decode>
+                        <TranslatedText>Option B</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+                <OpenClinica:MultiSelectListItem CodedOptionValue="c">
+                    <Decode>
+                        <TranslatedText>Option C</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+                <OpenClinica:MultiSelectListItem CodedOptionValue="d">
+                    <Decode>
+                        <TranslatedText>Option D</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+            </OpenClinica:MultiSelectList>
+            <OpenClinica:MultiSelectList ID="MSL_45" Name="multiple-select-real" DataType="text" ActualDataType="text">
+                <OpenClinica:MultiSelectListItem CodedOptionValue="1.0">
+                    <Decode>
+                        <TranslatedText>Option 1.0</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+                <OpenClinica:MultiSelectListItem CodedOptionValue="2.0">
+                    <Decode>
+                        <TranslatedText>Option 2.0</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+                <OpenClinica:MultiSelectListItem CodedOptionValue="3.0">
+                    <Decode>
+                        <TranslatedText>Option 3.0</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+                <OpenClinica:MultiSelectListItem CodedOptionValue="4.0">
+                    <Decode>
+                        <TranslatedText>Option 4.0</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+            </OpenClinica:MultiSelectList>
+            <OpenClinica:MultiSelectList ID="MSL_31" Name="multiple-select" DataType="text" ActualDataType="text">
+                <OpenClinica:MultiSelectListItem CodedOptionValue="0">
+                    <Decode>
+                        <TranslatedText>Zero</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+                <OpenClinica:MultiSelectListItem CodedOptionValue="1">
+                    <Decode>
+                        <TranslatedText>One</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+                <OpenClinica:MultiSelectListItem CodedOptionValue="2">
+                    <Decode>
+                        <TranslatedText>Two</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+                <OpenClinica:MultiSelectListItem CodedOptionValue="3">
+                    <Decode>
+                        <TranslatedText>Three</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+            </OpenClinica:MultiSelectList>
+            <OpenClinica:MultiSelectList ID="MSL_32" Name="multiple-select-string" DataType="text" ActualDataType="text">
+                <OpenClinica:MultiSelectListItem CodedOptionValue="a">
+                    <Decode>
+                        <TranslatedText>Option A</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+                <OpenClinica:MultiSelectListItem CodedOptionValue="b">
+                    <Decode>
+                        <TranslatedText>Option B</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+                <OpenClinica:MultiSelectListItem CodedOptionValue="c">
+                    <Decode>
+                        <TranslatedText>Option C</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+                <OpenClinica:MultiSelectListItem CodedOptionValue="d">
+                    <Decode>
+                        <TranslatedText>Option D</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+            </OpenClinica:MultiSelectList>
+            <OpenClinica:MultiSelectList ID="MSL_33" Name="multiple-select-real" DataType="text" ActualDataType="text">
+                <OpenClinica:MultiSelectListItem CodedOptionValue="1.0">
+                    <Decode>
+                        <TranslatedText>Option 1.0</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+                <OpenClinica:MultiSelectListItem CodedOptionValue="2.0">
+                    <Decode>
+                        <TranslatedText>Option 2.0</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+                <OpenClinica:MultiSelectListItem CodedOptionValue="3.0">
+                    <Decode>
+                        <TranslatedText>Option 3.0</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+                <OpenClinica:MultiSelectListItem CodedOptionValue="4.0">
+                    <Decode>
+                        <TranslatedText>Option 4.0</TranslatedText>
+                    </Decode>
+                </OpenClinica:MultiSelectListItem>
+            </OpenClinica:MultiSelectList>
+            <OpenClinica:StudyDetails StudyOID="S_TESTBEDD">
+                <OpenClinica:StudyDescriptionAndStatus OfficialTitle="Testbed-DataUploadTool" SecondaryIDs="Testbed-DataUploadTool" DateCreated="2014-01-13" StartDate="2014-01-13">
+                    <OpenClinica:StudySytemStatus>available</OpenClinica:StudySytemStatus>
+                    <OpenClinica:PrincipalInvestigator>Prof. Dr. Quackzaelver</OpenClinica:PrincipalInvestigator>
+                    <OpenClinica:DetailedDescription>The intent of this study is perform continious tests for the DataUploadTool</OpenClinica:DetailedDescription>
+                    <OpenClinica:Sponsor>n_a</OpenClinica:Sponsor>
+                    <OpenClinica:StudyPhase>Phase I</OpenClinica:StudyPhase>
+                    <OpenClinica:ProtocolType>Observational</OpenClinica:ProtocolType>
+                    <OpenClinica:Purpose>Natural History</OpenClinica:Purpose>
+                    <OpenClinica:Duration>Longitudinal</OpenClinica:Duration>
+                    <OpenClinica:Selection>Defined Population</OpenClinica:Selection>
+                    <OpenClinica:Timing>Prospective</OpenClinica:Timing>
+                </OpenClinica:StudyDescriptionAndStatus>
+                <OpenClinica:ConditionsAndEligibility>
+                    <OpenClinica:Sex>Both</OpenClinica:Sex>
+                    <OpenClinica:HealthyVolunteersAccepted>No</OpenClinica:HealthyVolunteersAccepted>
+                    <OpenClinica:ExpectedTotalEnrollment>20000</OpenClinica:ExpectedTotalEnrollment>
+                </OpenClinica:ConditionsAndEligibility>
+                <OpenClinica:RelatedInformation>
+                    <OpenClinica:ResultsReference>No</OpenClinica:ResultsReference>
+                </OpenClinica:RelatedInformation>
+                <OpenClinica:StudyParameterConfiguration>
+                    <OpenClinica:StudyParameterListRef StudyParameterListID="SPL_collectDob" Value="1"/>
+                    <OpenClinica:StudyParameterListRef StudyParameterListID="SPL_discrepancyManagement" Value="true"/>
+                    <OpenClinica:StudyParameterListRef StudyParameterListID="SPL_subjectPersonIdRequired" Value="required"/>
+                    <OpenClinica:StudyParameterListRef StudyParameterListID="SPL_genderRequired" Value="true"/>
+                    <OpenClinica:StudyParameterListRef StudyParameterListID="SPL_subjectIdGeneration" Value="manual"/>
+                    <OpenClinica:StudyParameterListRef StudyParameterListID="SPL_interviewerNameRequired" Value="not_used"/>
+                    <OpenClinica:StudyParameterListRef StudyParameterListID="SPL_interviewerNameDefault" Value="blank"/>
+                    <OpenClinica:StudyParameterListRef StudyParameterListID="SPL_interviewerNameEditable" Value="true"/>
+                    <OpenClinica:StudyParameterListRef StudyParameterListID="SPL_interviewDateRequired" Value="not_used"/>
+                    <OpenClinica:StudyParameterListRef StudyParameterListID="SPL_interviewDateDefault" Value="blank"/>
+                    <OpenClinica:StudyParameterListRef StudyParameterListID="SPL_interviewDateEditable" Value="true"/>
+                    <OpenClinica:StudyParameterListRef StudyParameterListID="SPL_personIdShownOnCRF" Value="false"/>
+                    <OpenClinica:StudyParameterListRef StudyParameterListID="SPL_secondaryLabelViewable" Value="false"/>
+                    <OpenClinica:StudyParameterListRef StudyParameterListID="SPL_adminForcedReasonForChange" Value="true"/>
+                    <OpenClinica:StudyParameterListRef StudyParameterListID="SPL_eventLocationRequired" Value="not_used"/>
+                    <OpenClinica:StudyParameterList ID="SPL_collectDob" Name="Collect Subject Date Of Birth">
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="1">
+                            <Decode>
+                                <TranslatedText>Yes</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="2">
+                            <Decode>
+                                <TranslatedText>Only Year of Birth</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="3">
+                            <Decode>
+                                <TranslatedText>Not Used</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                    </OpenClinica:StudyParameterList>
+                    <OpenClinica:StudyParameterList ID="SPL_discrepancyManagement" Name="Allow Discrepancy Management">
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="true">
+                            <Decode>
+                                <TranslatedText>Yes</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="false">
+                            <Decode>
+                                <TranslatedText>No</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                    </OpenClinica:StudyParameterList>
+                    <OpenClinica:StudyParameterList ID="SPL_subjectPersonIdRequired" Name="Person ID Required">
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="required">
+                            <Decode>
+                                <TranslatedText>Required</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="optional">
+                            <Decode>
+                                <TranslatedText>Optional</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="not used">
+                            <Decode>
+                                <TranslatedText>Not Used</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                    </OpenClinica:StudyParameterList>
+                    <OpenClinica:StudyParameterList ID="SPL_genderRequired" Name="Sex Required">
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="true">
+                            <Decode>
+                                <TranslatedText>Yes</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="false">
+                            <Decode>
+                                <TranslatedText>No</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                    </OpenClinica:StudyParameterList>
+                    <OpenClinica:StudyParameterList ID="SPL_subjectIdGeneration" Name="How To Generate Study SubjectID">
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="manual">
+                            <Decode>
+                                <TranslatedText>Manual Entry</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="auto editable">
+                            <Decode>
+                                <TranslatedText>Auto-generated and Editable</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="auto non-editable">
+                            <Decode>
+                                <TranslatedText>Auto-generated and Non-editable</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                    </OpenClinica:StudyParameterList>
+                    <OpenClinica:StudyParameterList ID="SPL_interviewerNameRequired" Name="When Performing Data Entry, Interviewer Name Required For Data Entry">
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="yes">
+                            <Decode>
+                                <TranslatedText>Yes</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="no">
+                            <Decode>
+                                <TranslatedText>No</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="not_used">
+                            <Decode>
+                                <TranslatedText>Not Used</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                    </OpenClinica:StudyParameterList>
+                    <OpenClinica:StudyParameterList ID="SPL_interviewerNameDefault" Name="When Performing Data Entry, Interviewer Name Default as Blank">
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="blank">
+                            <Decode>
+                                <TranslatedText>Blank</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="pre-populated">
+                            <Decode>
+                                <TranslatedText>Pre-Populated from active user</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                    </OpenClinica:StudyParameterList>
+                    <OpenClinica:StudyParameterList ID="SPL_interviewerNameEditable" Name="When Performing Data Entry, Interviewer Name Editable">
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="true">
+                            <Decode>
+                                <TranslatedText>Yes</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="false">
+                            <Decode>
+                                <TranslatedText>No</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                    </OpenClinica:StudyParameterList>
+                    <OpenClinica:StudyParameterList ID="SPL_interviewDateRequired" Name="When Performing Data Entry, Interview Date Required">
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="true">
+                            <Decode>
+                                <TranslatedText>Yes</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="false">
+                            <Decode>
+                                <TranslatedText>No</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="not_used">
+                            <Decode>
+                                <TranslatedText>Not Used</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                    </OpenClinica:StudyParameterList>
+                    <OpenClinica:StudyParameterList ID="SPL_interviewDateDefault" Name="When Performing Data Entry, Interview Date Default as Blank">
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="blank">
+                            <Decode>
+                                <TranslatedText>Blank</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="pre-populated">
+                            <Decode>
+                                <TranslatedText>Pre-Populated from Study Event</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                    </OpenClinica:StudyParameterList>
+                    <OpenClinica:StudyParameterList ID="SPL_interviewDateEditable" Name="When Performing Data Entry, Interview Date Editable">
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="true">
+                            <Decode>
+                                <TranslatedText>Yes</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="false">
+                            <Decode>
+                                <TranslatedText>No</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                    </OpenClinica:StudyParameterList>
+                    <OpenClinica:StudyParameterList ID="SPL_personIdShownOnCRF" Name="Show Person ID on CRF Header">
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="true">
+                            <Decode>
+                                <TranslatedText>Yes</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="false">
+                            <Decode>
+                                <TranslatedText>No</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                    </OpenClinica:StudyParameterList>
+                    <OpenClinica:StudyParameterList ID="SPL_secondaryLabelViewable" Name="Secondary Label Viewable">
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="true">
+                            <Decode>
+                                <TranslatedText>Yes</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="false">
+                            <Decode>
+                                <TranslatedText>No</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                    </OpenClinica:StudyParameterList>
+                    <OpenClinica:StudyParameterList ID="SPL_adminForcedReasonForChange" Name="Forced Reason For Change in Administrative Editing">
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="true">
+                            <Decode>
+                                <TranslatedText>Yes</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="false">
+                            <Decode>
+                                <TranslatedText>No</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                    </OpenClinica:StudyParameterList>
+                    <OpenClinica:StudyParameterList ID="SPL_eventLocationRequired" Name="Event Location Required">
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="required">
+                            <Decode>
+                                <TranslatedText>Required</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="optional">
+                            <Decode>
+                                <TranslatedText>Optional</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                        <OpenClinica:StudyParameterListItem CodedParameterValue="not_used">
+                            <Decode>
+                                <TranslatedText>Not Used</TranslatedText>
+                            </Decode>
+                        </OpenClinica:StudyParameterListItem>
+                    </OpenClinica:StudyParameterList>
+                </OpenClinica:StudyParameterConfiguration>
+            </OpenClinica:StudyDetails>
+        </MetaDataVersion>
+    </Study>
+    <AdminData StudyOID="S_TESTBEDD">
+        <User OID="USR_2">
+            <FullName>Jacob Rousseau</FullName>
+            <FirstName>Jacob</FirstName>
+            <LastName>Rousseau</LastName>
+            <Organization>VUmc</Organization>
+        </User>
+    </AdminData>
+</ODM>
