@@ -85,6 +85,7 @@ namespace OCDataImporter
         public const String VERSION_LABEL = "OCDataImporter Version 4.4";   
         
         public const bool DEBUGMODE = true;
+        // public const bool DEBUGMODE = false;
         
         public bool labelOCoidExists = false; // 2.1.1 If labelOCoid file exists, get the oid from that file, instead of 'SS_label'...
         public string dmpfilename = "";
@@ -1986,7 +1987,8 @@ namespace OCDataImporter
 
             GetStudyEventDef(conversionSettings.pathToMetaDataFile);
 
-            if ((comboBoxSE.Items.Count == 0) || (comboBoxCRF.Items.Count == 0)) 
+            //if ((comboBoxSE.Items.Count == 0) || (comboBoxCRF.Items.Count == 0)) 
+            if (comboBoxSE.Items.Count == 0) 
             {
                 MessageBox.Show("No study event and CRF definitions found in selected file; please check the format of the file and verify if the metadata file corresponds to the data file", "OCDataImporter");
                 textBoxInput.Focus();
@@ -1994,8 +1996,6 @@ namespace OCDataImporter
                 return;
             }
 
-            conversionSettings.selectedStudyEvent = comboBoxSE.SelectedItem.ToString();
-            conversionSettings.selectedCRF = comboBoxCRF.SelectedItem.ToString();
 
             if (FillTheGrid() == false)
             {
