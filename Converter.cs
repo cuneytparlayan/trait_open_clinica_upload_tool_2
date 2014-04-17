@@ -24,7 +24,8 @@ namespace OCDataImporter
         private StudyMetaDataValidator studyMetaDataValidator;
         private ArrayList InsertSubject = new ArrayList();
         private IViewUpdater viewUpdater;
-
+        private ArrayList Sites = new ArrayList();
+        private bool DOY = false;
         
 
         public int numberOfOutputFiles { get; private set; }
@@ -51,8 +52,8 @@ namespace OCDataImporter
             string[] theHeaders;
             int event_index_row = -1;
             int group_index_row = -1;
-                        
-            
+            int site_index_row = -1;
+            string usedStudyOID = conversionSettings.studyOID;                 
 
             if (dataGrid.isValid() == false)
             {
@@ -111,6 +112,7 @@ namespace OCDataImporter
                         {
                             if (theHeaders[i].ToUpper() == "EVENT_INDEX") event_index_row = i;    // 2.2 Input file format allows EVENT_INDEX and GROUP_INDEX to define repeating items in rows
                             if (theHeaders[i].ToUpper() == "GROUP_INDEX") group_index_row = i;
+                            if (theHeaders[i].ToUpper() == "SITE_OID") site_index_row = i;
                         }
                         continue; // skip first line; contains only headers
                     }
@@ -212,19 +214,45 @@ namespace OCDataImporter
 
                     if (event_index_row != -1) theSERK = split[event_index_row];
                     if (group_index_row != -1) theGRRK = split[group_index_row];
+
+                    if (site_index_row != -1 && split[site_index_row].Trim() != "")
+                    {
+                        bool found = false;
+                        foreach (string one in Sites)
+                        {
+                            if (one.Trim() == split[site_index_row].Trim())
+                            {
+                                found = true;
+                            }
+                        }
+                        if (!found)
+                        {
+                            string errtext = "Specified site not found in meta file: " + split[site_index_row] + " at line = " + linecount.ToString();
+                            warningLog.appendMessage(errtext);
+                        }
+                        usedStudyOID = split[site_index_row];
+                    }
+                    else usedStudyOID = conversionSettings.studyOID;
+                    if (site_index_row != -1 && split[site_index_row].Trim() == "")
+                    {
+                        string errtext = "No site specified under SITE_OID; assuming STUDY_OID, at line: " + linecount.ToString();
+                        warningLog.appendMessage(errtext);
+                    }
+
+
                     string SStheKEY = "SS_" + subjectID;
                     // *******************************************************
                     // TODO ask Cuneyt what this piece of code does, something with an external file which contains subject ID's
                     // Commenting out for now
-                    /*
-                    if (labelOCoidExists) // 2.1.1 there is a conversion file from label to oid; get the SSid from that file.
-                    {
-                        foreach (string one in LabelOID)
-                        {
-                            if (one.StartsWith(subjectID + "^")) SStheKEY = one.Substring(one.IndexOf('^') + 1);
-                        }
-                    }
-                    */
+                    
+                    //if (labelOCoidExists) // 2.1.1 there is a conversion file from label to oid; get the SSid from that file.
+                    //{
+                    //    foreach (string one in LabelOID)
+                    //    {
+                    //        if (one.StartsWith(subjectID + "^")) SStheKEY = one.Substring(one.IndexOf('^') + 1);
+                    //    }
+                    //}
+                    
                     string theXMLForm = "";
                     odmOutputFile.Append("    <SubjectData SubjectKey=\"" + SStheKEY + "\">");
                     theXMLEvent += "        <StudyEventData StudyEventOID=\"" + theWrittenSE + "\" StudyEventRepeatKey=\"" + CheckRepeatKey(theSERK, linecount) + "\">" + LINE_SEPARATOR;
@@ -459,8 +487,18 @@ namespace OCDataImporter
                     // generate insert statements
                     int theSERKInt = System.Convert.ToInt16(theSERK);
                     string theDOB = "";
+
+                    //if (DOBIndex >= 0)
+                    //{
+                    //    if (DOY && split[DOBIndex].Trim().Length == 4) theDOB = split[DOBIndex].Trim();
+                    //    else theDOB = ConvertToODMFormat(split[DOBIndex]);
+                    //}
+
+
                     if (dataGrid.DOBIndex >= 0)
                     {
+                        if (DOY && split[dataGrid.DOBIndex].Trim().Length == 4) theDOB = split[dataGrid.DOBIndex].Trim();
+                        else theDOB = theDOB = Utilities.ConvertToODMFormat(split[dataGrid.DOBIndex], conversionSettings.dateFormat);
                         theDOB = Utilities.ConvertToODMFormat(split[dataGrid.DOBIndex], conversionSettings.dateFormat);
                     }
                     string theSTD = "";
@@ -504,11 +542,11 @@ namespace OCDataImporter
                     }
                     insertsSQLFile.Append(INSERT_2);
                     // if there is no PID, use the key (unique_identifier) to fill the field label of study_subject. 
-                    insertsSQLFile.Append("    VALUES ('" + subjectID + "', (SELECT study_id FROM study WHERE oc_oid = '" + conversionSettings.studyOID + "'),");
+                    insertsSQLFile.Append("    VALUES ('" + subjectID + "', (SELECT study_id FROM study WHERE oc_oid = '" + usedStudyOID + "'),");
                     insertsSQLFile.Append("            1, '" + theDate + "', '" + theDate + "', '" + theDate + "', 1, '" + SStheKEY + "', (SELECT subject_id FROM subject where unique_identifier = '" + thePID + "'));");
                     if (theWrittenSE == "none" && conversionSettings.selectedStudyEvent != "-- select --") // 4.1 eliminate -- select --
                     {
-                        theWrittenSE = conversionSettings.selectedStudyEvent; // 2.0.5 Use the selected SE to determine current SE, as there is no CRF data 
+                        theWrittenSE = Utilities.GetOID(conversionSettings.selectedStudyEvent); // 2.0.5 Use the selected SE to determine current SE, as there is no CRF data 
                     }
                     if (theWrittenSE != "none")
                     {
@@ -538,8 +576,8 @@ namespace OCDataImporter
                                         insertsSQLFile.Append("    VALUES ((SELECT study_event_definition_id FROM study_event_definition WHERE oc_oid = '" + theWrittenSE + "'),");
                                         insertsOnlyEventsSQLFile.Append(INSERT_3);
                                         insertsOnlyEventsSQLFile.Append("    VALUES ((SELECT study_event_definition_id FROM study_event_definition WHERE oc_oid = '" + theWrittenSE + "'),");
-                                        insertsSQLFile.Append("	    (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theSTD + " 12:00:00', 1, 1, '" + theDate + "', 3, '0', '0');");
-                                        insertsOnlyEventsSQLFile.Append("	     (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theSTD + " 12:00:00', 1, 1, '" + theDate + "', 3, '0', '0');");
+                                        insertsSQLFile.Append("	    (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theSTD + " 12:00:00', 1, 1, '" + theDate + "', 1, '0', '0');");
+                                        insertsOnlyEventsSQLFile.Append("	     (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theSTD + " 12:00:00', 1, 1, '" + theDate + "', 1, '0', '0');");
                                     }
                                 }
                             }
@@ -551,8 +589,8 @@ namespace OCDataImporter
                                     insertsSQLFile.Append("    VALUES ((SELECT study_event_definition_id FROM study_event_definition WHERE oc_oid = '" + theWrittenSE + "'),");
                                     insertsOnlyEventsSQLFile.Append(INSERT_3);
                                     insertsOnlyEventsSQLFile.Append("    VALUES ((SELECT study_event_definition_id FROM study_event_definition WHERE oc_oid = '" + theWrittenSE + "'),");
-                                    insertsSQLFile.Append("	    (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theSTD + " 12:00:00', 1, 1, '" + theDate + "', 3, '0', '0');");
-                                    insertsOnlyEventsSQLFile.Append("        (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theSTD + " 12:00:00', 1, 1, '" + theDate + "', 3, '0', '0');");
+                                    insertsSQLFile.Append("	    (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theSTD + " 12:00:00', 1, 1, '" + theDate + "', 1, '0', '0');");
+                                    insertsOnlyEventsSQLFile.Append("        (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theSTD + " 12:00:00', 1, 1, '" + theDate + "', 1, '0', '0');");
                                 }
                                 else  // no date specified in data file
                                 {
@@ -563,8 +601,8 @@ namespace OCDataImporter
                                         insertsSQLFile.Append("    VALUES ((SELECT study_event_definition_id FROM study_event_definition WHERE oc_oid = '" + theWrittenSE + "'),");
                                         insertsOnlyEventsSQLFile.Append(INSERT_3);
                                         insertsOnlyEventsSQLFile.Append("    VALUES ((SELECT study_event_definition_id FROM study_event_definition WHERE oc_oid = '" + theWrittenSE + "'),");
-                                        insertsSQLFile.Append("	    (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theDate + " 12:00:00', 1, 1, '" + theDate + "', 3, '0', '0');");
-                                        insertsOnlyEventsSQLFile.Append("        (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theDate + " 12:00:00', 1, 1, '" + theDate + "', 3, '0', '0');");
+                                        insertsSQLFile.Append("	    (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theDate + " 12:00:00', 1, 1, '" + theDate + "', 1, '0', '0');");
+                                        insertsOnlyEventsSQLFile.Append("        (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theDate + " 12:00:00', 1, 1, '" + theDate + "', 1, '0', '0');");
                                     }
                                 }
                             }

@@ -15,6 +15,16 @@ namespace OCDataImporter
         /// </summary>
         /// <param name="theName">The item name</param>
         /// <returns>the value of the repeat</returns>
+        /// 
+
+        public static string GetOID(string val)
+        {
+            val = val.Replace("    ", "^");
+            string[] vals = val.Split('^');
+            if (vals.Length == 2) return vals[1];
+            else return val;
+        }
+
         public static string Get_SE_RepeatingKey_FromStudyDataColumn(string theName)
         {
             // Format: Adverse_Event_E1_G3      We must get the "1" here. It may not exist, as in:  SurgeryPlan_E_G2 or, for any other reason. -> Then error!   
@@ -255,7 +265,7 @@ namespace OCDataImporter
                 }
                 catch (Exception ex)
                 {
-                    return ("Error: date is not in day-month-yyyy format " + ex);
+                    return ("Error: date is not in day-month-yyyy format ");
                 }
             }
             if (selectedDateFormat == "month-day-year")
@@ -272,7 +282,7 @@ namespace OCDataImporter
                 }
                 catch (Exception ex)
                 {
-                    return ("Error: date is not in month-day-yyyy format " + ex);
+                    return ("Error: date is not in month-day-yyyy format ");
                 }
             }
             if (selectedDateFormat == "year-month-day")
@@ -289,7 +299,7 @@ namespace OCDataImporter
                 }
                 catch (Exception ex)
                 {
-                    return ("Error: date is not in yyyy-month-day format " + ex);
+                    return ("Error: date is not in yyyy-month-day format ");
                 }
             }
             return ("Error: unknown date format ");

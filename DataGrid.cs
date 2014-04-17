@@ -129,11 +129,19 @@ namespace OCDataImporter
             {
                 if (dataGridView.Rows[i].IsNewRow == false)
                 {
-                    string[] mi = dataGridView.Rows[i].Cells[DGIndexOfOCItem].Value.ToString().Split('.');
-                    if (mi.Length == 1 && (mi[0] == "none" || mi[0].StartsWith("Use link button"))) continue;
-                    if (mi[0].Length > maxSE) maxSE = mi[0].Length;
-                    if (mi[1].Length > maxCRF) maxCRF = mi[1].Length;
-                    if (mi[2].Length > maxGR) maxGR = mi[2].Length;
+                    try
+                    {
+                        string[] mi = dataGridView.Rows[i].Cells[DGIndexOfOCItem].Value.ToString().Split('.');
+                        if (mi.Length == 1 && (mi[0] == "none" || mi[0].StartsWith("Use link button"))) continue;
+                        if (mi[0].Length > maxSE) maxSE = mi[0].Length;
+                        if (mi[1].Length > maxCRF) maxCRF = mi[1].Length;
+                        if (mi[2].Length > maxGR) maxGR = mi[2].Length;
+                    }
+                    catch (NullReferenceException ex)
+                    {
+                        MessageBox.Show("OC Target Item of " + dataGridView.Rows[i].Cells[DGIndexOfDataItem].Value.ToString() + " can't be blank. Use 'none' if you do not want to match.", "OCDataImporter");
+                        return false;
+                    }
                 }
             }
             int sexCount = 0;
@@ -320,7 +328,7 @@ namespace OCDataImporter
                     fnparts[DGIndexOfPID] = pid;
                     fnparts[DGIndexOfDOB] = dob;
                     fnparts[DGIndexOfSTD] = std;
-                    
+                    string theCRF = Utilities.GetOID(conversionSettings.selectedCRF);
                     fnparts[DGIndexOfOCItem] = "none";
 
                     int startGroup = 0;
@@ -340,15 +348,15 @@ namespace OCDataImporter
                     if (startEvent > 0) theItem = theItem.Substring(0, startEvent);
                     else if (startGroup > 0) theItem = theItem.Substring(0, startGroup);
 
-                    string theItemOID = studyMetaDataValidator.GetItemOIDFromItemName(theItem, conversionSettings.selectedCRF);
+                    string theItemOID = studyMetaDataValidator.GetItemOIDFromItemName(theItem, theCRF);
                     if (theItemOID != "NOTFOUND2" && theItemOID != "ANOTHERCRF") // 3.03
                     {
-                        fnparts[DGIndexOfOCItem] = conversionSettings.selectedStudyEvent + "." + conversionSettings.selectedCRF + "." + studyMetaDataValidator.GetGroupFromItemCRF(theItemOID, conversionSettings.selectedCRF) + "." + theItemOID;
+                        fnparts[DGIndexOfOCItem] = Utilities.GetOID(conversionSettings.selectedStudyEvent) + "." + Utilities.GetOID(conversionSettings.selectedCRF) + "." + studyMetaDataValidator.GetGroupFromItemCRF(theItemOID, theCRF) + "." + theItemOID;
                         matched++;
                     }
                     else
                     {
-                        if (theItemOID == "NOTFOUND2" && key != "True" && sex != "True" && pid != "True" && dob != "True" && std != "True" && theItem != "event_index" && theItem != "group_index")
+                        if (theItemOID == "NOTFOUND2" && key != "True" && sex != "True" && pid != "True" && dob != "True" && std != "True" && theItem != "event_index" && theItem != "group_index" && theItem != "site_oid")
                         {
                             viewUpdater.appendText("No match for: " + theItem + System.Environment.NewLine);
                             nomatch = true;
@@ -378,11 +386,11 @@ namespace OCDataImporter
                 }
                 if (nomatch)
                 {
-                    MessageBox.Show("Not all Items in the selected CRF could be matched. For the list of UNMATCHED Items, see the progress textbox below. You can match those items by using the comboboxes above. Control the matched items too, as the matching can not be 100% correct!", "OCDataImporter");
+                    MessageBox.Show("Not all Items in the selected CRF could be matched. For the list of UNMATCHED Items, see the progress textbox below. You can match those items by using the comboboxes above. Please also control the matched items!", "OCDataImporter");
                 }
                 else
                 {
-                    MessageBox.Show("All Items in the selected CRF could be matched. Control the matched items as the matching can not be 100% correct!", "OCDataImporter");
+                    MessageBox.Show("All Items in the selected CRF could be matched. Please check if the matching has been performed correctly!", "OCDataImporter");
                 }
             }
             else

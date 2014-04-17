@@ -34,11 +34,13 @@ namespace OCDataImporter
         
         
         private WarningLog warningLog;
+        private ConversionSettings conversionSettings;
         
 
-        public StudyMetaDataValidator(WarningLog warningLog) 
+        public StudyMetaDataValidator(WarningLog warningLog, ConversionSettings conversionSettings) 
         {        
-            this.warningLog = warningLog;            
+            this.warningLog = warningLog;
+            this.conversionSettings = conversionSettings;
         }
 
         public void reset()
@@ -50,13 +52,55 @@ namespace OCDataImporter
         }
 
         public void BuildVerificationArrays(String pathToMetaDataFile, String pathToVerificationFile, Boolean debugMode)  // 3.0 Data verification structures 
-        {            
+        {
+            //*** ItemGroupDefs: CRF, Group contains which items. Item_OID,OPT = optional, Item_OID,MAN = mandatory. Separated by ~
+            //F_COCO_V10^IG_COCO_UNGROUPED^I_COCO_LABELLINK,MAN~I_COCO_DATEINTAKE,OPT~I_COCO_DATECOMMENT,OPT~I_COCO_STUDYEXPLANATION,OPT~I_COCO_INFORMEDCONSENTPATIENT,OPT~I_COCO_DATESIGNATUREPATIENT,OPT~I_COCO_INFORMEDCONSENTINVESTIGATOR,OPT~I_COCO_DATESIGNATUREINVESTIGATOR,OPT~I_COCO_STOOLCONSENT,OPT~I_COCO_FITCONSENT,OPT~I_COCO_BLOODCONSENT,OPT~I_COCO_COLONOSCOPYDATE,OPT~I_COCO_STOOLGIVEN,OPT~I_COCO_STOOLCOMMENT,OPT~I_COCO_STOOLDELIVERY,OPT~I_COCO_PICKUPDATE,OPT~I_COCO_PICKUPCOMMENT,OPT~I_COCO_PICKUPCONFIRMATION,OPT~I_COCO_NOPICKUPCOMMENT,OPT~I_COCO_FITDONE,OPT~I_COCO_FITCOMMENT,OPT~I_COCO_FITEIKENBARCODE,OPT~I_COCO_FITONCOBARCODE,OPT
+            //F_COCOS_BLOOD__V10^IG_COCOS_UNGROUPED^I_COCOS_BLOOD_THINNER,OPT~I_COCOS_BLOOD_THINNER_SPECIFIED,OPT~I_COCOS_BLOOD_THINNER_SPECIFIED_OTH,OPT~I_COCOS_ASCAL_DOSE,OPT~I_COCOS_PLAVIX_DOSE,OPT~I_COCOS_ACENOFENPRO_DOSE,OPT~I_COCOS_BLOOD_THINNER_OTHER_DOSE,OPT
+            //
+            // *** ItemDefForm: Item-data attributes in which form and show/hide situation
+            //I_MMRES_RES_BEHAN_LIJN^F_MMRESPONSE_10^SHOW^CL_6283^integer^2^999^RES_Behan_lijn
+            //I_MMRES_RES_KUUR_TYPE^F_MMRESPONSE_10^SHOW^CL_6284^integer^2^999^RES_Kuur_type
+            //
+            //*** CodeList: Codelist ID and values separated by ~
+            //CL_75^1~0
+            //CL_79^NA~1~0
+            //CL_10495^1~2~3~4~5~6~7~8~9~-1
+            //CL_10497^14~1~2~3~4~5~6~7~8~13~11~12~10~41~42~67~-1
+            //
+            //*** RCList: Range Check
+            //I_TEST_ITEM4^text^GT^10
+            //I_TEST_ITEM5^text^GE^1
+            //I_TEST_ITEM5^text^LE^5
+            //
+            //*** MSList
+            //MSL_18^1~2~3
+            //MSL_25^1
+            //
+            //*** SCOList
+            // ItemOID^ItemName^ControlItemName^ValueToControl
+            //I_COCOS_BLOOD_THINNER_SPECIFIED^Blood_thinner_specified^Blood_thinner^1
+            //I_COCOS_PLAVIX_DOSE^Plavix_dose^Blood_thinner_specified^2
+            //*** Sites
+            //S_PHAROSMM
+            //S_MM01
+            //S_MM02
+            //*** Forms
+            //MM-diagnose1 - 1.0    F_MMDIAGNOSE1_10
+            //MM-Comorbiditeiten - 1.0    F_MMCOMORBIDIT_10
+            //
+            //*** Groups
+            //IG_MMCOM_UNGROUPED    IG_MMCOM_UNGROUPED
+            //Comorb    IG_MMCOM_COMORB
             ItemGroupDefs.Clear();
             ItemDefForm.Clear();
             CodeList.Clear();
             RCList.Clear();
             MSList.Clear();
             SCOList.Clear();
+            conversionSettings.Sites.Clear();
+            conversionSettings.Forms.Clear();
+            conversionSettings.Groups.Clear();
+            conversionSettings.DOY = false;
             int linenr = 0;
 
             try
@@ -71,6 +115,22 @@ namespace OCDataImporter
                 while (res)
                 {
                     linenr++;
+                    if (reader.Name == "Study")
+                    {
+                        // build site array 4.3.1
+                        if (reader.AttributeCount > 0) conversionSettings.Sites.Add(reader.GetAttribute(0));
+                    }
+                    if (reader.Name == "FormDef")
+                    {
+                        // build form array 4.3.1
+                        if (reader.AttributeCount > 1) conversionSettings.Forms.Add(reader.GetAttribute(1) + "    " + reader.GetAttribute(0));
+                    }
+                    if (reader.Name == "ItemGroupDef")
+                    {
+                        // build group array 4.3.1
+                        if (reader.AttributeCount > 1) conversionSettings.Groups.Add(reader.GetAttribute(1) + "    " + reader.GetAttribute(0));
+                    }
+
                     // TODO add methods which perform the parsing of the node to make the code more legible. E.g. 
                     // if (reader.Name == "ItemGroupDef") { parseItemGroupDef(reader) }
 
@@ -215,6 +275,14 @@ namespace OCDataImporter
                             CodeList.Add(CLine);
                         }
                     }
+                    else if (reader.Name == "OpenClinica:StudyParameterListRef")
+                    {
+                        if (reader.AttributeCount > 1)
+                        {
+                            if (reader.GetAttribute(0) == "SPL_collectDob" && reader.GetAttribute(1) == "2") conversionSettings.DOY = true;
+                            string myGRPS = reader.ReadInnerXml();
+                        }
+                    }
                     else if (reader.Name == "OpenClinica:MultiSelectList")
                     {
                         if (reader.AttributeCount > 0)
@@ -272,6 +340,13 @@ namespace OCDataImporter
                     swlog.WriteLine("");
                     swlog.WriteLine("*** SCOList");
                     foreach (string ss in SCOList) swlog.WriteLine(ss);
+                    swlog.WriteLine("*** Sites");
+                    foreach (string ss in conversionSettings.Sites) swlog.WriteLine(ss);
+                    swlog.WriteLine("*** Forms");
+                    foreach (string ss in conversionSettings.Forms) swlog.WriteLine(ss);
+                    swlog.WriteLine("*** Groups");
+                    foreach (string ss in conversionSettings.Groups) swlog.WriteLine(ss);
+                    if (conversionSettings.DOY) swlog.WriteLine("*** Only year of birth accepted for subjects = true");
                 }
             }             
         }
@@ -470,6 +545,16 @@ namespace OCDataImporter
                 }
             }
             return ("NOTFOUND1");
+        }
+
+        public string GetItemNameFromItemOID(string ItemOID, string FormOID)
+        {
+            foreach (string idfs in ItemDefForm)
+            {
+                string[] idf = idfs.Split('^');
+                if (idf[0] == ItemOID && idf[1] == FormOID) return (idf[7]);
+            }
+            return (ItemOID);
         }
 
         public string GetItemOIDFromItemName(string ItemName, string FormOID)

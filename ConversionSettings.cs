@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -27,6 +27,10 @@ namespace OCDataImporter
         public int sepCount { get; set; }
         public int outFMaxLines { get; set; }
 
+        public ArrayList Groups { get; set; }
+        public ArrayList Forms { get; set; }
+        public ArrayList Sites { get; set; }
+        public bool DOY { get; set; }
 
         public void reset() {
             workdir = "";

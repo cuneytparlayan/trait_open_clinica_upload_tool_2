@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.comboBoxSE = new System.Windows.Forms.ComboBox();
             this.comboBoxCRF = new System.Windows.Forms.ComboBox();
@@ -60,7 +61,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.comboBoxDateFormat = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.textBoxReplace = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.comboBoxSex = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -85,6 +85,7 @@
             this.buttonConfPars = new System.Windows.Forms.Button();
             this.buttonBackToBegin = new System.Windows.Forms.Button();
             this.linkbuttonSHCols = new System.Windows.Forms.LinkLabel();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -142,9 +143,8 @@
             this.label1.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(41, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(260, 18);
+            this.label1.Size = new System.Drawing.Size(0, 18);
             this.label1.TabIndex = 0;
-            this.label1.Text = "";
             // 
             // label3
             // 
@@ -392,18 +392,6 @@
             this.label8.Size = new System.Drawing.Size(160, 13);
             this.label8.TabIndex = 73;
             this.label8.Text = "Date format in study items";
-            // 
-            // textBoxReplace
-            // 
-            this.textBoxReplace.AcceptsReturn = true;
-            this.textBoxReplace.Location = new System.Drawing.Point(144, 160);
-            this.textBoxReplace.Multiline = true;
-            this.textBoxReplace.Name = "textBoxReplace";
-            this.textBoxReplace.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxReplace.Size = new System.Drawing.Size(667, 48);
-            this.textBoxReplace.TabIndex = 74;
-            this.textBoxReplace.Visible = false;
-            this.textBoxReplace.WordWrap = false;
             // 
             // label9
             // 
@@ -665,7 +653,6 @@
             this.Controls.Add(this.label10);
             this.Controls.Add(this.comboBoxSex);
             this.Controls.Add(this.label9);
-            this.Controls.Add(this.textBoxReplace);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.comboBoxDateFormat);
             this.Controls.Add(this.label7);
@@ -723,7 +710,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox comboBoxDateFormat;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox textBoxReplace;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ComboBox comboBoxSex;
         private System.Windows.Forms.Label label10;
@@ -757,6 +743,7 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn DGSTD;
         private System.Windows.Forms.DataGridViewLinkColumn CopyCurrentTarget;
         private System.Windows.Forms.LinkLabel linkbuttonSHCols;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 
