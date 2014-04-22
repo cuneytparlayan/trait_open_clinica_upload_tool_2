@@ -26,6 +26,8 @@ namespace OCDataImporter
         private IViewUpdater viewUpdater;
         private ArrayList Sites = new ArrayList();
         private bool DOY = false;
+        private bool labelOCoidExists;
+        private ArrayList labelOID;
         
 
         public int numberOfOutputFiles { get; private set; }
@@ -33,13 +35,15 @@ namespace OCDataImporter
         private DataGridView dataGridView;
         private WarningLog warningLog;    
 
-        public Converter(ConversionSettings conversionSettings, StudyMetaDataValidator studyMetaDataValidator, DataGridView dataGridView, WarningLog warningLog, IViewUpdater viewUpdater)
+        public Converter(ConversionSettings conversionSettings, StudyMetaDataValidator studyMetaDataValidator, DataGridView dataGridView, WarningLog warningLog, IViewUpdater viewUpdater, bool labelOCoidExists, ArrayList labelOID)
         {
             this.conversionSettings = conversionSettings;
             this.studyMetaDataValidator = studyMetaDataValidator;
             this.viewUpdater = viewUpdater;
             this.dataGridView = dataGridView;
             this.warningLog = warningLog;
+            this.labelOCoidExists = labelOCoidExists;
+            this.labelOID = labelOID;
         }
 
 
@@ -241,17 +245,14 @@ namespace OCDataImporter
 
 
                     string SStheKEY = "SS_" + subjectID;
-                    // *******************************************************
-                    // TODO ask Cuneyt what this piece of code does, something with an external file which contains subject ID's
-                    // Commenting out for now
                     
-                    //if (labelOCoidExists) // 2.1.1 there is a conversion file from label to oid; get the SSid from that file.
-                    //{
-                    //    foreach (string one in LabelOID)
-                    //    {
-                    //        if (one.StartsWith(subjectID + "^")) SStheKEY = one.Substring(one.IndexOf('^') + 1);
-                    //    }
-                    //}
+                    if (labelOCoidExists) // 2.1.1 there is a conversion file from label to oid; get the SSid from that file.
+                    {
+                        foreach (string one in labelOID)
+                        {
+                            if (one.StartsWith(subjectID + "^")) SStheKEY = one.Substring(one.IndexOf('^') + 1);
+                        }
+                    }
                     
                     string theXMLForm = "";
                     odmOutputFile.Append("    <SubjectData SubjectKey=\"" + SStheKEY + "\">");

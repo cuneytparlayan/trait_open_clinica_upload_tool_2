@@ -601,7 +601,7 @@ namespace OCDataImporter
             conversionSettings.selectedStudyEvent = comboBoxSE.SelectedItem.ToString();
 
             dumpTheGrid();
-            Converter converter = new Converter(conversionSettings, studyMetaDataValidator, dataGridView1, warningLog, this);
+            Converter converter = new Converter(conversionSettings, studyMetaDataValidator, dataGridView1, warningLog, this, labelOCoidExists, LabelOID);
             try
             {
                 converter.DoWork(dataGrid);
