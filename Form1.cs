@@ -185,7 +185,7 @@ namespace OCDataImporter
             conversionSettings.Groups = new ArrayList(); 
             warningLog = new WarningLog();
             studyMetaDataValidator = new StudyMetaDataValidator(warningLog, conversionSettings);
-            dataGrid = new DataGrid(conversionSettings, studyMetaDataValidator, dataGridView1, this);
+            dataGrid = new DataGrid(studyMetaDataValidator, dataGridView1, this);
 
             Menu = new MainMenu();
             if (DEBUGMODE) MessageBox.Show("D E B U G M O D E - !!!!!", "OCDataImporter", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -510,8 +510,8 @@ namespace OCDataImporter
             {
                 conversionSettings.pathToInputFile = conversionSettings.workdir + "\\" + conversionSettings.pathToInputFile;
             }
-            if (Delimiter != tab) textBoxOutput.Text += "\r\nData file is: " + conversionSettings.pathToInputFile + ", delimited by: " + Delimiter + " Number of items per line: " + sepcount + "\r\n";
-            else textBoxOutput.Text += "\r\nData file is: " + conversionSettings.pathToInputFile + ", delimited by: tab, Number of items per line: " + sepcount + "\r\n";
+            if (Delimiter != tab) textBoxOutput.Text += "\r\nData file is: " + conversionSettings.pathToInputFile + ", delimited by: " + Delimiter + " Number of items per line: " + dataGrid.sepcount + "\r\n";
+            else textBoxOutput.Text += "\r\nData file is: " + conversionSettings.pathToInputFile + ", delimited by: tab, Number of items per line: " + dataGrid.sepcount + "\r\n";
             textBoxOutput.Text += "Started in directory " + conversionSettings.workdir + ". This may take several minutes...\r\n";
 
             buttonBackToBegin.Enabled = false;
@@ -599,11 +599,12 @@ namespace OCDataImporter
             conversionSettings.useTodaysDateIfNoEventDate = radioButtonUseTD.Checked;
             conversionSettings.dateFormat = comboBoxDateFormat.SelectedItem.ToString();
             conversionSettings.defaultLocation = textBoxLocation.Text;
+            conversionSettings.defaultSubjectSex = comboBoxSex.SelectedItem.ToString();
             conversionSettings.outFMaxLines = System.Convert.ToInt32(textBoxMaxLines.Text);
             conversionSettings.selectedStudyEvent = comboBoxSE.SelectedItem.ToString();
 
             dumpTheGrid();
-            Converter converter = new Converter(conversionSettings, studyMetaDataValidator, dataGridView1, warningLog, this, labelOCoidExists, LabelOID);
+            Converter converter = new Converter(conversionSettings, studyMetaDataValidator, warningLog, this, labelOCoidExists, LabelOID);
             try
             {
                 converter.DoWork(dataGrid);
@@ -1146,7 +1147,7 @@ namespace OCDataImporter
                 conversionSettings.pathToMetaDataFile = split[1];
                 conversionSettings.pathToInputFile = split[0];
             }
-            if (!dataGrid.GetDataFileItemsFromInput()) return;  // 1.1b
+            if (!dataGrid.GetDataFileItemsFromInput(conversionSettings.pathToInputFile)) return;  // 1.1b
             if (labelOCoidExists)
             {
                 conversionSettings.pathToMetaDataFile = split[2];
@@ -1237,7 +1238,16 @@ namespace OCDataImporter
 
             if (FillTheGrid() == false)
             {
-                dataGrid.BuildDG(false);
+                conversionSettings.selectedStudyEvent = comboBoxSE.SelectedItem.ToString();
+                if (comboBoxCRF.SelectedItem == null)
+                {
+                    conversionSettings.selectedCRF = "-- select --";
+                }
+                else
+                {
+                    conversionSettings.selectedCRF = comboBoxCRF.SelectedItem.ToString();
+                }
+                dataGrid.BuildDG(false, conversionSettings.selectedStudyEvent, conversionSettings.selectedCRF);
             }
             studyMetaDataValidator.BuildVerificationArrays(conversionSettings.pathToMetaDataFile, conversionSettings.workdir + "\\OCDataImporter_verification.txt", DEBUGMODE);
             StateParametres();
@@ -1295,7 +1305,7 @@ namespace OCDataImporter
                 {
                     conversionSettings.selectedStudyEvent = comboBoxSE.SelectedItem.ToString();
                     conversionSettings.selectedCRF = comboBoxCRF.SelectedItem.ToString();
-                    dataGrid.BuildDG(true);
+                    dataGrid.BuildDG(true, conversionSettings.selectedStudyEvent, conversionSettings.selectedCRF);
                 }
                 else MessageBox.Show("Please select a StudyEvent and a CRF before matching.", "OCDataImporter");
             }

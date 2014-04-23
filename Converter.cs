@@ -32,15 +32,14 @@ namespace OCDataImporter
 
         public int numberOfOutputFiles { get; private set; }
 
-        private DataGridView dataGridView;
+        
         private WarningLog warningLog;    
 
-        public Converter(ConversionSettings conversionSettings, StudyMetaDataValidator studyMetaDataValidator, DataGridView dataGridView, WarningLog warningLog, IViewUpdater viewUpdater, bool labelOCoidExists, ArrayList labelOID)
+        public Converter(ConversionSettings conversionSettings, StudyMetaDataValidator studyMetaDataValidator, WarningLog warningLog, IViewUpdater viewUpdater, bool labelOCoidExists, ArrayList labelOID)
         {
             this.conversionSettings = conversionSettings;
             this.studyMetaDataValidator = studyMetaDataValidator;
-            this.viewUpdater = viewUpdater;
-            this.dataGridView = dataGridView;
+            this.viewUpdater = viewUpdater;        
             this.warningLog = warningLog;
             this.labelOCoidExists = labelOCoidExists;
             this.labelOID = labelOID;
@@ -57,8 +56,7 @@ namespace OCDataImporter
             int event_index_row = -1;
             int group_index_row = -1;
             int site_index_row = -1;
-            string usedStudyOID = conversionSettings.studyOID;                 
-
+            string usedStudyOID = conversionSettings.studyOID;            
             if (dataGrid.isValid() == false)
             {
                 return;
@@ -145,8 +143,8 @@ namespace OCDataImporter
 
                     //  Handle first DG line
                     int DGFirstLine = 0;
-                    String lineToSplit = dataGridView.Rows[DGFirstLine].Cells[DGIndexOfOCItem].Value.ToString();
-                    string[] ocparts = dataGridView.Rows[DGFirstLine].Cells[DGIndexOfOCItem].Value.ToString().Split('.');
+                    String lineToSplit = dataGrid.dataGridView.Rows[DGFirstLine].Cells[DGIndexOfOCItem].Value.ToString();
+                    string[] ocparts = dataGrid.dataGridView.Rows[DGFirstLine].Cells[DGIndexOfOCItem].Value.ToString().Split('.');
                     String TheStudyEventOID = ocparts[0];
                     String TheFormOID = "";
                     String TheItemGroupDef = "";
@@ -159,13 +157,13 @@ namespace OCDataImporter
                         DGFirstLine++;
                         try // fix 2.0.3 -> If no items are matched; can't increase DGFirstLine, causes index out of range 
                         {
-                            ocparts = dataGridView.Rows[DGFirstLine].Cells[DGIndexOfOCItem].Value.ToString().Split('.');
+                            ocparts = dataGrid.dataGridView.Rows[DGFirstLine].Cells[DGIndexOfOCItem].Value.ToString().Split('.');
                             TheFormOID = ocparts[1];
                             TheItemGroupDef = ocparts[2];
                             TheItemId = ocparts[3];
                             if (TheItemGroupDef.IndexOf('-') > 0) TheItemGroupDef = TheItemGroupDef.Substring(0, TheItemGroupDef.IndexOf('-'));
                             TheStudyEventOID = ocparts[0];
-                            theStudyDataColumn = dataGridView.Rows[DGFirstLine].Cells[DGIndexOfDataItem].Value.ToString();
+                            theStudyDataColumn = dataGrid.dataGridView.Rows[DGFirstLine].Cells[DGIndexOfDataItem].Value.ToString();
                         }
                         catch (Exception ex)
                         {
@@ -183,7 +181,7 @@ namespace OCDataImporter
                         TheItemGroupDef = ocparts[2];
                         if (TheItemGroupDef.IndexOf('-') > 0) TheItemGroupDef = TheItemGroupDef.Substring(0, TheItemGroupDef.IndexOf('-'));
                         TheItemId = ocparts[3];
-                        theStudyDataColumn = dataGridView.Rows[DGFirstLine].Cells[DGIndexOfDataItem].Value.ToString();
+                        theStudyDataColumn = dataGrid.dataGridView.Rows[DGFirstLine].Cells[DGIndexOfDataItem].Value.ToString();
                     }
 
                     if (TheStudyEventOID.Contains("*"))
@@ -266,7 +264,7 @@ namespace OCDataImporter
                     bool datapresentevent = false;
                     if (TheItemId != "none")
                     {
-                        indexOfItem = dataGrid.GetIndexOfItem(dataGridView.Rows[DGFirstLine].Cells[DGIndexOfOCItem].Value.ToString());
+                        indexOfItem = dataGrid.GetIndexOfItem(dataGrid.dataGridView.Rows[DGFirstLine].Cells[DGIndexOfOCItem].Value.ToString());
                         check_index_of_item(linecount, indexOfItem);
                         itemval = split[indexOfItem];
                         itemval = studyMetaDataValidator.ValidateItem(subjectID, TheFormOID, TheItemId, itemval, linecount, conversionSettings.dateFormat);
@@ -277,17 +275,17 @@ namespace OCDataImporter
                         }
                     }
                     // Now handle the rest of the DG
-                    for (int i = DGFirstLine + 1; i < dataGridView.RowCount; i++)
+                    for (int i = DGFirstLine + 1; i < dataGrid.dataGridView.RowCount; i++)
                     {
-                        if (dataGridView.Rows[i].IsNewRow == false)
+                        if (dataGrid.dataGridView.Rows[i].IsNewRow == false)
                         {
-                            string[] nwdingen = dataGridView.Rows[i].Cells[DGIndexOfOCItem].Value.ToString().Split('.');
-                            theStudyDataColumn = dataGridView.Rows[i].Cells[DGIndexOfDataItem].Value.ToString();
+                            string[] nwdingen = dataGrid.dataGridView.Rows[i].Cells[DGIndexOfOCItem].Value.ToString().Split('.');
+                            theStudyDataColumn = dataGrid.dataGridView.Rows[i].Cells[DGIndexOfDataItem].Value.ToString();
                             if (TheStudyEventOID == nwdingen[0] && TheFormOID == nwdingen[1] && TheItemGroupDef == nwdingen[2])
                             {
                                 if (nwdingen[3] != "none")
                                 {
-                                    indexOfItem = dataGrid.GetIndexOfItem(dataGridView.Rows[i].Cells[DGIndexOfOCItem].Value.ToString());
+                                    indexOfItem = dataGrid.GetIndexOfItem(dataGrid.dataGridView.Rows[i].Cells[DGIndexOfOCItem].Value.ToString());
                                     check_index_of_item(linecount, indexOfItem);
                                     itemval = split[indexOfItem];
                                     itemval = studyMetaDataValidator.ValidateItem(subjectID, TheFormOID, nwdingen[3], itemval, linecount, conversionSettings.dateFormat);
@@ -318,7 +316,7 @@ namespace OCDataImporter
                                 else theXMLForm += "                <ItemGroupData ItemGroupOID=\"" + theWrittenGR + "\" ItemGroupRepeatKey=\"" + CheckRepeatKey(theGRRK, linecount) + "\" TransactionType=\"Insert\" >" + LINE_SEPARATOR;
                                 if (nwdingen[3] != "none")
                                 {
-                                    indexOfItem = dataGrid.GetIndexOfItem(dataGridView.Rows[i].Cells[DGIndexOfOCItem].Value.ToString());
+                                    indexOfItem = dataGrid.GetIndexOfItem(dataGrid.dataGridView.Rows[i].Cells[DGIndexOfOCItem].Value.ToString());
                                     check_index_of_item(linecount, indexOfItem);
                                     itemval = split[indexOfItem];
                                     itemval = studyMetaDataValidator.ValidateItem(subjectID, TheFormOID, nwdingen[3], itemval, linecount, conversionSettings.dateFormat);
@@ -361,7 +359,7 @@ namespace OCDataImporter
                                 else theXMLForm += "                <ItemGroupData ItemGroupOID=\"" + theWrittenGR + "\" ItemGroupRepeatKey=\"" + CheckRepeatKey(theGRRK, linecount) + "\" TransactionType=\"Insert\" >" + LINE_SEPARATOR;
                                 if (nwdingen[3] != "none")
                                 {
-                                    indexOfItem = dataGrid.GetIndexOfItem(dataGridView.Rows[i].Cells[DGIndexOfOCItem].Value.ToString());
+                                    indexOfItem = dataGrid.GetIndexOfItem(dataGrid.dataGridView.Rows[i].Cells[DGIndexOfOCItem].Value.ToString());
                                     check_index_of_item(linecount, indexOfItem);
                                     itemval = split[indexOfItem];
                                     itemval = studyMetaDataValidator.ValidateItem(subjectID, TheFormOID, nwdingen[3], itemval, linecount, conversionSettings.dateFormat);
@@ -429,7 +427,7 @@ namespace OCDataImporter
                                 else theXMLForm += "                <ItemGroupData ItemGroupOID=\"" + theWrittenGR + "\" ItemGroupRepeatKey=\"" + CheckRepeatKey(theGRRK, linecount) + "\" TransactionType=\"Insert\" >" + LINE_SEPARATOR;
                                 if (nwdingen[3] != "none")
                                 {
-                                    indexOfItem = dataGrid.GetIndexOfItem(dataGridView.Rows[i].Cells[DGIndexOfOCItem].Value.ToString());
+                                    indexOfItem = dataGrid.GetIndexOfItem(dataGrid.dataGridView.Rows[i].Cells[DGIndexOfOCItem].Value.ToString());
                                     check_index_of_item(linecount, indexOfItem);
                                     itemval = split[indexOfItem];
                                     itemval = studyMetaDataValidator.ValidateItem(subjectID, TheFormOID, nwdingen[3], itemval, linecount, conversionSettings.dateFormat);

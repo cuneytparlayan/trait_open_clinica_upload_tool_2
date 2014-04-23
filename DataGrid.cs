@@ -50,21 +50,19 @@ namespace OCDataImporter
         private string PIDItem = "";
         private string DOBItem = "";
         
-        public string startDateItem {get; set;}
+        public string startDateItem { get; set;}
                       
 
-        private DataGridView dataGridView;
+        public DataGridView dataGridView  { get; set;}
         
 
         private ArrayList dataFileItems = new ArrayList();
         private StudyMetaDataValidator studyMetaDataValidator;
-        private IViewUpdater viewUpdater;
-        private ConversionSettings conversionSettings;
+        private IViewUpdater viewUpdater;        
 
-        public DataGrid(ConversionSettings conversionSettings, StudyMetaDataValidator studyMetaDataValidator, DataGridView dataGridView, IViewUpdater viewUpdater)
+        public DataGrid(StudyMetaDataValidator studyMetaDataValidator, DataGridView dataGridView, IViewUpdater viewUpdater)
         {
             this.dataGridView = dataGridView;            
-            this.conversionSettings = conversionSettings;
             this.studyMetaDataValidator = studyMetaDataValidator;
             this.viewUpdater = viewUpdater;
             reset();   
@@ -85,14 +83,14 @@ namespace OCDataImporter
             sepcount = 1;
         }
 
-        public bool GetDataFileItemsFromInput()
+        public bool GetDataFileItemsFromInput(String pathToInputFile)
         {
             // Find out how many data items are present per line and build array of data item names for using in data grid
             dataFileItems.Clear();
             sepcount = 1;
             try
             {
-                using (StreamReader sr = new StreamReader(conversionSettings.pathToInputFile))
+                using (StreamReader sr = new StreamReader(pathToInputFile))
                 {
                     String line;
                     while ((line = sr.ReadLine()) != null)
@@ -105,6 +103,7 @@ namespace OCDataImporter
 
                         for (int i = 0; i < line.Length; i++) if (line[i] == delimiter) sepcount++;
                         string[] spfirst = line.Split(delimiter);
+                        sepcount = spfirst.GetLength(0);
                         foreach (string one in spfirst) dataFileItems.Add(one);
                         break;
                     }
@@ -288,7 +287,7 @@ namespace OCDataImporter
             return true;
         }
 
-        public void BuildDG(bool matchcolumns)
+        public void BuildDG(bool matchcolumns, String selectedStudyEvent, String selectedCRF)
         {
             string key = "False";
             string dat = "False";
@@ -299,7 +298,7 @@ namespace OCDataImporter
             viewUpdater.resetText();
             string[] fnparts;
             fnparts = new string[dataGridView.ColumnCount];
-            if (conversionSettings.selectedStudyEvent != "-- select --" && conversionSettings.selectedCRF != "-- select --")
+            if (selectedStudyEvent != "-- select --" && selectedCRF != "-- select --")
             {
                 int matched = 0;
                 bool nomatch = false;
@@ -328,7 +327,7 @@ namespace OCDataImporter
                     fnparts[DGIndexOfPID] = pid;
                     fnparts[DGIndexOfDOB] = dob;
                     fnparts[DGIndexOfSTD] = std;
-                    string theCRF = Utilities.GetOID(conversionSettings.selectedCRF);
+                    string theCRF = Utilities.GetOID(selectedCRF);
                     fnparts[DGIndexOfOCItem] = "none";
 
                     int startGroup = 0;
@@ -351,7 +350,7 @@ namespace OCDataImporter
                     string theItemOID = studyMetaDataValidator.GetItemOIDFromItemName(theItem, theCRF);
                     if (theItemOID != "NOTFOUND2" && theItemOID != "ANOTHERCRF") // 3.03
                     {
-                        fnparts[DGIndexOfOCItem] = Utilities.GetOID(conversionSettings.selectedStudyEvent) + "." + Utilities.GetOID(conversionSettings.selectedCRF) + "." + studyMetaDataValidator.GetGroupFromItemCRF(theItemOID, theCRF) + "." + theItemOID;
+                        fnparts[DGIndexOfOCItem] = Utilities.GetOID(selectedStudyEvent) + "." + Utilities.GetOID(selectedCRF) + "." + studyMetaDataValidator.GetGroupFromItemCRF(theItemOID, theCRF) + "." + theItemOID;
                         matched++;
                     }
                     else
