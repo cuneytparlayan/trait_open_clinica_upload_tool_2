@@ -498,9 +498,8 @@ namespace OCDataImporter
 
                     if (dataGrid.DOBIndex >= 0)
                     {
-                        if (DOY && split[dataGrid.DOBIndex].Trim().Length == 4) theDOB = split[dataGrid.DOBIndex].Trim();
+                        if (DOY && split[dataGrid.DOBIndex].Trim().Length == 4) theDOB = split[dataGrid.DOBIndex].Trim() + "-01-01";
                         else theDOB = theDOB = Utilities.ConvertToODMFormat(split[dataGrid.DOBIndex], conversionSettings.dateFormat);
-                        theDOB = Utilities.ConvertToODMFormat(split[dataGrid.DOBIndex], conversionSettings.dateFormat);
                     }
                     string theSTD = "";
                     if (dataGrid.STDIndex >= 0)

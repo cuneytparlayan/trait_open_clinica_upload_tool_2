@@ -89,6 +89,8 @@ using System.Security.AccessControl;
                           and colors                          C. Parlayan
 4.3.3     14-04-2014      Dont change date format when back
                           to begin button is hit              C. Parlayan, S. de Ridder
+4.3.3     14-04-2014      Added "-01-01" after year of 
+                          birth                               C. Parlayan, S. de Ridder
                             
 *******************************************************************************************/
 namespace OCDataImporter
@@ -96,10 +98,10 @@ namespace OCDataImporter
     public partial class Form1 : Form, IViewUpdater
     {
         
-        public const String VERSION_LABEL = "OCDataImporter Version 4.4";   
+        public const String VERSION_LABEL = "OCDataImporter Version 4.4.1";   
         
-        public const bool DEBUGMODE = true;
-        // public const bool DEBUGMODE = false;
+        // public const bool DEBUGMODE = true;
+        public const bool DEBUGMODE = false;
         
         public bool labelOCoidExists = false; // 2.1.1 If labelOCoid file exists, get the oid from that file, instead of 'SS_label'...
         public string dmpfilename = "";
