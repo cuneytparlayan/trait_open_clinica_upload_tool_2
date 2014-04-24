@@ -1126,7 +1126,7 @@ namespace OCDataImporter
             if (!dataGrid.GetDataFileItemsFromInput(conversionSettings.pathToInputFile)) return;  // 1.1b
             if (labelOCoidExists)
             {
-                conversionSettings.pathToMetaDataFile = split[2];
+                input_oid = split[2];
                 Get_label_oid(input_oid);
             }
 
@@ -1453,7 +1453,7 @@ namespace OCDataImporter
             
             InsertKeys.Clear();
             
-            Delimiter = ';';
+            Delimiter = tab;
             sepcount = 1;
             PROGBARSIZE = 0;
             
