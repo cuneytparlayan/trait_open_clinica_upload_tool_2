@@ -9,3 +9,4 @@ bin
 /test/test-set_parameters.dmp
 /test/OCDataImporter_verification.txt
 /release-latest/OCDataImporter.exe
+/test/OCDataImporter_warnings.txt

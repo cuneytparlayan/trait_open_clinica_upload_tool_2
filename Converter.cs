@@ -172,7 +172,7 @@ namespace OCDataImporter
                             TheStudyEventOID = "none";
                             theStudyDataColumn = "none";
                             TheItemId = "none";
-                            warningLog.appendMessage("Problem occured: " + ex.Message);
+                            warningLog.appendMessage("Problem occurred: " + ex.Message);
                         }
                     }
                     else  // 2.1 fix on above fix

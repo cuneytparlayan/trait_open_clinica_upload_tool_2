@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Collections;
 
 namespace OCDataImporter
@@ -82,6 +83,14 @@ namespace OCDataImporter
                 ret += warningMessage.ToString() + LINE_SEPARATOR;
             }
             return ret;
+        }
+
+        public void dumpToFile(String fileName)
+        {
+            StreamWriter SW;
+            SW = File.AppendText(fileName);
+            SW.WriteLine(this.ToString());
+            SW.Close();
         }
 
         public void appendMessage(String aMessageText)

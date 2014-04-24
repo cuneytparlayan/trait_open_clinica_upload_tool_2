@@ -125,8 +125,7 @@ namespace OCDataImporter
         ArrayList AllValuesInOneRow = new ArrayList();
         ArrayList Hiddens = new ArrayList();
         ArrayList InsertKeys = new ArrayList();
-        
-        string LOG = "";
+               
         
         char Delimiter = ';';
         char tab = '\u0009';
@@ -594,7 +593,7 @@ namespace OCDataImporter
                 }
             }
 
-            LOG = conversionSettings.workdir + "\\OCDataImporter_warnings.txt";
+            
             conversionSettings.checkForDuplicateSubjects = checkBoxDup.Checked;
             conversionSettings.useTodaysDateIfNoEventDate = radioButtonUseTD.Checked;
             conversionSettings.dateFormat = comboBoxDateFormat.SelectedItem.ToString();
@@ -613,6 +612,8 @@ namespace OCDataImporter
                     MessageBox.Show(ocdie.ToString(), "OCDataImporter", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                     exit_error(ocdie.ToString());
             }
+            String pathWarningLog = conversionSettings.workdir + "\\OCDataImporter_warnings.txt";
+            warningLog.dumpToFile(pathWarningLog);
             resetUserInterfaceElements(converter);
         }
 
@@ -1088,32 +1089,7 @@ namespace OCDataImporter
                 swlog.WriteLine(probl);
             }
             Close();
-        }
-        
-        /*
-        private void append_warning(string probl)
-        {
-            bool found = false;
-            foreach (string one in Warnings)
-            {
-                if (one == probl)
-                {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found)
-            {
-                Warnings.Add(probl);
-                DateTime dt = DateTime.Now;
-                textBoxOutput.Text += probl + Mynewline; // 3.02
-                probl = dt.Day.ToString("00") + "-" + dt.Month.ToString("00") + "-" + dt.Year + " " + dt.Hour.ToString("00") + ":" + dt.Minute.ToString("00") + ":" + dt.Second.ToString("00") + "    " + probl;
-                AppendToFile(LOG, probl);
-                WARCOUNT++;
-                labelWarningCounter.Text = "WARNINGS: " + WARCOUNT.ToString();
-            }
-        }
-        */
+        }                
 
         private void buttonBrowse_Click_1(object sender, EventArgs e)
         {
@@ -1476,8 +1452,6 @@ namespace OCDataImporter
             
             
             InsertKeys.Clear();
-            
-            LOG = "";
             
             Delimiter = ';';
             sepcount = 1;
