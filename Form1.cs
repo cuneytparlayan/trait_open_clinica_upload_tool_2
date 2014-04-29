@@ -1448,8 +1448,8 @@ namespace OCDataImporter
             CodeList.Clear();
             MSList.Clear();
             RCList.Clear();
-            Warnings.Clear();            
-            
+            Warnings.Clear();
+            warningLog.reset();
             
             InsertKeys.Clear();
             
