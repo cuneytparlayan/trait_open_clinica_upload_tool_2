@@ -103,6 +103,7 @@ namespace OCDataImporter
 
                     // line = line.Trim();  // 1.1b
                     if (line.Length == 0) continue;
+                    if (line.Trim().Length == 0) continue; // 4.4.2
 
                     studyMetaDataValidator.reset();
 

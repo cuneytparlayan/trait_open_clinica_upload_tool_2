@@ -91,6 +91,10 @@ using System.Security.AccessControl;
                           to begin button is hit              C. Parlayan, S. de Ridder
 4.3.3     14-04-2014      Added "-01-01" after year of 
                           birth                               C. Parlayan, S. de Ridder
+4.4.2     01-05-2014      EVENT_INDEX and GROUP_INDEX bug
+                          resolved                            C. Parlayan
+4.4.2     01-05-2014      Ignore input line if it is completely
+                          empty                               C. Parlayan
                             
 *******************************************************************************************/
 namespace OCDataImporter
@@ -98,7 +102,7 @@ namespace OCDataImporter
     public partial class Form1 : Form, IViewUpdater
     {
         
-        public const String VERSION_LABEL = "OCDataImporter Version 4.4.1";   
+        public const String VERSION_LABEL = "OCDataImporter Version 4.4.2";   
         
         // public const bool DEBUGMODE = true;
         public const bool DEBUGMODE = false;

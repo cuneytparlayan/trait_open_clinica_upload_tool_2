@@ -154,7 +154,19 @@ namespace OCDataImporter
             sexItem = "";
             PIDItem = "";
             DOBItem = "";
-            
+
+            bool EvtIdxPresent = false;  // this and next for loop 4.4.2
+            bool GrpIdxPresent = false;
+
+            for (int i = 0; i < dataGridView.RowCount; i++)
+            {
+                if (dataGridView.Rows[i].IsNewRow == false)
+                {
+                    if (dataGridView.Rows[i].Cells[DGIndexOfDataItem].Value.ToString() == "EVENT_INDEX") EvtIdxPresent = true;
+                    if (dataGridView.Rows[i].Cells[DGIndexOfDataItem].Value.ToString() == "GROUP_INDEX") GrpIdxPresent = true;
+                }
+            }
+
             for (int i = 0; i < dataGridView.RowCount; i++)
             {
                 if (dataGridView.Rows[i].IsNewRow == false)
@@ -224,8 +236,8 @@ namespace OCDataImporter
                         string theDataItem = dataGridView.Rows[i].Cells[DGIndexOfDataItem].Value.ToString();
                         string ev_rep = "";
                         string gr_rep = "";
-                        if (studyMetaDataValidator.repeatingEvents.Contains(mi[0])) ev_rep = Utilities.Get_SE_RepeatingKey_FromStudyDataColumn(theDataItem);
-                        if (studyMetaDataValidator.repeatingGroups.Contains(mi[2])) gr_rep = Utilities.Get_GR_RepeatingKey_FromStudyDataColumn(theDataItem);
+                        if (studyMetaDataValidator.repeatingEvents.Contains(mi[0]) && !EvtIdxPresent) ev_rep = Utilities.Get_SE_RepeatingKey_FromStudyDataColumn(theDataItem);
+                        if (studyMetaDataValidator.repeatingGroups.Contains(mi[2]) && !GrpIdxPresent) gr_rep = Utilities.Get_GR_RepeatingKey_FromStudyDataColumn(theDataItem);
                         mi[0] = Utilities.FillTildes(mi[0], maxSE);
                         mi[1] = Utilities.FillTildes(mi[1], maxCRF);
                         mi[2] = Utilities.FillTildes(mi[2], maxGR);
