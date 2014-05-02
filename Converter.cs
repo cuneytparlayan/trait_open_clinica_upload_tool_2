@@ -484,7 +484,16 @@ namespace OCDataImporter
                         masterHeader(odmOutputFile);
                     }
                     // generate insert statements
-                    int theSERKInt = System.Convert.ToInt16(theSERK);
+                    int theSERKInt = 0;
+                    try
+                    {
+                        theSERKInt = System.Convert.ToInt16(theSERK);
+                    }
+                    catch
+                    {
+                        string errtext = "EVENT_INDEX can't be determined at line " + linecount.ToString() + ". Index: " + theSERK + ". (must be an integer)";
+                        warningLog.appendMessage(errtext);
+                    }
                     string theDOB = "";
 
                     //if (DOBIndex >= 0)
