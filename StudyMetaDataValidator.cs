@@ -409,26 +409,7 @@ namespace OCDataImporter
             if (ittype == "partialDate") ConvertedDate = Utilities.ConvertToODMPartial(ItemVal);
             if (ConvertedDate.StartsWith("Error")) warningLog.appendMessage(fixedwarning + ConvertedDate);
             else if (ConvertedDate != "") return (ConvertedDate);
-            if (ittype == "integer" || ittype == "float")
-            {
-                string theval = ItemVal.Replace(".", "").Replace(",", "").Replace("-", "");
-                if (ittype == "float")
-                {
-                    if (Utilities.IsNumber(theval) == false) warningLog.appendMessage(fixedwarning + "Item type is real but contains non numeric characters: " + ItemVal);
-                    string thefloatval = ItemVal.Replace(",", ".");
-                    if (thefloatval.IndexOf('.') > 0)
-                    {
-                        int stdec = thefloatval.LastIndexOf('.');
-                        string thedec = thefloatval.Substring(stdec + 1);
-                        if (thedec.Length > itdeclen) warningLog.appendMessage(fixedwarning + "Item contains more numbers than allowed after the decimal point: " + ItemVal + " (allowed = " + itdeclen.ToString() + " numbers)");
-                    }
-                }
-                else
-                {
-                    if (Utilities.IsNumber(ItemVal.Replace("-", "")) == false) warningLog.appendMessage(fixedwarning + "Item type is integer but contains non integer characters: " + ItemVal);
-                }
-            }
-            if (ItemVal.Length > itlen) warningLog.appendMessage(fixedwarning + "Item value exceeds required width = " + itlen.ToString());
+
             if (thecodelist != "NOCODE" && ItemVal != "")
             {
                 if (thecodelist.StartsWith("*") == false) // single selection code list
@@ -473,6 +454,29 @@ namespace OCDataImporter
                             }
                             if (found < selvals.Length) warningLog.appendMessage(fixedwarning + "(at least one of) value(s) not in multiple selection list: " + theVals);
                         }
+                    }
+                }
+            }
+            else
+            {
+                if (ItemVal.Length > itlen) warningLog.appendMessage(fixedwarning + "Item value exceeds required width = " + itlen.ToString());
+                if (ittype == "integer" || ittype == "float")
+                {
+                    string theval = ItemVal.Replace(".", "").Replace(",", "").Replace("-", "");
+                    if (ittype == "float")
+                    {
+                        if (Utilities.IsNumber(theval) == false) warningLog.appendMessage(fixedwarning + "Item type is real but contains non numeric characters: " + ItemVal);
+                        string thefloatval = ItemVal.Replace(",", ".");
+                        if (thefloatval.IndexOf('.') > 0)
+                        {
+                            int stdec = thefloatval.LastIndexOf('.');
+                            string thedec = thefloatval.Substring(stdec + 1);
+                            if (thedec.Length > itdeclen) warningLog.appendMessage(fixedwarning + "Item contains more numbers than allowed after the decimal point: " + ItemVal + " (allowed = " + itdeclen.ToString() + " numbers)");
+                        }
+                    }
+                    else
+                    {
+                        if (Utilities.IsNumber(ItemVal.Replace("-", "")) == false) warningLog.appendMessage(fixedwarning + "Item type is integer but contains non integer characters: " + ItemVal);
                     }
                 }
             }
