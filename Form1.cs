@@ -95,6 +95,7 @@ using System.Security.AccessControl;
                           resolved                            C. Parlayan
 4.4.2     01-05-2014      Ignore input line if it is completely
                           empty                               C. Parlayan
+4.4.2     05-05-2014      prevent duplicate inserts           C.Parlayan
                             
 *******************************************************************************************/
 namespace OCDataImporter
@@ -128,8 +129,7 @@ namespace OCDataImporter
         ArrayList Warnings = new ArrayList();
         ArrayList AllValuesInOneRow = new ArrayList();
         ArrayList Hiddens = new ArrayList();
-        ArrayList InsertKeys = new ArrayList();
-               
+        ArrayList InsertKeys = new ArrayList();           
         
         char Delimiter = ';';
         char tab = '\u0009';
@@ -1422,7 +1422,6 @@ namespace OCDataImporter
             checkBoxDup.ForeColor = System.Drawing.Color.Black;
         }
 
-
         private void StateReadFiles(bool begin)
         {
             // initialize program variables
@@ -1440,13 +1439,12 @@ namespace OCDataImporter
             dmpprm = "";
             
             conversionSettings.reset();
-            
             input_oid = "";
             Items.Clear();
             DataFileItems.Clear();
             LabelOID.Clear();
             SortableDG.Clear();
-            InsertSubject.Clear();
+            InsertSubject.Clear();        
             ItemGroupDefs.Clear();
             ItemDefForm.Clear();
             CodeList.Clear();

@@ -28,7 +28,8 @@ namespace OCDataImporter
         private bool DOY = false;
         private bool labelOCoidExists;
         private ArrayList labelOID;
-        
+        private ArrayList Insert2s = new ArrayList();
+        private ArrayList Insert3s = new ArrayList();       
 
         public int numberOfOutputFiles { get; private set; }
 
@@ -48,7 +49,8 @@ namespace OCDataImporter
 
         public void DoWork(DataGrid dataGrid)
         {
-            
+            Insert2s.Clear();
+            Insert3s.Clear();   
             string theDate = DateTime.Now.ToString("yyyy-MM-dd");
             string theWrittenSE = "";
             string theWrittenGR = "";
@@ -547,10 +549,13 @@ namespace OCDataImporter
                             insertsSQLFile.Append("    VALUES (1, '" + SubSex + "', '" + thePID + "', '" + theDate + "', 1, '1', '" + theDOB + "');");
                         }
                     }
-                    insertsSQLFile.Append(INSERT_2);
-                    // if there is no PID, use the key (unique_identifier) to fill the field label of study_subject. 
-                    insertsSQLFile.Append("    VALUES ('" + subjectID + "', (SELECT study_id FROM study WHERE oc_oid = '" + usedStudyOID + "'),");
-                    insertsSQLFile.Append("            1, '" + theDate + "', '" + theDate + "', '" + theDate + "', 1, '" + SStheKEY + "', (SELECT subject_id FROM subject where unique_identifier = '" + thePID + "'));");
+                    if (!IsDuplicateInsert2s(subjectID + "^" + usedStudyOID + "^" + theDate + "^" + SStheKEY + "^" + thePID))
+                    {
+                        insertsSQLFile.Append(INSERT_2);
+                        // if there is no PID, use the key (unique_identifier) to fill the field label of study_subject. 
+                        insertsSQLFile.Append("    VALUES ('" + subjectID + "', (SELECT study_id FROM study WHERE oc_oid = '" + usedStudyOID + "'),");
+                        insertsSQLFile.Append("            1, '" + theDate + "', '" + theDate + "', '" + theDate + "', 1, '" + SStheKEY + "', (SELECT subject_id FROM subject where unique_identifier = '" + thePID + "'));");
+                    }
                     if (theWrittenSE == "none" && conversionSettings.selectedStudyEvent != "-- select --") // 4.1 eliminate -- select --
                     {
                         theWrittenSE = Utilities.GetOID(conversionSettings.selectedStudyEvent); // 2.0.5 Use the selected SE to determine current SE, as there is no CRF data 
@@ -579,37 +584,43 @@ namespace OCDataImporter
                                 {
                                     if (theSTD != "")
                                     {
-                                        insertsSQLFile.Append(INSERT_3);
-                                        insertsSQLFile.Append("    VALUES ((SELECT study_event_definition_id FROM study_event_definition WHERE oc_oid = '" + theWrittenSE + "'),");
-                                        insertsOnlyEventsSQLFile.Append(INSERT_3);
-                                        insertsOnlyEventsSQLFile.Append("    VALUES ((SELECT study_event_definition_id FROM study_event_definition WHERE oc_oid = '" + theWrittenSE + "'),");
-                                        insertsSQLFile.Append("	    (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theSTD + " 12:00:00', 1, 1, '" + theDate + "', 1, '0', '0');");
-                                        insertsOnlyEventsSQLFile.Append("	     (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theSTD + " 12:00:00', 1, 1, '" + theDate + "', 1, '0', '0');");
+                                        if (!IsDuplicateInsert3s(theWrittenSE + "^" + SStheKEY + "^" + say.ToString() + "^" + theSTD + "^" + theDate))
+                                        {
+                                            insertsSQLFile.Append(INSERT_3);
+                                            insertsSQLFile.Append("    VALUES ((SELECT study_event_definition_id FROM study_event_definition WHERE oc_oid = '" + theWrittenSE + "'),");
+                                            insertsOnlyEventsSQLFile.Append(INSERT_3);
+                                            insertsOnlyEventsSQLFile.Append("    VALUES ((SELECT study_event_definition_id FROM study_event_definition WHERE oc_oid = '" + theWrittenSE + "'),");
+                                            insertsSQLFile.Append("	    (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theSTD + " 12:00:00', 1, 1, '" + theDate + "', 1, '0', '0');");
+                                            insertsOnlyEventsSQLFile.Append("	     (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theSTD + " 12:00:00', 1, 1, '" + theDate + "', 1, '0', '0');");
+                                        }
                                     }
                                 }
                             }
                             else  // no repeating Events; use either todays date as STD or pick it from data file  2.0.9
                             {
-                                if (theSTD != "") // there is a date specified in the data file
+                                if (!IsDuplicateInsert3s(theWrittenSE + "^" + SStheKEY + "^" + say.ToString() + "^" + theSTD + "^" + theDate))
                                 {
-                                    insertsSQLFile.Append(INSERT_3);
-                                    insertsSQLFile.Append("    VALUES ((SELECT study_event_definition_id FROM study_event_definition WHERE oc_oid = '" + theWrittenSE + "'),");
-                                    insertsOnlyEventsSQLFile.Append(INSERT_3);
-                                    insertsOnlyEventsSQLFile.Append("    VALUES ((SELECT study_event_definition_id FROM study_event_definition WHERE oc_oid = '" + theWrittenSE + "'),");
-                                    insertsSQLFile.Append("	    (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theSTD + " 12:00:00', 1, 1, '" + theDate + "', 1, '0', '0');");
-                                    insertsOnlyEventsSQLFile.Append("        (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theSTD + " 12:00:00', 1, 1, '" + theDate + "', 1, '0', '0');");
-                                }
-                                else  // no date specified in data file
-                                {
-                                    if (conversionSettings.useTodaysDateIfNoEventDate)  // 2.1.3 Generate inserts for events without dates using todays date, only if user wants to, otherwise 
-                                    // TODO ask Cuneyt what otherwise 
+                                    if (theSTD != "") // there is a date specified in the data file
                                     {
                                         insertsSQLFile.Append(INSERT_3);
                                         insertsSQLFile.Append("    VALUES ((SELECT study_event_definition_id FROM study_event_definition WHERE oc_oid = '" + theWrittenSE + "'),");
                                         insertsOnlyEventsSQLFile.Append(INSERT_3);
                                         insertsOnlyEventsSQLFile.Append("    VALUES ((SELECT study_event_definition_id FROM study_event_definition WHERE oc_oid = '" + theWrittenSE + "'),");
-                                        insertsSQLFile.Append("	    (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theDate + " 12:00:00', 1, 1, '" + theDate + "', 1, '0', '0');");
-                                        insertsOnlyEventsSQLFile.Append("        (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theDate + " 12:00:00', 1, 1, '" + theDate + "', 1, '0', '0');");
+                                        insertsSQLFile.Append("	    (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theSTD + " 12:00:00', 1, 1, '" + theDate + "', 1, '0', '0');");
+                                        insertsOnlyEventsSQLFile.Append("        (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theSTD + " 12:00:00', 1, 1, '" + theDate + "', 1, '0', '0');");
+                                    }
+                                    else  // no date specified in data file
+                                    {
+                                        if (conversionSettings.useTodaysDateIfNoEventDate)  // 2.1.3 Generate inserts for events without dates using todays date, only if user wants to, otherwise 
+                                        // TODO ask Cuneyt what otherwise 
+                                        {
+                                            insertsSQLFile.Append(INSERT_3);
+                                            insertsSQLFile.Append("    VALUES ((SELECT study_event_definition_id FROM study_event_definition WHERE oc_oid = '" + theWrittenSE + "'),");
+                                            insertsOnlyEventsSQLFile.Append(INSERT_3);
+                                            insertsOnlyEventsSQLFile.Append("    VALUES ((SELECT study_event_definition_id FROM study_event_definition WHERE oc_oid = '" + theWrittenSE + "'),");
+                                            insertsSQLFile.Append("	    (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theDate + " 12:00:00', 1, 1, '" + theDate + "', 1, '0', '0');");
+                                            insertsOnlyEventsSQLFile.Append("        (SELECT study_subject_id FROM study_subject WHERE oc_oid = '" + SStheKEY + "'),'" + conversionSettings.defaultLocation + "', " + say.ToString() + ", '" + theDate + " 12:00:00', 1, 1, '" + theDate + "', 1, '0', '0');");
+                                        }
                                     }
                                 }
                             }
@@ -691,7 +702,41 @@ namespace OCDataImporter
             }
             return (found);
         }
+        public bool IsDuplicateInsert2s(string theStrtoCheck)
+        {
+            bool found = false;
+            foreach (string one in Insert2s)
+            {
+                if (one == theStrtoCheck)
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+            {
+                Insert2s.Add(theStrtoCheck);
+            }
+            return (found);
+        }
 
+        public bool IsDuplicateInsert3s(string theStrtoCheck)
+        {
+            bool found = false;
+            foreach (string one in Insert3s)
+            {
+                if (one == theStrtoCheck)
+                {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found)
+            {
+                Insert3s.Add(theStrtoCheck);
+            }
+            return (found);
+        }
         private string CheckRepeatKey(string rk, int line)
         {
             if (Utilities.IsNumber(rk)) return (rk);
