@@ -12,6 +12,7 @@ namespace OCDataImporter
         public string fnxml;
         public string fntxt;
         public string fnoid = "";
+        public string fnmdb = "";
         private static OpenFileDialog ofd;
 
         public MyFileDialog(string workdir)
@@ -20,8 +21,8 @@ namespace OCDataImporter
             fntxt = "";
             ofd = new OpenFileDialog();
             if (workdir != "") ofd.InitialDirectory = workdir;
-            ofd.Title = "Please select OC MetaFile (.XML), Study Data file (.TXT) and label-oid cross data file (.OID) as input";
-            ofd.Filter = "MetaFile and Study Data (*.XML;*.TXT;*.OID)|*.XML;*.TXT;*.OID|" + "All files (*.*)|*.*";
+            ofd.Title = "Please select OC MetaFile (.XML), Study Data file (.TXT), label-oid cross data file (.OID) and WSDB file (*.mdb) as input";
+            ofd.Filter = "OCDataImporter files (*.XML;*.TXT;*.OID;*.MDB)|*.XML;*.TXT;*.OID;*.MDB|" + "All files (*.*)|*.*";
             ofd.Multiselect = true;
             if (ofd.ShowDialog() == DialogResult.OK)
             {
@@ -32,6 +33,7 @@ namespace OCDataImporter
                         if (file.EndsWith(".xml")) fnxml = file;
                         if (file.EndsWith(".txt")) fntxt = file;
                         if (file.EndsWith(".oid")) fnoid = file;
+                        if (file.EndsWith(".mdb")) fnmdb = file;
                     }
                     catch (SecurityException ex)
                     {

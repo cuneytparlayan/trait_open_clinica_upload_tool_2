@@ -96,7 +96,7 @@
             this.comboBoxSE.FormattingEnabled = true;
             this.comboBoxSE.Location = new System.Drawing.Point(21, 563);
             this.comboBoxSE.Name = "comboBoxSE";
-            this.comboBoxSE.Size = new System.Drawing.Size(209, 21);
+            this.comboBoxSE.Size = new System.Drawing.Size(295, 21);
             this.comboBoxSE.Sorted = true;
             this.comboBoxSE.TabIndex = 40;
             this.comboBoxSE.SelectedIndexChanged += new System.EventHandler(this.comboBoxSE_SelectedIndexChanged);
@@ -106,21 +106,23 @@
             this.comboBoxCRF.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxCRF.DropDownWidth = 161;
             this.comboBoxCRF.FormattingEnabled = true;
-            this.comboBoxCRF.Location = new System.Drawing.Point(236, 563);
+            this.comboBoxCRF.Location = new System.Drawing.Point(322, 563);
             this.comboBoxCRF.Name = "comboBoxCRF";
-            this.comboBoxCRF.Size = new System.Drawing.Size(195, 21);
+            this.comboBoxCRF.Size = new System.Drawing.Size(295, 21);
             this.comboBoxCRF.Sorted = true;
             this.comboBoxCRF.TabIndex = 50;
             this.comboBoxCRF.SelectedIndexChanged += new System.EventHandler(this.comboBoxCRF_SelectedIndexChanged);
             // 
             // comboBoxIT
             // 
+            this.comboBoxIT.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxIT.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxIT.DropDownWidth = 161;
             this.comboBoxIT.FormattingEnabled = true;
-            this.comboBoxIT.Location = new System.Drawing.Point(660, 563);
+            this.comboBoxIT.Location = new System.Drawing.Point(924, 563);
             this.comboBoxIT.Name = "comboBoxIT";
-            this.comboBoxIT.Size = new System.Drawing.Size(562, 21);
+            this.comboBoxIT.Size = new System.Drawing.Size(298, 21);
             this.comboBoxIT.Sorted = true;
             this.comboBoxIT.TabIndex = 70;
             this.comboBoxIT.SelectedIndexChanged += new System.EventHandler(this.comboBoxIT_SelectedIndexChanged);
@@ -130,9 +132,9 @@
             this.comboBoxGR.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxGR.DropDownWidth = 161;
             this.comboBoxGR.FormattingEnabled = true;
-            this.comboBoxGR.Location = new System.Drawing.Point(438, 563);
+            this.comboBoxGR.Location = new System.Drawing.Point(623, 563);
             this.comboBoxGR.Name = "comboBoxGR";
-            this.comboBoxGR.Size = new System.Drawing.Size(216, 21);
+            this.comboBoxGR.Size = new System.Drawing.Size(295, 21);
             this.comboBoxGR.Sorted = true;
             this.comboBoxGR.TabIndex = 60;
             this.comboBoxGR.SelectedIndexChanged += new System.EventHandler(this.comboBoxGR_SelectedIndexChanged);
@@ -143,18 +145,20 @@
             this.label1.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(41, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(0, 18);
+            this.label1.Size = new System.Drawing.Size(298, 18);
             this.label1.TabIndex = 0;
+            this.label1.Text = "OCDataImporter Version 4.3.26z";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(104, 33);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(812, 13);
+            this.label3.Size = new System.Drawing.Size(1012, 13);
             this.label3.TabIndex = 2;
-            this.label3.Text = "OCMetaData file (XML), Study Data file (TXT) and label-oid file (OID), separated " +
-    "by a \';\' or use \'Browse\' button. The label-oid file is optional.";
+            this.label3.Text = "OCMetaData file (XML), Study Data file (TXT), label-oid file (OID), WS database (" +
+    "MDB), separated by a \';\' or use \'Browse\' button. Label-oid and WS database files" +
+    " are optional.";
             // 
             // textBoxInput
             // 
@@ -251,7 +255,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(114, 547);
+            this.label2.Location = new System.Drawing.Point(104, 547);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(76, 13);
             this.label2.TabIndex = 62;
@@ -260,7 +264,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(233, 547);
+            this.label5.Location = new System.Drawing.Point(319, 547);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(30, 13);
             this.label5.TabIndex = 63;
@@ -269,7 +273,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(435, 547);
+            this.label6.Location = new System.Drawing.Point(620, 547);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(42, 13);
             this.label6.TabIndex = 64;
@@ -365,7 +369,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(657, 547);
+            this.label7.Location = new System.Drawing.Point(921, 547);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(34, 13);
             this.label7.TabIndex = 71;
@@ -379,7 +383,7 @@
             "day-month-year",
             "month-day-year",
             "year-month-day"});
-            this.comboBoxDateFormat.Location = new System.Drawing.Point(183, 101);
+            this.comboBoxDateFormat.Location = new System.Drawing.Point(181, 101);
             this.comboBoxDateFormat.Name = "comboBoxDateFormat";
             this.comboBoxDateFormat.Size = new System.Drawing.Size(121, 21);
             this.comboBoxDateFormat.TabIndex = 72;
@@ -407,17 +411,18 @@
             // 
             this.comboBoxSex.FormattingEnabled = true;
             this.comboBoxSex.Items.AddRange(new object[] {
+            "nothing",
             "f",
             "m"});
-            this.comboBoxSex.Location = new System.Drawing.Point(461, 101);
+            this.comboBoxSex.Location = new System.Drawing.Point(449, 101);
             this.comboBoxSex.Name = "comboBoxSex";
-            this.comboBoxSex.Size = new System.Drawing.Size(60, 21);
+            this.comboBoxSex.Size = new System.Drawing.Size(73, 21);
             this.comboBoxSex.TabIndex = 76;
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(316, 104);
+            this.label10.Location = new System.Drawing.Point(310, 104);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(138, 13);
             this.label10.TabIndex = 77;
@@ -450,12 +455,12 @@
             this.textBoxMaxLines.Name = "textBoxMaxLines";
             this.textBoxMaxLines.Size = new System.Drawing.Size(51, 21);
             this.textBoxMaxLines.TabIndex = 77;
-            this.textBoxMaxLines.Text = "0";
+            this.textBoxMaxLines.Text = "75";
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(527, 104);
+            this.label12.Location = new System.Drawing.Point(530, 104);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(127, 13);
             this.label12.TabIndex = 80;
